@@ -37,7 +37,14 @@ dev_requirements = [
     "wheel>=0.34.2",
 ]
 
-requirements = []
+requirements = [
+    "aicsimageio>=4.9.2",
+    "scipy>=1.9.1",
+    "scikit-image>=0.19.3",
+    "networkx>=2.8.6",
+    "matplotlib>=3.6.0",
+    "geomdl>=5.3.1",
+]
 
 extra_requirements = {
     "setup": setup_requirements,
@@ -64,7 +71,7 @@ setup(
     description="A Python package for analyzing 3D vascular structures from segmentations",
     entry_points={
         "console_scripts": [
-            "my_example=vessel_analysis_3d.bin.my_example:main"
+            "run_vessel_analysis=vessel_analysis_3d.bin.run_analysis:main"
         ],
     },
     install_requires=requirements,

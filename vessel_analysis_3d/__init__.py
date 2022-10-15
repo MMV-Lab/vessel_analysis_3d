@@ -13,4 +13,4 @@ def get_module_version():
     return __version__
 
 
-from .example import Example  # noqa: F401
+from .processing_pipeline import Pipeline3D  # noqa: F401

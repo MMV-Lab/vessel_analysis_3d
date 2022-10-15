@@ -10,8 +10,9 @@ import argparse
 import logging
 import sys
 import traceback
+import yaml
 
-from vessel_analysis_3d import Example, get_module_version
+from vessel_analysis_3d import Pipeline3D
 
 ###############################################################################
 
@@ -30,41 +31,19 @@ class Args(argparse.Namespace):
 
     def __init__(self):
         # Arguments that could be passed in through the command line
-        self.first = self.DEFAULT_FIRST
-        self.second = self.DEFAULT_SECOND
         self.debug = False
         #
         self.__parse()
 
     def __parse(self):
         p = argparse.ArgumentParser(
-            prog="run_exmaple",
-            description="A simple example of a bin script",
+            prog="run_analysis",
+            description="run analysis on a set of vessel segmentations",
         )
 
         p.add_argument(
-            "-v",
-            "--version",
-            action="version",
-            version="%(prog)s " + get_module_version(),
-        )
-        p.add_argument(
-            "-f",
-            "--first",
-            action="store",
-            dest="first",
-            type=int,
-            default=self.first,
-            help="The first argument value",
-        )
-        p.add_argument(
-            "-s",
-            "--second",
-            action="store",
-            dest="second",
-            type=int,
-            default=self.second,
-            help="The first argument value",
+            "--config",
+            help="The path to configuration file",
         )
         p.add_argument(
             "--debug",
@@ -85,11 +64,13 @@ def main():
 
         # Do your work here - preferably in a class or function,
         # passing in your args. E.g.
-        exe = Example(args.first)
-        exe.update_value(args.second)
-        print(
-            "First : {}\nSecond: {}".format(exe.get_value(), exe.get_previous_value())
-        )
+        with open(args.config, "r") as stream:
+            cfg = yaml.safe_load(stream)
+
+        exe = Pipeline3D()
+        exe.config_data(cfg["data"])
+        exe.config_analysis(cfg["analysis"])
+        exe.run()
 
     except Exception as e:
         log.error("=============================================")

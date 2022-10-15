@@ -1,0 +1,11 @@
+data:
+  input_dir: /mnt/eternus/users/Shuo/project/datasets/VesselExpress_Data/Figure3/Hippocampus/Binary
+  input_type: Binary_*.tiff
+  output_dir: /mnt/eternus/users/Jianxu/projects/vessel_analysis_3d/out/  # this optional, default is the "_tmp" folder under the working directory
+
+analysis:
+  pixelDimensions: [2.0, 1.015625, 1.015625]
+  pruningScale: 1.5
+  lengthLimit: 3
+  diaScale: 2
+  branchingThreshold: 0.25
