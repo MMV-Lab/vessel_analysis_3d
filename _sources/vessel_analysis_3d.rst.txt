@@ -1,0 +1,29 @@
+vessel\_analysis\_3d package
+============================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   vessel_analysis_3d.bin
+
+Submodules
+----------
+
+vessel\_analysis\_3d.example module
+-----------------------------------
+
+.. automodule:: vessel_analysis_3d.example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: vessel_analysis_3d
+   :members:
+   :undoc-members:
+   :show-inheritance:

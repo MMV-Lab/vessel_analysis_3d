@@ -1,0 +1,21 @@
+vessel\_analysis\_3d.bin package
+================================
+
+Submodules
+----------
+
+vessel\_analysis\_3d.bin.my\_example module
+-------------------------------------------
+
+.. automodule:: vessel_analysis_3d.bin.my_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: vessel_analysis_3d.bin
+   :members:
+   :undoc-members:
+   :show-inheritance:
