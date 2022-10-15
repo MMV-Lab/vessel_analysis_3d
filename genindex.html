@@ -103,11 +103,12 @@
 <li class="toctree-l2"><a class="reference internal" href="vessel_analysis_3d.html">vessel_analysis_3d package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="vessel_analysis_3d.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="vessel_analysis_3d.bin.html">vessel_analysis_3d.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="vessel_analysis_3d.graph.html">vessel_analysis_3d.graph package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="vessel_analysis_3d.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="vessel_analysis_3d.html#module-vessel_analysis_3d.example">vessel_analysis_3d.example module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="vessel_analysis_3d.html#vessel_analysis_3d.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessel_analysis_3d.html#module-vessel_analysis_3d.processing_pipeline">vessel_analysis_3d.processing_pipeline module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D"><code class="docutils literal notranslate"><span class="pre">Pipeline3D</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="vessel_analysis_3d.html#module-vessel_analysis_3d">Module contents</a><ul>
@@ -193,18 +194,38 @@
 
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
+ | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
- | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#M"><strong>M</strong></a>
- | <a href="#U"><strong>U</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
  | <a href="#V"><strong>V</strong></a>
  
 </div>
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.my_example.Args">Args (class in vessel_analysis_3d.bin.my_example)</a>
+      <li><a href="vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.run_analysis.Args">Args (class in vessel_analysis_3d.bin.run_analysis)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.distance_transform_edt_dask.compute_distance_transform">compute_distance_transform() (vessel_analysis_3d.graph.core.distance_transform_edt_dask method)</a>
+</li>
+      <li><a href="vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D.config_analysis">config_analysis() (vessel_analysis_3d.processing_pipeline.Pipeline3D method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D.config_data">config_data() (vessel_analysis_3d.processing_pipeline.Pipeline3D method)</a>
+</li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.GraphObj.connected_component_subgraphs">connected_component_subgraphs() (vessel_analysis_3d.graph.core.GraphObj method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -212,19 +233,23 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.my_example.Args.DEFAULT_FIRST">DEFAULT_FIRST (vessel_analysis_3d.bin.my_example.Args attribute)</a>
+      <li><a href="vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.run_analysis.Args.DEFAULT_FIRST">DEFAULT_FIRST (vessel_analysis_3d.bin.run_analysis.Args attribute)</a>
+</li>
+      <li><a href="vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.run_analysis.Args.DEFAULT_SECOND">DEFAULT_SECOND (vessel_analysis_3d.bin.run_analysis.Args attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.my_example.Args.DEFAULT_SECOND">DEFAULT_SECOND (vessel_analysis_3d.bin.my_example.Args attribute)</a>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.filament.Filament.dfs_iterative">dfs_iterative() (vessel_analysis_3d.graph.filament.Filament method)</a>
+</li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.distance_transform_edt_dask">distance_transform_edt_dask (class in vessel_analysis_3d.graph.core)</a>
 </li>
   </ul></td>
 </tr></table>
 
-<h2 id="E">E</h2>
+<h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vessel_analysis_3d.html#vessel_analysis_3d.example.Example">Example (class in vessel_analysis_3d.example)</a>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.filament.Filament">Filament (class in vessel_analysis_3d.graph.filament)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -234,11 +259,21 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vessel_analysis_3d.html#vessel_analysis_3d.get_module_version">get_module_version() (in module vessel_analysis_3d)</a>
 </li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.networkx_from_array.get_networkx_graph_from_array">get_networkx_graph_from_array() (in module vessel_analysis_3d.graph.networkx_from_array)</a>
+</li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.measurement.get_z_angle">get_z_angle() (in module vessel_analysis_3d.graph.measurement)</a>
+</li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.measurement.getLength">getLength() (in module vessel_analysis_3d.graph.measurement)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vessel_analysis_3d.html#vessel_analysis_3d.example.Example.get_previous_value">get_previous_value() (vessel_analysis_3d.example.Example method)</a>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.measurement.getRadius">getRadius() (in module vessel_analysis_3d.graph.measurement)</a>
 </li>
-      <li><a href="vessel_analysis_3d.html#vessel_analysis_3d.example.Example.get_value">get_value() (vessel_analysis_3d.example.Example method)</a>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.measurement.getVolume">getVolume() (in module vessel_analysis_3d.graph.measurement)</a>
+</li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.measurement.getVolumeCylinder">getVolumeCylinder() (in module vessel_analysis_3d.graph.measurement)</a>
+</li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.GraphObj">GraphObj (class in vessel_analysis_3d.graph.core)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -246,7 +281,7 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.my_example.main">main() (in module vessel_analysis_3d.bin.my_example)</a>
+      <li><a href="vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.run_analysis.main">main() (in module vessel_analysis_3d.bin.run_analysis)</a>
 </li>
       <li>
     module
@@ -256,18 +291,78 @@
 </li>
         <li><a href="vessel_analysis_3d.bin.html#module-vessel_analysis_3d.bin">vessel_analysis_3d.bin</a>
 </li>
-        <li><a href="vessel_analysis_3d.bin.html#module-vessel_analysis_3d.bin.my_example">vessel_analysis_3d.bin.my_example</a>
+        <li><a href="vessel_analysis_3d.bin.html#module-vessel_analysis_3d.bin.run_analysis">vessel_analysis_3d.bin.run_analysis</a>
 </li>
-        <li><a href="vessel_analysis_3d.html#module-vessel_analysis_3d.example">vessel_analysis_3d.example</a>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph">vessel_analysis_3d.graph</a>
+</li>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph.core">vessel_analysis_3d.graph.core</a>
+</li>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph.filament">vessel_analysis_3d.graph.filament</a>
+</li>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph.measurement">vessel_analysis_3d.graph.measurement</a>
+</li>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph.networkx_from_array">vessel_analysis_3d.graph.networkx_from_array</a>
+</li>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph.stats_reporting">vessel_analysis_3d.graph.stats_reporting</a>
+</li>
+        <li><a href="vessel_analysis_3d.html#module-vessel_analysis_3d.processing_pipeline">vessel_analysis_3d.processing_pipeline</a>
 </li>
       </ul></li>
   </ul></td>
 </tr></table>
 
-<h2 id="U">U</h2>
+<h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vessel_analysis_3d.html#vessel_analysis_3d.example.Example.update_value">update_value() (vessel_analysis_3d.example.Example method)</a>
+      <li><a href="vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D">Pipeline3D (class in vessel_analysis_3d.processing_pipeline)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D.process_one_file">process_one_file() (vessel_analysis_3d.processing_pipeline.Pipeline3D static method)</a>
+</li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.GraphObj.prune_and_analyze">prune_and_analyze() (vessel_analysis_3d.graph.core.GraphObj method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.report_everything">report_everything() (in module vessel_analysis_3d.graph.stats_reporting)</a>
+</li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.reportAllFilStats">reportAllFilStats() (in module vessel_analysis_3d.graph.stats_reporting)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.reportAllStats">reportAllStats() (in module vessel_analysis_3d.graph.stats_reporting)</a>
+</li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.reportBranchesBrPt">reportBranchesBrPt() (in module vessel_analysis_3d.graph.stats_reporting)</a>
+</li>
+      <li><a href="vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D.run">run() (vessel_analysis_3d.processing_pipeline.Pipeline3D method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.save_everything">save_everything() (in module vessel_analysis_3d.graph.stats_reporting)</a>
+</li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.saveAllFilStatsAsCSV">saveAllFilStatsAsCSV() (in module vessel_analysis_3d.graph.stats_reporting)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.saveAllStatsAsCSV">saveAllStatsAsCSV() (in module vessel_analysis_3d.graph.stats_reporting)</a>
+</li>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.saveBranchesBrPtAsCSV">saveBranchesBrPtAsCSV() (in module vessel_analysis_3d.graph.stats_reporting)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.GraphObj.top_endPts_vs_bottom_endPts">top_endPts_vs_bottom_endPts() (vessel_analysis_3d.graph.core.GraphObj method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -275,8 +370,6 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vessel_analysis_3d.html#vessel_analysis_3d.example.Example.values">values (vessel_analysis_3d.example.Example property)</a>
-</li>
       <li>
     vessel_analysis_3d
 
@@ -291,20 +384,62 @@
         <li><a href="vessel_analysis_3d.bin.html#module-vessel_analysis_3d.bin">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    vessel_analysis_3d.bin.my_example
+    vessel_analysis_3d.bin.run_analysis
 
       <ul>
-        <li><a href="vessel_analysis_3d.bin.html#module-vessel_analysis_3d.bin.my_example">module</a>
+        <li><a href="vessel_analysis_3d.bin.html#module-vessel_analysis_3d.bin.run_analysis">module</a>
 </li>
       </ul></li>
       <li>
-    vessel_analysis_3d.example
+    vessel_analysis_3d.graph
 
       <ul>
-        <li><a href="vessel_analysis_3d.html#module-vessel_analysis_3d.example">module</a>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph">module</a>
+</li>
+      </ul></li>
+      <li>
+    vessel_analysis_3d.graph.core
+
+      <ul>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph.core">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    vessel_analysis_3d.graph.filament
+
+      <ul>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph.filament">module</a>
+</li>
+      </ul></li>
+      <li>
+    vessel_analysis_3d.graph.measurement
+
+      <ul>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph.measurement">module</a>
+</li>
+      </ul></li>
+      <li>
+    vessel_analysis_3d.graph.networkx_from_array
+
+      <ul>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph.networkx_from_array">module</a>
+</li>
+      </ul></li>
+      <li>
+    vessel_analysis_3d.graph.stats_reporting
+
+      <ul>
+        <li><a href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph.stats_reporting">module</a>
+</li>
+      </ul></li>
+      <li>
+    vessel_analysis_3d.processing_pipeline
+
+      <ul>
+        <li><a href="vessel_analysis_3d.html#module-vessel_analysis_3d.processing_pipeline">module</a>
 </li>
       </ul></li>
   </ul></td>

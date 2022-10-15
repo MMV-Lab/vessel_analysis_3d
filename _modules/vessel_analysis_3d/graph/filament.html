@@ -1,0 +1,746 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>vessel_analysis_3d.graph.filament &mdash; 3D Vascular Structure Analysis 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> 3D Vascular Structure Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../vessel_analysis_3d.html">vessel_analysis_3d package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.bin.html">vessel_analysis_3d.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.graph.html">vessel_analysis_3d.graph package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#module-vessel_analysis_3d.processing_pipeline">vessel_analysis_3d.processing_pipeline module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D"><code class="docutils literal notranslate"><span class="pre">Pipeline3D</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#module-vessel_analysis_3d">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.html#vessel_analysis_3d.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">3D Vascular Structure Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../vessel_analysis_3d.html">vessel_analysis_3d</a> &raquo;</li>
+        
+      <li>vessel_analysis_3d.graph.filament</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for vessel_analysis_3d.graph.filament</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">dask.array</span> <span class="k">as</span> <span class="nn">da</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span>
+<span class="kn">from</span> <span class="nn">geomdl</span> <span class="kn">import</span> <span class="n">knotvector</span>
+
+<span class="kn">from</span> <span class="nn">.measurement</span> <span class="kn">import</span> <span class="n">getLength</span><span class="p">,</span> <span class="n">getVolumeCylinder</span><span class="p">,</span> <span class="n">getVolume</span><span class="p">,</span> <span class="n">getRadius</span><span class="p">,</span> <span class="n">get_z_angle</span>
+
+
+<div class="viewcode-block" id="Filament"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.filament.Filament">[docs]</a><span class="k">class</span> <span class="nc">Filament</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find statistics on a graph of a skeleton</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : dictionary of lists (adjacency list) with key as node and value = list with its neighboring nodes</span>
+
+<span class="sd">    start : list of coordinates</span>
+<span class="sd">        beginning point for DFS (must be an end point)</span>
+<span class="sd">        3D: [z, y, x]   2D: [y, x]</span>
+
+<span class="sd">    skelRadii : array containing the distance to the closest background point (=radius)</span>
+
+<span class="sd">    pixelDimensions : list of pixel dimensions [z, y, x]</span>
+
+<span class="sd">    lengthLimit : float</span>
+<span class="sd">        minimum length (all branches below this length will be removed)</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Filament.endPtsList - A list containing all nodes with only one other node connected to them</span>
+
+<span class="sd">    Filament.branchPtsList - A list containing all nodes with more than 2 nodes connected to them</span>
+
+<span class="sd">    Filament.segmentsDict - A dictionary containing all segments (path from branch/end point to branch/end point)</span>
+<span class="sd">        with key as segment index (start node, end node) and value = list of nodes in segment</span>
+
+<span class="sd">    Filament.lengthDict - A dictionary with key as segment index (start node, end node) and</span>
+<span class="sd">        value = length of the segment</span>
+
+<span class="sd">    Filament.straightnessDict - A dictionary with key as segment index (start node, end node) and</span>
+<span class="sd">        value = straightness of the segment</span>
+
+<span class="sd">    Filament.degreeDict - A dictionary with key as segment index (start node, end node) and</span>
+<span class="sd">        value = segment branching angle</span>
+
+<span class="sd">    Filament.diameterDict - A dictionary with key as segment index (start node, end node) and</span>
+<span class="sd">        value = avg diameter of the segment</span>
+
+<span class="sd">    Filament.volumeDict - A dictionary with key as segment index (start node, end node) and</span>
+<span class="sd">        value = volume of the segment</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    --------</span>
+<span class="sd">    straightness = curveDisplacement / curveLength</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">graph</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">,</span>
+        <span class="n">skelRadii</span><span class="p">,</span>
+        <span class="n">pixelDimensions</span><span class="p">,</span>
+        <span class="n">lengthLimit</span><span class="p">,</span>
+        <span class="n">diaScale</span><span class="p">,</span>
+        <span class="n">branchingThreshold</span><span class="p">,</span>
+        <span class="n">expFlag</span><span class="p">,</span>
+        <span class="n">smallRAMmode</span><span class="p">,</span>
+        <span class="n">fileName</span><span class="p">,</span>
+        <span class="n">removeBorderEndPts</span><span class="p">,</span>
+        <span class="n">removeEndPtsFromSmallFilaments</span><span class="p">,</span>
+        <span class="n">interpolate</span><span class="p">,</span>
+        <span class="n">cut_neighbor_brpt_segs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skelRadii</span> <span class="o">=</span> <span class="n">skelRadii</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span> <span class="o">=</span> <span class="n">pixelDimensions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lengthLim</span> <span class="o">=</span> <span class="n">lengthLimit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diaScale</span> <span class="o">=</span> <span class="n">diaScale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">branchingThr</span> <span class="o">=</span> <span class="n">branchingThreshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expFlag</span> <span class="o">=</span> <span class="n">expFlag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smallRAMmode</span> <span class="o">=</span> <span class="n">smallRAMmode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="n">fileName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">removeBorderEndPts</span> <span class="o">=</span> <span class="n">removeBorderEndPts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">removeEndPtsFromSmallFilaments</span> <span class="o">=</span> <span class="n">removeEndPtsFromSmallFilaments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interpolate</span> <span class="o">=</span> <span class="n">interpolate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cut_neighbor_brpt_segs</span> <span class="o">=</span> <span class="n">cut_neighbor_brpt_segs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_predDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compTime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocessTime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocBranches</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocEndPts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># dictionary containing all segment statistics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Filament.dfs_iterative"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.filament.Filament.dfs_iterative">[docs]</a>    <span class="k">def</span> <span class="nf">dfs_iterative</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterate over the graph in a depth-first-search. If a branch or end point is found, retrieve the segment</span>
+<span class="sd">        and calculate its statistics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">visited</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(),</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">]</span>
+        <span class="k">while</span> <span class="n">stack</span><span class="p">:</span>
+            <span class="n">vertex</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">vertex</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+                <span class="n">visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">vertex</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">neighbor</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_predDict</span><span class="p">[</span><span class="n">neighbor</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertex</span>
+                        <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="p">(</span>
+                        <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">visited</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predDict</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="o">==</span> <span class="n">neighbor</span>
+                    <span class="p">):</span>  <span class="c1"># cycle found</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">neighbor</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># neighbor is branch point</span>
+                            <span class="n">oldPred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predDict</span><span class="p">[</span><span class="n">neighbor</span><span class="p">]</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_predDict</span><span class="p">[</span>
+                                <span class="n">neighbor</span>
+                            <span class="p">]</span> <span class="o">=</span> <span class="n">vertex</span>  <span class="c1"># change predecessor to get segment of cycle</span>
+                            <span class="n">segment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getSegment</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_predDict</span><span class="p">[</span>
+                                <span class="n">neighbor</span>
+                            <span class="p">]</span> <span class="o">=</span> <span class="n">oldPred</span>  <span class="c1"># change back to old predecessor</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_setSegStats</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">interpolate</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">vertex</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># end point found</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">vertex</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
+                        <span class="n">segment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getSegment</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_setSegStats</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">interpolate</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">vertex</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># branch point found</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">vertex</span><span class="p">])</span>
+                    <span class="n">segment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getSegment</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_setSegStats</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">interpolate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">startTime</span>
+
+        <span class="c1"># postprocessing</span>
+        <span class="n">postprocStart</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_removeSmallAndSegmentsBelowDiameterLengthRatio</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cut_neighbor_brpt_segs</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">removeBorderEndPts</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_removeBorderPtsFromEndPts</span><span class="p">()</span>  <span class="c1"># remove image border points from end points list</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">removeEndPtsFromSmallFilaments</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="n">endPtsToRemove</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span>
+                <span class="k">for</span> <span class="n">endPt</span> <span class="ow">in</span> <span class="n">endPtsToRemove</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">endPt</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocessTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">postprocStart</span>
+
+        <span class="c1"># add number of terminal and branch points to segments dictionary</span>
+        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">seg</span><span class="p">][</span><span class="s2">&quot;terminal Points&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">seg</span><span class="p">][</span><span class="s2">&quot;branching Points&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">seg</span><span class="p">][</span><span class="s2">&quot;terminal Points&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">seg</span><span class="p">][</span><span class="s2">&quot;branching Points&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">seg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">seg</span><span class="p">][</span><span class="s2">&quot;terminal Points&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">seg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">seg</span><span class="p">][</span><span class="s2">&quot;branching Points&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+    <span class="c1">#############################</span>
+    <span class="c1">### Segment Interpolation ###</span>
+    <span class="c1">#############################</span>
+    <span class="c1"># Build interpolation delta</span>
+    <span class="k">def</span> <span class="nf">_delta_calc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_verts</span><span class="p">,</span> <span class="n">vis_radius</span><span class="p">):</span>
+        <span class="c1"># base = 3 if num_verts &gt; 50 else 2</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">num_verts</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">num_verts</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">num_verts</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">or</span> <span class="p">(</span><span class="n">vis_radius</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">num_verts</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">):</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">delta</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">delta</span>
+
+    <span class="k">def</span> <span class="nf">_seg_interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_coords</span><span class="p">,</span> <span class="n">vis_radius</span><span class="p">):</span>
+        <span class="c1"># Find basis-spline (BSpline) of points to smooth jaggedness of skeleton.</span>
+        <span class="c1"># The resources I used to learn about BSplines can be examined below:</span>
+        <span class="c1"># https://web.mit.edu/hyperbook/Patrikalakis-Maekawa-Cho/node17.html</span>
+        <span class="c1"># http://learnwebgl.brown37.net/07_cameras/points_along_a_path.html</span>
+        <span class="c1"># http://www.independent-software.com/determining-coordinates-on-a-html-canvas-bezier-curve.html</span>
+
+        <span class="c1"># Set appropriate degree of our BSpline</span>
+        <span class="n">num_verts</span> <span class="o">=</span> <span class="n">point_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">num_verts</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">spline_degree</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">spline_degree</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_verts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># The optimal number of interpolated segment points for visualization was determined emperically as a trade-off value between ground-truth length and computational costs.</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delta_calc</span><span class="p">(</span><span class="n">num_verts</span><span class="p">,</span> <span class="n">vis_radius</span><span class="p">)</span>
+
+        <span class="c1"># Find the segment length based on our cubic BSpline.</span>
+        <span class="c1"># https://github.com/kawache/Python-B-spline-examples</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># U</span>
+
+        <span class="c1"># Scipy knot vector format</span>
+        <span class="n">knots</span> <span class="o">=</span> <span class="n">knotvector</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">spline_degree</span><span class="p">,</span> <span class="n">num_verts</span><span class="p">)</span>  <span class="c1"># Knotvector</span>
+        <span class="n">tck</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">knots</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">point_coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">point_coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">point_coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]],</span>
+            <span class="n">spline_degree</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="n">coords_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">interpolate</span><span class="o">.</span><span class="n">splev</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">tck</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">return</span> <span class="n">coords_list</span>
+
+    <span class="k">def</span> <span class="nf">_getSegment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find the segment of a branch or end node by iterating over its predecessors</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node : list of node coordinates</span>
+<span class="sd">            3D: [z, y, x]   2D: [y, x]</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        segmentList : list of nodes in the segment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">segmentList</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predDict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="p">):</span>  <span class="c1"># may happen due to postprocessing removing predecessors of old branching points</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">segmentList</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">segmentList</span>
+
+    <span class="k">def</span> <span class="nf">_getBranchingDegree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.25</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the branching degree of a segment</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        segment : list</span>
+<span class="sd">            list of nodes in the segment</span>
+
+<span class="sd">        factor : float</span>
+<span class="sd">            length factor used for calculating the vectors of the segments</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        degree : float</span>
+<span class="sd">            degree between the vectors of the segment and it&#39;s predecessor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">segPredList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getSegment</span><span class="p">(</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">segPredList</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Null&quot;</span>
+        <span class="n">segPredList</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+        <span class="c1"># take neighboring points from branching point</span>
+        <span class="k">if</span> <span class="n">factor</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">segPredPt</span> <span class="o">=</span> <span class="n">segPredList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">segPt</span> <span class="o">=</span> <span class="n">segment</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># take half of the segments from branching point</span>
+        <span class="k">elif</span> <span class="n">factor</span> <span class="o">==</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="n">segPredPt</span> <span class="o">=</span> <span class="n">segPredList</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">segPredList</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)]</span>
+            <span class="n">segPt</span> <span class="o">=</span> <span class="n">segment</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)]</span>
+        <span class="c1"># take the whole segment from branching point</span>
+        <span class="k">elif</span> <span class="n">factor</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">segPredPt</span> <span class="o">=</span> <span class="n">segPredList</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segPredList</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">):</span>  <span class="c1"># in case of a circle, take pre-last point</span>
+                <span class="n">segPt</span> <span class="o">=</span> <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">segPt</span> <span class="o">=</span> <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># take points according to the factor of the segment lengths</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># determine point of predecessor</span>
+            <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">segPredList</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">segPredList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">segPredPt</span> <span class="o">=</span> <span class="n">segPredList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">segPredPt</span> <span class="o">=</span> <span class="n">segPredList</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">segPredList</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)]</span>
+            <span class="c1"># determine point of segment</span>
+            <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">segPt</span> <span class="o">=</span> <span class="n">segment</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">segment</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)]</span> <span class="o">==</span> <span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="p">):</span>  <span class="c1"># in case of a circle, take pre-last point</span>
+                    <span class="n">segPt</span> <span class="o">=</span> <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">segPt</span> <span class="o">=</span> <span class="n">segment</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)]</span>
+        <span class="n">segPredVect</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">segPredPt</span><span class="p">,</span> <span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+        <span class="n">segPredVect</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">segPredVect</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span><span class="p">)]</span>
+        <span class="n">segVect</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">segPt</span><span class="p">)]</span>
+        <span class="n">segVect</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">segVect</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span><span class="p">)]</span>
+
+        <span class="n">cosine_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">segPredVect</span><span class="p">,</span> <span class="n">segVect</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">segPredVect</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">segVect</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">cosine_angle</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_setSegStats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">interpolate</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the statistics for a segment</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        segment : list</span>
+<span class="sd">            list of nodes in the segment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">segment</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallRAMmode</span><span class="p">:</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="n">getRadius</span><span class="p">(</span>
+                <span class="n">da</span><span class="o">.</span><span class="n">from_zarr</span><span class="p">(</span>
+                    <span class="s2">&quot;tmp_zarr&quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">+</span> <span class="s2">&quot;_radiusMatrix.zarr&quot;</span>
+                <span class="p">),</span>
+                <span class="n">segment</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="n">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">skelRadii</span><span class="p">,</span> <span class="n">segment</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">interpolate</span><span class="p">:</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seg_interpolate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">segment</span><span class="p">),</span> <span class="n">radius</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">segment</span>
+
+        <span class="c1"># calculate straightness</span>
+        <span class="n">vect</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])]</span>
+        <span class="n">vect</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">vect</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span><span class="p">)</span>
+        <span class="p">]</span>  <span class="c1"># multiply pixel length with pixel dimension</span>
+        <span class="n">curveDisplacement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vect</span><span class="p">)</span>
+
+        <span class="c1"># calculate segment length</span>
+        <span class="n">segLength</span> <span class="o">=</span> <span class="n">getLength</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span><span class="p">)</span>
+
+        <span class="c1"># calculate segment volume</span>
+        <span class="k">if</span> <span class="n">interpolate</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallRAMmode</span><span class="p">:</span>
+                <span class="n">volume</span> <span class="o">=</span> <span class="n">getVolume</span><span class="p">(</span>
+                    <span class="n">da</span><span class="o">.</span><span class="n">from_zarr</span><span class="p">(</span>
+                        <span class="s2">&quot;tmp_zarr&quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">+</span> <span class="s2">&quot;_radiusMatrix.zarr&quot;</span>
+                    <span class="p">),</span>
+                    <span class="n">coords</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">volume</span> <span class="o">=</span> <span class="n">getVolumeCylinder</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">segLength</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">volume</span> <span class="o">=</span> <span class="n">getVolumeCylinder</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">segLength</span><span class="p">)</span>
+
+        <span class="c1"># calculate branching degree</span>
+        <span class="n">branchingDegree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getBranchingDegree</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">branchingThr</span><span class="p">)</span>
+
+        <span class="c1"># fill dictionary for csv file containing all segment statistics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;diameter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">radius</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;straightness&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">curveDisplacement</span> <span class="o">/</span> <span class="n">segLength</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">segLength</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">volume</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]][</span>
+            <span class="s2">&quot;branchingAngle&quot;</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">branchingDegree</span>
+
+        <span class="c1"># experimental statistics</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expFlag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">zAngle</span> <span class="o">=</span> <span class="n">get_z_angle</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;zAngle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">zAngle</span>
+
+    <span class="k">def</span> <span class="nf">_removeBorderPtsFromEndPts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes all end points which are image border points from end points list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">endPtsToRemove</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ndims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skelRadii</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="k">if</span> <span class="n">ndims</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skelRadii</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skelRadii</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skelRadii</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">endPt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">endPt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">z</span>
+                    <span class="ow">or</span> <span class="n">endPt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span>
+                    <span class="ow">or</span> <span class="n">endPt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span>
+                    <span class="ow">or</span> <span class="n">endPt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+                    <span class="ow">or</span> <span class="n">endPt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+                    <span class="ow">or</span> <span class="n">endPt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+                <span class="p">):</span>
+                    <span class="n">endPtsToRemove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">endPt</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">postprocEndPts</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">ndims</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skelRadii</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skelRadii</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">endPt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">endPt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span> <span class="ow">or</span> <span class="n">endPt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span> <span class="ow">or</span> <span class="n">endPt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">endPt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">endPtsToRemove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">endPt</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">postprocEndPts</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">endPt</span> <span class="ow">in</span> <span class="n">endPtsToRemove</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">endPt</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_deletePath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_removeEdge</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_removeEdge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_removeSegments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+        <span class="n">brPtCandidates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_deletePath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="c1"># add branch points to possible deletable candidates</span>
+            <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="p">:</span>
+                <span class="n">brPtCandidates</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="p">:</span>
+                <span class="n">brPtCandidates</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># check if branch points still remain branch points after postprocessing</span>
+        <span class="k">for</span> <span class="n">brPt</span> <span class="ow">in</span> <span class="n">brPtCandidates</span><span class="p">:</span>
+            <span class="c1"># branch point becomes normal point connecting two segments together</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">brPt</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="p">[</span><span class="n">brPt</span><span class="p">]</span>
+                <span class="c1"># find both segments connected by the branch pt</span>
+                <span class="n">segments</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">v</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span> <span class="ow">or</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span>
+                <span class="p">]</span>
+                <span class="c1"># delete old segments from segment dictionaries (either one segment if circle otherwise 2 segments)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">segKey1</span> <span class="o">=</span> <span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">segKey1</span><span class="p">]</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey1</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span>
+                    <span class="p">):</span>  <span class="c1"># if segment is not a circle delete second segment from dictionaries</span>
+                        <span class="n">segKey2</span> <span class="o">=</span> <span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">segKey2</span><span class="p">]</span>
+                        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey2</span><span class="p">]</span>
+                        <span class="c1"># combine both segments to one segment and calculate its statistics</span>
+                        <span class="k">if</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span> <span class="ow">and</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span><span class="p">:</span>
+                            <span class="n">combSegments</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+                        <span class="k">elif</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span> <span class="ow">and</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span><span class="p">:</span>
+                            <span class="n">combSegments</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+                        <span class="c1"># in this case the predecessor of the brPt has been deleted</span>
+                        <span class="k">elif</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span> <span class="ow">and</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span><span class="p">:</span>
+                            <span class="n">combSegments</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+                        <span class="k">elif</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span> <span class="ow">and</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span><span class="p">:</span>
+                            <span class="n">combSegments</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_setSegStats</span><span class="p">(</span><span class="n">combSegments</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">interpolate</span><span class="p">)</span>
+            <span class="c1"># branch point becomes end point</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">brPt</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="p">[</span><span class="n">brPt</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">brPt</span><span class="p">)</span>
+            <span class="c1"># all branches of a branch point were removed =&gt; delete branch point from dict</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">brPt</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="p">[</span><span class="n">brPt</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_removeSmallAndSegmentsBelowDiameterLengthRatio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cut_neighbor_brpt_segs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes all branches with a length below a specified limit and length below the scaled diameter</span>
+<span class="sd">        and removes their statistics from the dictionaries. After branch removal branch points are reassigned</span>
+<span class="sd">        (either they remain branch point, become normal point or end point) and statistics of new segments</span>
+<span class="sd">        are recalculated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># find segments with endpoint(s) in lengthDict which are below length/diameter ratio</span>
+        <span class="n">keysToRemoveList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">segKey</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cut_neighbor_brpt_segs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span>
+                    <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">diaScale</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey</span><span class="p">][</span><span class="s2">&quot;diameter&quot;</span><span class="p">]</span>
+                    <span class="ow">and</span> <span class="p">(</span><span class="n">segKey</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span> <span class="ow">or</span> <span class="n">segKey</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="p">)</span>
+                <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lengthLim</span><span class="p">):</span>
+                    <span class="n">keysToRemoveList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">segKey</span><span class="p">)</span>
+            <span class="c1"># dont cut segments which are 2 branching points with length below pixel dimension</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
+                    <span class="n">segKey</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span>
+                    <span class="ow">and</span> <span class="n">segKey</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lengthLim</span>
+                <span class="p">):</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span>
+                        <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">diaScale</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey</span><span class="p">][</span><span class="s2">&quot;diameter&quot;</span><span class="p">]</span>
+                        <span class="ow">and</span> <span class="p">(</span>
+                            <span class="n">segKey</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span> <span class="ow">or</span> <span class="n">segKey</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lengthLim</span><span class="p">):</span>
+                        <span class="n">keysToRemoveList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">segKey</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocBranches</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keysToRemoveList</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_removeSegments</span><span class="p">(</span><span class="n">keysToRemoveList</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Jianxu Chen.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

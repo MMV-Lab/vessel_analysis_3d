@@ -8,14 +8,15 @@ Subpackages
    :maxdepth: 4
 
    vessel_analysis_3d.bin
+   vessel_analysis_3d.graph
 
 Submodules
 ----------
 
-vessel\_analysis\_3d.example module
------------------------------------
+vessel\_analysis\_3d.processing\_pipeline module
+------------------------------------------------
 
-.. automodule:: vessel_analysis_3d.example
+.. automodule:: vessel_analysis_3d.processing_pipeline
    :members:
    :undoc-members:
    :show-inheritance:

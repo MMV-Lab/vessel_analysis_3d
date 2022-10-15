@@ -4,10 +4,10 @@ vessel\_analysis\_3d.bin package
 Submodules
 ----------
 
-vessel\_analysis\_3d.bin.my\_example module
--------------------------------------------
+vessel\_analysis\_3d.bin.run\_analysis module
+---------------------------------------------
 
-.. automodule:: vessel_analysis_3d.bin.my_example
+.. automodule:: vessel_analysis_3d.bin.run_analysis
    :members:
    :undoc-members:
    :show-inheritance:

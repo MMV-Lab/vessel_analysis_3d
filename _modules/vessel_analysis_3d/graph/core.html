@@ -1,0 +1,637 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>vessel_analysis_3d.graph.core &mdash; 3D Vascular Structure Analysis 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> 3D Vascular Structure Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../vessel_analysis_3d.html">vessel_analysis_3d package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.bin.html">vessel_analysis_3d.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.graph.html">vessel_analysis_3d.graph package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#module-vessel_analysis_3d.processing_pipeline">vessel_analysis_3d.processing_pipeline module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D"><code class="docutils literal notranslate"><span class="pre">Pipeline3D</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#module-vessel_analysis_3d">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.html#vessel_analysis_3d.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">3D Vascular Structure Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../vessel_analysis_3d.html">vessel_analysis_3d</a> &raquo;</li>
+        
+      <li>vessel_analysis_3d.graph.core</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for vessel_analysis_3d.graph.core</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">distance_transform_edt</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">dask.array</span> <span class="k">as</span> <span class="nn">da</span>
+
+<span class="c1"># from dask.distributed import Client</span>
+<span class="kn">from</span> <span class="nn">.filament</span> <span class="kn">import</span> <span class="n">Filament</span>
+<span class="kn">from</span> <span class="nn">.measurement</span> <span class="kn">import</span> <span class="n">getLength</span>
+
+
+<div class="viewcode-block" id="distance_transform_edt_dask"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.distance_transform_edt_dask">[docs]</a><span class="k">class</span> <span class="nc">distance_transform_edt_dask</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sampling</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampling</span> <span class="o">=</span> <span class="n">sampling</span>
+
+<div class="viewcode-block" id="distance_transform_edt_dask.compute_distance_transform"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.distance_transform_edt_dask.compute_distance_transform">[docs]</a>    <span class="k">def</span> <span class="nf">compute_distance_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">distance_transform_edt</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">sampling</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sampling</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="GraphObj"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.GraphObj">[docs]</a><span class="k">class</span> <span class="nc">GraphObj</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find statistics on a graph of a skeleton</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : networkx graph</span>
+<span class="sd">        networkx graph of a skeleton</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Graph.segmentsTotal - total number of segments (branches between branch/end point and branch/end point)</span>
+
+<span class="sd">    Graph.segmentsDict - A dictionary with the nth disjoint graph as the key containing a dictionary</span>
+<span class="sd">                            with key as the segment index (start node, end node) and value = list of nodes</span>
+
+<span class="sd">    Graph.lengthDict - A dictionary with the nth disjoint graph as the key containing a dictionary</span>
+<span class="sd">                            with key as the segment index (start node, end node) and value = length of the segment</span>
+
+<span class="sd">    Graph.sumLengthDict - A dictionary with the nth disjoint graph as the key and the total length as the value</span>
+
+<span class="sd">    Graph.straightnessDict - A dictionary with the nth disjoint graph as the key containing a dictionary</span>
+<span class="sd">                                with key as the segment index (start node, end node) and</span>
+<span class="sd">                                value = straightness of the segment</span>
+
+<span class="sd">    Graph.branchPointsDict - A dictionary with the nth disjoint graph as the key and the list of</span>
+<span class="sd">                                branch points as the value</span>
+
+<span class="sd">    Graph.endPointsDict - A dictionary with the nth disjoint graph as the key and the list of</span>
+<span class="sd">                                end points as the value</span>
+
+<span class="sd">    Graph.countBranchPointsDict - A dictionary with the nth disjoint graph as the key and the number of</span>
+<span class="sd">                                    branch points as the value</span>
+
+<span class="sd">    Graph.countEndPointsDict -  A dictionary with the nth disjoint graph as the key and the number of</span>
+<span class="sd">                                    end points as the value</span>
+
+<span class="sd">    Graph.degreeDict - A dictionary with the nth disjoint graph as the key containing a dictionary</span>
+<span class="sd">                            with key as the segment index (start node, end node) and value = segment branching angle</span>
+
+<span class="sd">    Graph.volumeDict - A dictionary with the nth disjoint graph as the key containing a dictionary</span>
+<span class="sd">                            with key as the segment index (start node, end node) and value = volume of the segment</span>
+
+<span class="sd">    Graph.diameterDict - A dictionary with the nth disjoint graph as the key containing a dictionary</span>
+<span class="sd">                            with key as the segment index (start node, end node) and value = avg diameter of the segment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">segmentation</span><span class="p">,</span>
+        <span class="n">skeleton</span><span class="p">,</span>
+        <span class="n">networkxGraph</span><span class="p">,</span>
+        <span class="n">pixelDimensions</span><span class="p">,</span>
+        <span class="n">pruningScale</span><span class="p">,</span>
+        <span class="n">lengthLimit</span><span class="p">,</span>
+        <span class="n">diaScale</span><span class="p">,</span>
+        <span class="n">branchingThreshold</span><span class="p">,</span>
+        <span class="n">removeBorderEndPts</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">removeEndPtsFromSmallFilaments</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">interpolate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">cut_neighbor_brpt_segs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">infoFile</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">expFlag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">smallRAMmode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">fileName</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skeleton</span> <span class="o">=</span> <span class="n">skeleton</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">networkxGraph</span> <span class="o">=</span> <span class="n">networkxGraph</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span> <span class="o">=</span> <span class="n">pixelDimensions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prunScale</span> <span class="o">=</span> <span class="n">pruningScale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lengthLim</span> <span class="o">=</span> <span class="n">lengthLimit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diaScale</span> <span class="o">=</span> <span class="n">diaScale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">branchingThresh</span> <span class="o">=</span> <span class="n">branchingThreshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">removeBorderEndPts</span> <span class="o">=</span> <span class="n">removeBorderEndPts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">removeEndPtsFromSmallFilaments</span> <span class="o">=</span> <span class="n">removeEndPtsFromSmallFilaments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interpolate</span> <span class="o">=</span> <span class="n">interpolate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cut_neighbor_brpt_segs</span> <span class="o">=</span> <span class="n">cut_neighbor_brpt_segs</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">expFlag</span> <span class="o">=</span> <span class="n">expFlag</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">expFlag</span>
+        <span class="p">),</span> <span class="s2">&quot;experiment_flag is a legacy parameter, and can only be False&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">smallRAMmode</span> <span class="o">=</span> <span class="n">smallRAMmode</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">smallRAMmode</span><span class="p">,</span> <span class="s2">&quot;smallRAMmode is not supported yet&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="n">fileName</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">fileName</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">),</span> <span class="s2">&quot;fileName will only be used after smallRAMmode is added&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">infoFile</span> <span class="o">=</span> <span class="n">infoFile</span>
+        <span class="k">assert</span> <span class="n">infoFile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;infoFile is a legacy parameter, and can only be None&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">countSegmentsDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">branchPointsDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endPointsDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">countBranchPointsDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">countEndPointsDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compTime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postProcessTime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endPtsTopVsBottom</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodesFinal</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;distTransformation&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;pruning&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;dfsComp&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;postProcessing&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;statCalculation&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;pruning&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;filaments&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;segments&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;postProcBranches&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;postProcEndPts&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodeDegreeDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">networkxGraph</span><span class="p">))</span>
+        <span class="c1"># dictionaries containing all filament, segment and branch point statistics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segStatsDict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filStatsDict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">branchesBrPtDict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+
+        <span class="c1"># calculate distance transform matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallRAMmode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distTransf</span> <span class="o">=</span> <span class="n">distance_transform_edt</span><span class="p">(</span>
+                <span class="n">segmentation</span><span class="p">,</span> <span class="n">sampling</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">im_dask</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">segmentation</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">segmentation</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">segmentation</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">segmentation</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="o">&gt;</span> <span class="mi">16777216</span>
+            <span class="p">):</span>
+                <span class="n">im_dask</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">segmentation</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+            <span class="n">edt_func</span> <span class="o">=</span> <span class="n">distance_transform_edt_dask</span><span class="p">(</span><span class="n">sampling</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distTransf</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">map_overlap</span><span class="p">(</span>
+                <span class="n">edt_func</span><span class="o">.</span><span class="n">compute_distance_transform</span><span class="p">,</span>
+                <span class="n">im_dask</span><span class="p">,</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+                <span class="n">depth</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                <span class="n">boundary</span><span class="o">=</span><span class="s2">&quot;reflect&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radiusMatrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distTransf</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">skeleton</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDict</span><span class="p">[</span><span class="s2">&quot;distTransformation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">initTime</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+        <span class="c1"># pruning: delete branches with length below the distance to its closest border</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallRAMmode</span><span class="p">:</span>
+            <span class="c1"># client = Client()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">radiusMatrix</span><span class="o">.</span><span class="n">to_zarr</span><span class="p">(</span>
+                <span class="s2">&quot;tmp_zarr&quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">+</span> <span class="s2">&quot;_radiusMatrix.zarr&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prune</span><span class="p">(</span>
+                <span class="n">da</span><span class="o">.</span><span class="n">from_zarr</span><span class="p">(</span><span class="s2">&quot;tmp_zarr&quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">+</span> <span class="s2">&quot;_radiusMatrix.zarr&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="c1"># client.submit(self._prune, da.from_zarr(&#39;tmp_zarr&#39; + os.sep + self.fileName + &#39;_radiusMatrix.zarr&#39;))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prune</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radiusMatrix</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">filaments</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connected_component_subgraphs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">networkxGraph</span><span class="p">))</span>
+        <span class="c1"># print(&quot;found {} filaments&quot;.format(len(self.filaments)))</span>
+
+<div class="viewcode-block" id="GraphObj.prune_and_analyze"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.GraphObj.prune_and_analyze">[docs]</a>    <span class="k">def</span> <span class="nf">prune_and_analyze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_final_skel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the statistics of a networkx graph</span>
+<span class="sd">        1) go through each subgraph</span>
+<span class="sd">        2) calculate all end points and set one end point as beginning point</span>
+<span class="sd">        3) extract an adjacency dictionary of networkx subgraph</span>
+<span class="sd">        4) calculate the subgraphs statistics with the class Filament</span>
+<span class="sd">        5) save statistics for each filament</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Graph : networkx graph</span>
+<span class="sd">            networkx graph of a skeleton</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># statistic calculation</span>
+        <span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="s2">&quot;filaments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filaments</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ithDisjointGraph</span><span class="p">,</span> <span class="n">subGraphSkeleton</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filaments</span><span class="p">):</span>
+            <span class="n">nodeDegreeDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">subGraphSkeleton</span><span class="p">))</span>
+            <span class="n">endPoints</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">nodeDegreeDict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">endPoints</span><span class="p">:</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">endPoints</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># take random end point as beginning</span>
+                <span class="n">adjacencyDict</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">to_dict_of_lists</span><span class="p">(</span><span class="n">subGraphSkeleton</span><span class="p">)</span>
+                <span class="n">filament</span> <span class="o">=</span> <span class="n">Filament</span><span class="p">(</span>
+                    <span class="n">adjacencyDict</span><span class="p">,</span>
+                    <span class="n">start</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">radiusMatrix</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">lengthLim</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">diaScale</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">branchingThresh</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">expFlag</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">smallRAMmode</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">removeBorderEndPts</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">removeEndPtsFromSmallFilaments</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">interpolate</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cut_neighbor_brpt_segs</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">filament</span><span class="o">.</span><span class="n">dfs_iterative</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span> <span class="o">=</span> <span class="n">filament</span><span class="o">.</span><span class="n">segmentsDict</span>
+
+                <span class="c1"># save nodes of filament after processing</span>
+                <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                <span class="n">nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">nodes</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nodesFinal</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+
+                <span class="c1"># filament may have no segments left after postprocessing</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">countSegmentsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">branchPointsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span> <span class="o">=</span> <span class="n">filament</span><span class="o">.</span><span class="n">brPtsDict</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">endPointsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span> <span class="o">=</span> <span class="n">filament</span><span class="o">.</span><span class="n">endPtsList</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">countBranchPointsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+                        <span class="n">filament</span><span class="o">.</span><span class="n">brPtsDict</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">countEndPointsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filament</span><span class="o">.</span><span class="n">endPtsList</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="s2">&quot;segments&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDict</span><span class="p">[</span><span class="s2">&quot;dfsComp&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">filament</span><span class="o">.</span><span class="n">compTime</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDict</span><span class="p">[</span><span class="s2">&quot;postProcessing&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">filament</span><span class="o">.</span><span class="n">postprocessTime</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="s2">&quot;postProcBranches&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">filament</span><span class="o">.</span><span class="n">postprocBranches</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="s2">&quot;postProcEndPts&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">filament</span><span class="o">.</span><span class="n">postprocEndPts</span>
+
+                    <span class="c1"># fill dictionaries containing all filament, segment and branch point statistics</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">segStatsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span> <span class="o">=</span> <span class="n">filament</span><span class="o">.</span><span class="n">segmentStats</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">filStatsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">][</span>
+                        <span class="s2">&quot;TerminalPoints&quot;</span>
+                    <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">countEndPointsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">filStatsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">][</span>
+                        <span class="s2">&quot;BranchPoints&quot;</span>
+                    <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">countBranchPointsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">filStatsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">][</span>
+                        <span class="s2">&quot;Segments&quot;</span>
+                    <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">countSegmentsDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">branchesBrPtDict</span><span class="p">[</span><span class="n">ithDisjointGraph</span><span class="p">]</span> <span class="o">=</span> <span class="n">filament</span><span class="o">.</span><span class="n">brPtsDict</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="s2">&quot;filaments&quot;</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDict</span><span class="p">[</span><span class="s2">&quot;statCalculation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expFlag</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endPtsTopVsBottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">top_endPts_vs_bottom_endPts</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">infoFile</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_writeInfoFile</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">return_final_skel</span><span class="p">:</span>
+            <span class="c1"># remove nodes which were removed in postprocessing of filaments in the overall graph</span>
+            <span class="n">nodes_graph</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">networkxGraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+            <span class="n">nodes_to_remove</span> <span class="o">=</span> <span class="n">nodes_graph</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodesFinal</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes_to_remove</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">networkxGraph</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">skeleton</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_final_skeleton</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">skeleton</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_final_skeleton</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">skel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">skeleton</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">networkxGraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">):</span>
+            <span class="n">skel</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">skel</span>
+
+    <span class="k">def</span> <span class="nf">_writeInfoFile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infoFile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="n">fieldnames</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="s2">&quot;time(s)&quot;</span><span class="p">,</span> <span class="s2">&quot;comment&quot;</span><span class="p">]</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="n">fieldnames</span><span class="p">)</span>
+
+            <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="s2">&quot;Distance transformation&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;time(s)&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runTimeDict</span><span class="p">[</span><span class="s2">&quot;distTransformation&quot;</span><span class="p">]),</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="s2">&quot;Pruning&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;time(s)&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runTimeDict</span><span class="p">[</span><span class="s2">&quot;pruning&quot;</span><span class="p">]),</span>
+                    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;pruned &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="s2">&quot;pruning&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; branches&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="s2">&quot;DFS calculations&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;time(s)&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runTimeDict</span><span class="p">[</span><span class="s2">&quot;dfsComp&quot;</span><span class="p">],</span> <span class="mi">3</span><span class="p">)),</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="s2">&quot;Postprocessing&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;time(s)&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runTimeDict</span><span class="p">[</span><span class="s2">&quot;postProcessing&quot;</span><span class="p">],</span> <span class="mi">3</span><span class="p">)),</span>
+                    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;removed &quot;</span>
+                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="s2">&quot;postProcBranches&quot;</span><span class="p">])</span>
+                    <span class="o">+</span> <span class="s2">&quot; branches and &quot;</span>
+                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="s2">&quot;postProcEndPts&quot;</span><span class="p">])</span>
+                    <span class="o">+</span> <span class="s2">&quot; end points&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="s2">&quot;Statistic calculation&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;time(s)&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runTimeDict</span><span class="p">[</span><span class="s2">&quot;statCalculation&quot;</span><span class="p">]),</span>
+                    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;filaments=&quot;</span>
+                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="s2">&quot;filaments&quot;</span><span class="p">])</span>
+                    <span class="o">+</span> <span class="s2">&quot; segments=&quot;</span>
+                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="s2">&quot;segments&quot;</span><span class="p">]),</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radiusMat</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This implements the pruning as described by Montero &amp; Lang</span>
+<span class="sd">        Skeleton pruning by contour approximation and the integer medial axis transform.</span>
+<span class="sd">        Computers &amp; Graphics 36, 477-487 (2012).</span>
+<span class="sd">        Branches are removed when |ep - bp|^2 &lt;= s * |f - bp|^2</span>
+<span class="sd">        where ep = end point, bp = branch point, s = scaling factor, f = closest boundary point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">endPtsList</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodeDegreeDict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">branchesToRemove</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">endPt</span> <span class="ow">in</span> <span class="n">endPtsList</span><span class="p">:</span>
+            <span class="n">visited</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(),</span> <span class="p">[</span><span class="n">endPt</span><span class="p">]</span>
+            <span class="n">branch</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">while</span> <span class="n">stack</span><span class="p">:</span>
+                <span class="n">vertex</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">vertex</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+                    <span class="n">visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
+                    <span class="n">branch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
+                    <span class="n">neighbors</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">networkxGraph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">vertex</span><span class="p">)]</span>
+                    <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">neighbor</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+                            <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># branch point found</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="n">getLength</span><span class="p">(</span><span class="n">branch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelDims</span><span class="p">)</span>
+                            <span class="o">&lt;=</span> <span class="n">radiusMat</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">prunScale</span>
+                        <span class="p">):</span>
+                            <span class="n">branchesToRemove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span>
+                        <span class="k">break</span>
+        <span class="c1"># delete branches from adjacency matrix besides branch points</span>
+        <span class="k">for</span> <span class="n">branch</span> <span class="ow">in</span> <span class="n">branchesToRemove</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">branch</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">networkxGraph</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDict</span><span class="p">[</span><span class="s2">&quot;pruning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="s2">&quot;pruning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">branchesToRemove</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GraphObj.connected_component_subgraphs"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.GraphObj.connected_component_subgraphs">[docs]</a>    <span class="k">def</span> <span class="nf">connected_component_subgraphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">G</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">c</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphObj.top_endPts_vs_bottom_endPts"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.core.GraphObj.top_endPts_vs_bottom_endPts">[docs]</a>    <span class="k">def</span> <span class="nf">top_endPts_vs_bottom_endPts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radiusMatrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">top_endPts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">bottom_endPts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">filament</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPointsDict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">countSegmentsDict</span><span class="p">[</span><span class="n">filament</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">endPts</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPointsDict</span><span class="p">[</span><span class="n">filament</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">endPts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">gap</span><span class="p">:</span>
+                        <span class="n">bottom_endPts</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">endPts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">z</span> <span class="o">-</span> <span class="n">gap</span><span class="p">:</span>
+                        <span class="n">top_endPts</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">bottom_endPts</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">top_endPts</span> <span class="o">/</span> <span class="n">bottom_endPts</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="s2">&quot;NULL&quot;</span>
+        <span class="k">return</span> <span class="n">ratio</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Jianxu Chen.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>vessel_analysis_3d.graph.networkx_from_array &mdash; 3D Vascular Structure Analysis 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> 3D Vascular Structure Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../vessel_analysis_3d.html">vessel_analysis_3d package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.bin.html">vessel_analysis_3d.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.graph.html">vessel_analysis_3d.graph package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#module-vessel_analysis_3d.processing_pipeline">vessel_analysis_3d.processing_pipeline module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D"><code class="docutils literal notranslate"><span class="pre">Pipeline3D</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#module-vessel_analysis_3d">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.html#vessel_analysis_3d.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">3D Vascular Structure Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../vessel_analysis_3d.html">vessel_analysis_3d</a> &raquo;</li>
+        
+      <li>vessel_analysis_3d.graph.networkx_from_array</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for vessel_analysis_3d.graph.networkx_from_array</h1><div class="highlight"><pre>
+<span></span><span class="c1"># this is adopted from https://github.com/RUB-Bioinf/VesselExpress/blob/master/VesselExpress/modules/networkx_graph_from_array.py</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">convolve</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">program to look up adjacent elements and calculate degree</span>
+<span class="sd">this dictionary can be used for graph creation</span>
+<span class="sd">since networkx graph based on looking up the array and the</span>
+<span class="sd">adjacent coordinates takes long time. create a dict</span>
+<span class="sd">using dict_of_indices_and_adjacent_coordinates.</span>
+<span class="sd">(-1 -1 -1) (-1 0 -1) (-1 1 -1)</span>
+<span class="sd">(-1 -1 0)  (-1 0 0)  (-1 1 0)</span>
+<span class="sd">(-1 -1 1)  (-1 0 1)  (-1 1 1)</span>
+
+<span class="sd">(0 -1 -1) (0 0 -1) (0 1 -1)</span>
+<span class="sd">(0 -1 0)  (0 0 0)  (0 1 0)</span>
+<span class="sd">(0 -1 1)  (0 0 1)  (0 1 1)</span>
+
+<span class="sd">(1 -1 -1) (1 0 -1) (1 1 -1)</span>
+<span class="sd">(1 -1 0)  (1 0 0)  (1 1 0)</span>
+<span class="sd">(1 -1 1)  (1 0 1)  (1 1 1)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># permutations of (-1, 0, 1) in three/two dimensional tuple format</span>
+<span class="c1"># representing 8 and 26 increments around a pixel at origin (0, 0, 0)</span>
+<span class="c1"># 2nd ordered neighborhood around a voxel/pixel</span>
+<span class="n">LIST_STEP_DIRECTIONS3D</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">LIST_STEP_DIRECTIONS3D</span><span class="o">.</span><span class="n">remove</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+<span class="n">LIST_STEP_DIRECTIONS2D</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">LIST_STEP_DIRECTIONS2D</span><span class="o">.</span><span class="n">remove</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_get_increments</span><span class="p">(</span><span class="n">config_number</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return position of non zero voxels/pixels in the</span>
+<span class="sd">    binary string of config number</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config_number : int64</span>
+<span class="sd">        integer less than 2 ** 26</span>
+
+<span class="sd">    dimensions: int</span>
+<span class="sd">        number of dimensions, can only be 2 or 3</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        a list of incremental direction of a non zero voxel/pixel</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ------</span>
+<span class="sd">    As in the beginning of the program, there are incremental directions</span>
+<span class="sd">    around a voxel at origin (0, 0, 0) which are returned by this function.</span>
+<span class="sd">    config_number is a decimal number representation of 26 binary numbers</span>
+<span class="sd">    around a voxel at the origin in a second ordered neighborhood</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config_number</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span><span class="n">config_number</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dimensions</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="c1"># convert decimal number to a binary string</span>
+        <span class="n">list_step_directions</span> <span class="o">=</span> <span class="n">LIST_STEP_DIRECTIONS3D</span>
+    <span class="k">elif</span> <span class="n">dimensions</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">list_step_directions</span> <span class="o">=</span> <span class="n">LIST_STEP_DIRECTIONS2D</span>
+    <span class="n">neighbor_values</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">config_number</span> <span class="o">&gt;&gt;</span> <span class="n">digit</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x01</span> <span class="k">for</span> <span class="n">digit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="o">**</span><span class="n">dimensions</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">neighbor_value</span> <span class="o">*</span> <span class="n">increment</span>
+        <span class="k">for</span> <span class="n">neighbor_value</span><span class="p">,</span> <span class="n">increment</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">neighbor_values</span><span class="p">,</span> <span class="n">list_step_directions</span><span class="p">)</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_set_adjacency_list</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return position of non zero voxels/pixels in the</span>
+<span class="sd">    binary string of config number</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : numpy array</span>
+<span class="sd">        binary numpy array can only be 2D Or 3D</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict_of_indices_and_adjacent_coordinates: Dictionary</span>
+<span class="sd">        key is the nonzero coordinate in input &quot;arr&quot; and value</span>
+<span class="sd">        is all the position of nonzero coordinates around it</span>
+<span class="sd">        in it&#39;s second order neighborhood</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dimensions</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span>
+    <span class="k">assert</span> <span class="n">dimensions</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;array dimensions must be 2 or 3, they are </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">dimensions</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">dimensions</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="c1"># flipped 3D template in advance</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">[</span>
+                    <span class="p">[</span><span class="mi">33554432</span><span class="p">,</span> <span class="mi">16777216</span><span class="p">,</span> <span class="mi">8388608</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">4194304</span><span class="p">,</span> <span class="mi">2097152</span><span class="p">,</span> <span class="mi">1048576</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">524288</span><span class="p">,</span> <span class="mi">262144</span><span class="p">,</span> <span class="mi">131072</span><span class="p">],</span>
+                <span class="p">],</span>
+                <span class="p">[[</span><span class="mi">65536</span><span class="p">,</span> <span class="mi">32768</span><span class="p">,</span> <span class="mi">16384</span><span class="p">],</span> <span class="p">[</span><span class="mi">8192</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">],</span> <span class="p">[</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">512</span><span class="p">]],</span>
+                <span class="p">[[</span><span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span>
+            <span class="p">],</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># 2 dimensions</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">)</span>
+    <span class="c1"># convert the binary array to a configuration number array of same size</span>
+    <span class="c1"># by convolving with template</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">convolve</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># set the values in convolution result to zero which were zero in &#39;arr&#39;</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">arr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">dict_of_indices_and_adjacent_coordinates</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># list of nonzero tuples</span>
+    <span class="n">non_zeros</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">arr</span><span class="p">)))))</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># if there is just one nonzero element there are no adjacent coordinates</span>
+        <span class="n">dict_of_indices_and_adjacent_coordinates</span><span class="p">[</span><span class="n">non_zeros</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">non_zeros</span><span class="p">:</span>
+            <span class="n">adjacent_coordinate_list</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">increments</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">increments</span> <span class="ow">in</span> <span class="n">_get_increments</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">item</span><span class="p">],</span> <span class="n">dimensions</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">increments</span> <span class="o">!=</span> <span class="p">()</span>
+            <span class="p">]</span>
+            <span class="n">dict_of_indices_and_adjacent_coordinates</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="n">adjacent_coordinate_list</span>
+    <span class="k">return</span> <span class="n">dict_of_indices_and_adjacent_coordinates</span>
+
+
+<span class="k">def</span> <span class="nf">_remove_clique_edges</span><span class="p">(</span><span class="n">networkx_graph</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return 3 vertex clique removed graph</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    networkx_graph : Networkx graph</span>
+<span class="sd">        graph to remove cliques from</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    networkx_graph: Networkx graph</span>
+<span class="sd">        graph with 3 vertex clique edges removed</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ------</span>
+<span class="sd">    Removes the longest edge in a 3 Vertex cliques,</span>
+<span class="sd">    Special case edges are the edges with equal</span>
+<span class="sd">    lengths that form the 3 vertex clique.</span>
+<span class="sd">    Doesn&#39;t deal with any other cliques</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># start = time.time()</span>
+    <span class="n">cliques</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">find_cliques_recursive</span><span class="p">(</span><span class="n">networkx_graph</span><span class="p">)</span>
+    <span class="c1"># all the nodes/vertices of 3 cliques</span>
+    <span class="n">three_vertex_cliques</span> <span class="o">=</span> <span class="p">[</span><span class="n">clq</span> <span class="k">for</span> <span class="n">clq</span> <span class="ow">in</span> <span class="n">cliques</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">clq</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">three_vertex_cliques</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">combination_edges</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">clique</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">clique</span> <span class="ow">in</span> <span class="n">three_vertex_cliques</span>
+        <span class="p">]</span>
+        <span class="n">subgraph_edge_lengths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># different combination of edges in the cliques and their lengths</span>
+        <span class="k">for</span> <span class="n">combinationEdge</span> <span class="ow">in</span> <span class="n">combination_edges</span><span class="p">:</span>
+            <span class="n">subgraph_edge_lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">combinationEdge</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="n">clique_edges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># clique edges to be removed are collected here</span>
+        <span class="c1"># the edges with maximum edge length</span>
+        <span class="k">for</span> <span class="n">main_dim</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">subgraph_edge_lengths</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">item</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">sub_dim</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">length</span> <span class="o">==</span> <span class="nb">max</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+                        <span class="n">clique_edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combination_edges</span><span class="p">[</span><span class="n">main_dim</span><span class="p">][</span><span class="n">sub_dim</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">special_case</span> <span class="o">=</span> <span class="n">combination_edges</span><span class="p">[</span><span class="n">main_dim</span><span class="p">]</span>
+                <span class="n">diff_of_edges</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">num_spcl_edges</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+                    <span class="n">source</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">special_case</span><span class="p">[</span><span class="n">num_spcl_edges</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">special_case</span><span class="p">[</span><span class="n">num_spcl_edges</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">diff_of_edges</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span> <span class="o">-</span> <span class="n">j</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)])</span>
+                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">diff_of_edges</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">sub_dim</span> <span class="o">=</span> <span class="n">index</span>
+                        <span class="n">clique_edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combination_edges</span><span class="p">[</span><span class="n">main_dim</span><span class="p">][</span><span class="n">sub_dim</span><span class="p">])</span>
+                        <span class="k">break</span>
+        <span class="n">networkx_graph</span><span class="o">.</span><span class="n">remove_edges_from</span><span class="p">(</span><span class="n">clique_edges</span><span class="p">)</span>
+        <span class="c1"># print(&quot;time taken to remove cliques is %0.2f seconds&quot; % (time.time() - start))</span>
+    <span class="k">return</span> <span class="n">networkx_graph</span>
+
+
+<div class="viewcode-block" id="get_networkx_graph_from_array"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.networkx_from_array.get_networkx_graph_from_array">[docs]</a><span class="k">def</span> <span class="nf">get_networkx_graph_from_array</span><span class="p">(</span><span class="n">binary_arr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a networkx graph from a binary numpy array</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    binary_arr : numpy array</span>
+<span class="sd">        binary numpy array can only be 2D Or 3D</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    networkx_graph : Networkx graph</span>
+<span class="sd">        graphical representation of the input array after clique removal</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">binary_arr</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;input must always be a binary array&quot;</span>
+    <span class="c1"># start = time.time()</span>
+    <span class="n">dict_of_indices_and_adjacent_coordinates</span> <span class="o">=</span> <span class="n">_set_adjacency_list</span><span class="p">(</span><span class="n">binary_arr</span><span class="p">)</span>
+    <span class="n">networkx_graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">from_dict_of_lists</span><span class="p">(</span><span class="n">dict_of_indices_and_adjacent_coordinates</span><span class="p">)</span>
+    <span class="n">_remove_clique_edges</span><span class="p">(</span><span class="n">networkx_graph</span><span class="p">)</span>
+    <span class="c1"># print(&quot;time taken to obtain networkxgraph is %0.3f seconds&quot; % (time.time() - start))</span>
+    <span class="k">return</span> <span class="n">networkx_graph</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Jianxu Chen.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

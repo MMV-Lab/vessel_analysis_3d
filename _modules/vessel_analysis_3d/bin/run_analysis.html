@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>vessel_analysis_3d.bin.my_example &mdash; 3D Vascular Structure Analysis 0.0.1 documentation</title>
+  <title>vessel_analysis_3d.bin.run_analysis &mdash; 3D Vascular Structure Analysis 0.0.1 documentation</title>
   
 
   
@@ -103,11 +103,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../vessel_analysis_3d.html">vessel_analysis_3d package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.bin.html">vessel_analysis_3d.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.graph.html">vessel_analysis_3d.graph package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#module-vessel_analysis_3d.example">vessel_analysis_3d.example module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.html#vessel_analysis_3d.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#module-vessel_analysis_3d.processing_pipeline">vessel_analysis_3d.processing_pipeline module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D"><code class="docutils literal notranslate"><span class="pre">Pipeline3D</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#module-vessel_analysis_3d">Module contents</a><ul>
@@ -175,7 +176,7 @@
         
           <li><a href="../../vessel_analysis_3d.html">vessel_analysis_3d</a> &raquo;</li>
         
-      <li>vessel_analysis_3d.bin.my_example</li>
+      <li>vessel_analysis_3d.bin.run_analysis</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -190,7 +191,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for vessel_analysis_3d.bin.my_example</h1><div class="highlight"><pre>
+  <h1>Source code for vessel_analysis_3d.bin.run_analysis</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
@@ -203,8 +204,9 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
 
-<span class="kn">from</span> <span class="nn">vessel_analysis_3d</span> <span class="kn">import</span> <span class="n">Example</span><span class="p">,</span> <span class="n">get_module_version</span>
+<span class="kn">from</span> <span class="nn">vessel_analysis_3d</span> <span class="kn">import</span> <span class="n">Pipeline3D</span>
 
 <span class="c1">###############################################################################</span>
 
@@ -216,48 +218,26 @@
 <span class="c1">###############################################################################</span>
 
 
-<div class="viewcode-block" id="Args"><a class="viewcode-back" href="../../../vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.my_example.Args">[docs]</a><span class="k">class</span> <span class="nc">Args</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">):</span>
+<div class="viewcode-block" id="Args"><a class="viewcode-back" href="../../../vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.run_analysis.Args">[docs]</a><span class="k">class</span> <span class="nc">Args</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">):</span>
 
     <span class="n">DEFAULT_FIRST</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="n">DEFAULT_SECOND</span> <span class="o">=</span> <span class="mi">20</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Arguments that could be passed in through the command line</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_FIRST</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_SECOND</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="c1">#</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__parse</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
-            <span class="n">prog</span><span class="o">=</span><span class="s2">&quot;run_exmaple&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A simple example of a bin script&quot;</span><span class="p">,</span>
+            <span class="n">prog</span><span class="o">=</span><span class="s2">&quot;run_analysis&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;run analysis on a set of vessel segmentations&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">p</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;-v&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--version&quot;</span><span class="p">,</span>
-            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span>
-            <span class="n">version</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(prog)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">get_module_version</span><span class="p">(),</span>
-        <span class="p">)</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;-f&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--first&quot;</span><span class="p">,</span>
-            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
-            <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;first&quot;</span><span class="p">,</span>
-            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-            <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">first</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The first argument value&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;-s&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--second&quot;</span><span class="p">,</span>
-            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
-            <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;second&quot;</span><span class="p">,</span>
-            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-            <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The first argument value&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;--config&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The path to configuration file&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">p</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
             <span class="s2">&quot;--debug&quot;</span><span class="p">,</span>
@@ -271,18 +251,20 @@
 <span class="c1">###############################################################################</span>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.my_example.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../vessel_analysis_3d.bin.html#vessel_analysis_3d.bin.run_analysis.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">args</span> <span class="o">=</span> <span class="n">Args</span><span class="p">()</span>
         <span class="n">dbg</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span>
 
         <span class="c1"># Do your work here - preferably in a class or function,</span>
         <span class="c1"># passing in your args. E.g.</span>
-        <span class="n">exe</span> <span class="o">=</span> <span class="n">Example</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">first</span><span class="p">)</span>
-        <span class="n">exe</span><span class="o">.</span><span class="n">update_value</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">second</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;First : </span><span class="si">{}</span><span class="se">\n</span><span class="s2">Second: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exe</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="n">exe</span><span class="o">.</span><span class="n">get_previous_value</span><span class="p">())</span>
-        <span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="n">cfg</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+
+        <span class="n">exe</span> <span class="o">=</span> <span class="n">Pipeline3D</span><span class="p">()</span>
+        <span class="n">exe</span><span class="o">.</span><span class="n">config_data</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+        <span class="n">exe</span><span class="o">.</span><span class="n">config_analysis</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;analysis&quot;</span><span class="p">])</span>
+        <span class="n">exe</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;=============================================&quot;</span><span class="p">)</span>

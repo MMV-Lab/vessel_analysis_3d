@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>vessel_analysis_3d.graph.stats_reporting &mdash; 3D Vascular Structure Analysis 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> 3D Vascular Structure Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../vessel_analysis_3d.html">vessel_analysis_3d package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.bin.html">vessel_analysis_3d.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.graph.html">vessel_analysis_3d.graph package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#module-vessel_analysis_3d.processing_pipeline">vessel_analysis_3d.processing_pipeline module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D"><code class="docutils literal notranslate"><span class="pre">Pipeline3D</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../vessel_analysis_3d.html#module-vessel_analysis_3d">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../vessel_analysis_3d.html#vessel_analysis_3d.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">3D Vascular Structure Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../vessel_analysis_3d.html">vessel_analysis_3d</a> &raquo;</li>
+        
+      <li>vessel_analysis_3d.graph.stats_reporting</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for vessel_analysis_3d.graph.stats_reporting</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">.core</span> <span class="kn">import</span> <span class="n">GraphObj</span>
+
+
+<div class="viewcode-block" id="save_everything"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.save_everything">[docs]</a><span class="k">def</span> <span class="nf">save_everything</span><span class="p">(</span><span class="n">gh</span><span class="p">:</span> <span class="n">GraphObj</span><span class="p">,</span> <span class="n">out_path</span><span class="p">,</span> <span class="n">base_name</span><span class="p">):</span>
+
+    <span class="c1"># create files containing all statisics in one csv per category (segment, filament, branches and endPtsRatio)</span>
+    <span class="n">saveAllStatsAsCSV</span><span class="p">(</span>
+        <span class="n">gh</span><span class="o">.</span><span class="n">segStatsDict</span><span class="p">,</span> <span class="n">out_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_name</span><span class="si">}</span><span class="s2">_Segment_Statistics.csv&quot;</span><span class="p">,</span> <span class="n">base_name</span>
+    <span class="p">)</span>
+    <span class="n">saveAllFilStatsAsCSV</span><span class="p">(</span>
+        <span class="n">gh</span><span class="o">.</span><span class="n">filStatsDict</span><span class="p">,</span> <span class="n">out_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_name</span><span class="si">}</span><span class="s2">_Filament_Statistics.csv&quot;</span><span class="p">,</span> <span class="n">base_name</span>
+    <span class="p">)</span>
+    <span class="n">saveBranchesBrPtAsCSV</span><span class="p">(</span>
+        <span class="n">gh</span><span class="o">.</span><span class="n">branchesBrPtDict</span><span class="p">,</span>
+        <span class="n">out_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_name</span><span class="si">}</span><span class="s2">_BranchesPerBranchPt.csv&quot;</span><span class="p">,</span>
+        <span class="n">base_name</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="report_everything"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.report_everything">[docs]</a><span class="k">def</span> <span class="nf">report_everything</span><span class="p">(</span><span class="n">gh</span><span class="p">:</span> <span class="n">GraphObj</span><span class="p">,</span> <span class="n">basename</span><span class="p">):</span>
+
+    <span class="n">all_stat</span> <span class="o">=</span> <span class="n">reportAllStats</span><span class="p">(</span><span class="n">gh</span><span class="o">.</span><span class="n">segStatsDict</span><span class="p">,</span> <span class="n">basename</span><span class="p">)</span>
+    <span class="n">all_filstat</span> <span class="o">=</span> <span class="n">reportAllFilStats</span><span class="p">(</span><span class="n">gh</span><span class="o">.</span><span class="n">filStatsDict</span><span class="p">,</span> <span class="n">basename</span><span class="p">)</span>
+    <span class="n">all_brstat</span> <span class="o">=</span> <span class="n">reportBranchesBrPt</span><span class="p">(</span><span class="n">gh</span><span class="o">.</span><span class="n">branchesBrPtDict</span><span class="p">,</span> <span class="n">basename</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">all_stat</span><span class="p">,</span> <span class="n">all_filstat</span><span class="p">,</span> <span class="n">all_brstat</span></div>
+
+
+<div class="viewcode-block" id="saveAllStatsAsCSV"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.saveAllStatsAsCSV">[docs]</a><span class="k">def</span> <span class="nf">saveAllStatsAsCSV</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">imgName</span><span class="p">):</span>
+    <span class="c1"># get all segment measurements as list from dictionary</span>
+    <span class="n">fil_id</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">dictionary</span><span class="p">[</span><span class="n">idx</span><span class="p">]):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dictionary</span><span class="p">[</span><span class="n">idx</span><span class="p">]))</span>
+            <span class="n">fil_id</span> <span class="o">=</span> <span class="n">idx</span>
+            <span class="k">break</span>
+    <span class="n">ms_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">fil_id</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">ms_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="nb">list</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;filamentID&quot;</span><span class="p">,</span> <span class="s2">&quot;segmentID&quot;</span><span class="p">]]</span>  <span class="c1"># header list</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ms_list</span><span class="p">:</span>
+        <span class="nb">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">filament</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">]:</span>
+            <span class="n">list_item</span> <span class="o">=</span> <span class="p">[</span><span class="n">imgName</span><span class="p">,</span> <span class="n">filament</span><span class="p">,</span> <span class="n">segment</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="n">segment</span><span class="p">]:</span>
+                <span class="n">list_item</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="n">segment</span><span class="p">][</span><span class="n">stat</span><span class="p">])</span>
+            <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">list_item</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saveAllFilStatsAsCSV"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.saveAllFilStatsAsCSV">[docs]</a><span class="k">def</span> <span class="nf">saveAllFilStatsAsCSV</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">imgName</span><span class="p">):</span>
+    <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;Image&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;FilamentID&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;No. Segments&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;No. Terminal Points&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;No. Branching Points&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">filament</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">segs</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="s2">&quot;Segments&quot;</span><span class="p">]</span>
+        <span class="n">endPts</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="s2">&quot;TerminalPoints&quot;</span><span class="p">]</span>
+        <span class="n">brPts</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="s2">&quot;BranchPoints&quot;</span><span class="p">]</span>
+        <span class="n">list_item</span> <span class="o">=</span> <span class="p">[</span><span class="n">imgName</span><span class="p">,</span> <span class="n">filament</span><span class="p">,</span> <span class="n">segs</span><span class="p">,</span> <span class="n">endPts</span><span class="p">,</span> <span class="n">brPts</span><span class="p">]</span>
+        <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">list_item</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saveBranchesBrPtAsCSV"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.saveBranchesBrPtAsCSV">[docs]</a><span class="k">def</span> <span class="nf">saveBranchesBrPtAsCSV</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">imgName</span><span class="p">):</span>
+    <span class="nb">list</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;Image&quot;</span><span class="p">,</span> <span class="s2">&quot;FilamentID&quot;</span><span class="p">,</span> <span class="s2">&quot;BranchID&quot;</span><span class="p">,</span> <span class="s2">&quot;No. Branches per BranchPoint&quot;</span><span class="p">]]</span>
+    <span class="k">for</span> <span class="n">filament</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">]:</span>
+            <span class="n">branches</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="n">segment</span><span class="p">]</span>
+            <span class="n">list_item</span> <span class="o">=</span> <span class="p">[</span><span class="n">imgName</span><span class="p">,</span> <span class="n">filament</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">branches</span><span class="p">]</span>
+            <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">list_item</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="reportAllStats"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.reportAllStats">[docs]</a><span class="k">def</span> <span class="nf">reportAllStats</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">imgName</span><span class="p">):</span>
+    <span class="c1"># get all segment measurements as list from dictionary</span>
+    <span class="n">fil_id</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">dictionary</span><span class="p">[</span><span class="n">idx</span><span class="p">]):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dictionary</span><span class="p">[</span><span class="n">idx</span><span class="p">]))</span>
+            <span class="n">fil_id</span> <span class="o">=</span> <span class="n">idx</span>
+            <span class="k">break</span>
+    <span class="n">ms_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">fil_id</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">ms_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ms_list</span><span class="p">:</span>
+        <span class="nb">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">filament</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">]:</span>
+            <span class="n">list_item</span> <span class="o">=</span> <span class="p">[</span><span class="n">imgName</span><span class="p">,</span> <span class="n">filament</span><span class="p">,</span> <span class="n">segment</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="n">segment</span><span class="p">]:</span>
+                <span class="n">list_item</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="n">segment</span><span class="p">][</span><span class="n">stat</span><span class="p">])</span>
+            <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">list_item</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;filamentID&quot;</span><span class="p">,</span> <span class="s2">&quot;segmentID&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="reportAllFilStats"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.reportAllFilStats">[docs]</a><span class="k">def</span> <span class="nf">reportAllFilStats</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">imgName</span><span class="p">):</span>
+    <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">filament</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">segs</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="s2">&quot;Segments&quot;</span><span class="p">]</span>
+        <span class="n">endPts</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="s2">&quot;TerminalPoints&quot;</span><span class="p">]</span>
+        <span class="n">brPts</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="s2">&quot;BranchPoints&quot;</span><span class="p">]</span>
+        <span class="n">list_item</span> <span class="o">=</span> <span class="p">[</span><span class="n">imgName</span><span class="p">,</span> <span class="n">filament</span><span class="p">,</span> <span class="n">segs</span><span class="p">,</span> <span class="n">endPts</span><span class="p">,</span> <span class="n">brPts</span><span class="p">]</span>
+        <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">list_item</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Image&quot;</span><span class="p">,</span> <span class="s2">&quot;FilamentID&quot;</span><span class="p">,</span> <span class="s2">&quot;No. Segments&quot;</span><span class="p">,</span> <span class="s2">&quot;No. Terminal Points&quot;</span><span class="p">,</span> <span class="s2">&quot;No. Branching Points&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="reportBranchesBrPt"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.reportBranchesBrPt">[docs]</a><span class="k">def</span> <span class="nf">reportBranchesBrPt</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">imgName</span><span class="p">):</span>
+    <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">filament</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">]:</span>
+            <span class="n">branches</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">filament</span><span class="p">][</span><span class="n">segment</span><span class="p">]</span>
+            <span class="n">list_item</span> <span class="o">=</span> <span class="p">[</span><span class="n">imgName</span><span class="p">,</span> <span class="n">filament</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">branches</span><span class="p">]</span>
+            <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">list_item</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Image&quot;</span><span class="p">,</span> <span class="s2">&quot;FilamentID&quot;</span><span class="p">,</span> <span class="s2">&quot;BranchID&quot;</span><span class="p">,</span> <span class="s2">&quot;No. Branches per BranchPoint&quot;</span><span class="p">])</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Jianxu Chen.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
