@@ -31,43 +31,6 @@ class GraphObj:
     ----------
     graph : networkx graph
         networkx graph of a skeleton
-
-    Examples
-    --------
-    Graph.segmentsTotal - total number of segments (branches between branch/end point and branch/end point)
-
-    Graph.segmentsDict - A dictionary with the nth disjoint graph as the key containing a dictionary
-                            with key as the segment index (start node, end node) and value = list of nodes
-
-    Graph.lengthDict - A dictionary with the nth disjoint graph as the key containing a dictionary
-                            with key as the segment index (start node, end node) and value = length of the segment
-
-    Graph.sumLengthDict - A dictionary with the nth disjoint graph as the key and the total length as the value
-
-    Graph.straightnessDict - A dictionary with the nth disjoint graph as the key containing a dictionary
-                                with key as the segment index (start node, end node) and
-                                value = straightness of the segment
-
-    Graph.branchPointsDict - A dictionary with the nth disjoint graph as the key and the list of
-                                branch points as the value
-
-    Graph.endPointsDict - A dictionary with the nth disjoint graph as the key and the list of
-                                end points as the value
-
-    Graph.countBranchPointsDict - A dictionary with the nth disjoint graph as the key and the number of
-                                    branch points as the value
-
-    Graph.countEndPointsDict -  A dictionary with the nth disjoint graph as the key and the number of
-                                    end points as the value
-
-    Graph.degreeDict - A dictionary with the nth disjoint graph as the key containing a dictionary
-                            with key as the segment index (start node, end node) and value = segment branching angle
-
-    Graph.volumeDict - A dictionary with the nth disjoint graph as the key containing a dictionary
-                            with key as the segment index (start node, end node) and value = volume of the segment
-
-    Graph.diameterDict - A dictionary with the nth disjoint graph as the key containing a dictionary
-                            with key as the segment index (start node, end node) and value = avg diameter of the segment
     """
 
     def __init__(
@@ -173,14 +136,12 @@ class GraphObj:
 
         # pruning: delete branches with length below the distance to its closest border
         if self.smallRAMmode:
-            # client = Client()
             self.radiusMatrix.to_zarr(
                 "tmp_zarr" + os.sep + self.fileName + "_radiusMatrix.zarr"
             )
             self._prune(
                 da.from_zarr("tmp_zarr" + os.sep + self.fileName + "_radiusMatrix.zarr")
             )
-            # client.submit(self._prune, da.from_zarr('tmp_zarr' + os.sep + self.fileName + '_radiusMatrix.zarr'))
         else:
             self._prune(self.radiusMatrix)
 
@@ -253,7 +214,8 @@ class GraphObj:
                     self.infoDict["postProcBranches"] += filament.postprocBranches
                     self.infoDict["postProcEndPts"] += filament.postprocEndPts
 
-                    # fill dictionaries containing all filament, segment and branch point statistics
+                    # fill dictionaries containing all filament, segment and branch
+                    # point statistics
                     self.segStatsDict[ithDisjointGraph] = filament.segmentStats
                     self.filStatsDict[ithDisjointGraph][
                         "TerminalPoints"
@@ -276,7 +238,8 @@ class GraphObj:
             self._writeInfoFile()
 
         if return_final_skel:
-            # remove nodes which were removed in postprocessing of filaments in the overall graph
+            # remove nodes which were removed in postprocessing of filaments
+            # in the overall graph
             nodes_graph = set(self.networkxGraph.nodes)
             nodes_to_remove = nodes_graph - self.nodesFinal
             for node in nodes_to_remove:
@@ -341,10 +304,11 @@ class GraphObj:
     def _prune(self, radiusMat):
         """
         This implements the pruning as described by Montero & Lang
-        Skeleton pruning by contour approximation and the integer medial axis transform.
-        Computers & Graphics 36, 477-487 (2012).
+        Skeleton pruning by contour approximation and the integer
+        medial axis transform. Computers & Graphics 36, 477-487 (2012).
         Branches are removed when |ep - bp|^2 <= s * |f - bp|^2
-        where ep = end point, bp = branch point, s = scaling factor, f = closest boundary point
+        where ep = end point, bp = branch point, s = scaling factor,
+        f = closest boundary point
         """
         startTime = time.time()
         endPtsList = [k for (k, v) in self.nodeDegreeDict.items() if v == 1]

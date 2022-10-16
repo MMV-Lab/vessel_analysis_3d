@@ -16,7 +16,8 @@ class Filament:
 
     Parameters
     ----------
-    graph : dictionary of lists (adjacency list) with key as node and value = list with its neighboring nodes
+    graph : dictionary of lists (adjacency list) with key as node and value = list with
+            its neighboring nodes
 
     start : list of coordinates
         beginning point for DFS (must be an end point)
@@ -28,30 +29,6 @@ class Filament:
 
     lengthLimit : float
         minimum length (all branches below this length will be removed)
-
-    Examples
-    --------
-    Filament.endPtsList - A list containing all nodes with only one other node connected to them
-
-    Filament.branchPtsList - A list containing all nodes with more than 2 nodes connected to them
-
-    Filament.segmentsDict - A dictionary containing all segments (path from branch/end point to branch/end point)
-        with key as segment index (start node, end node) and value = list of nodes in segment
-
-    Filament.lengthDict - A dictionary with key as segment index (start node, end node) and
-        value = length of the segment
-
-    Filament.straightnessDict - A dictionary with key as segment index (start node, end node) and
-        value = straightness of the segment
-
-    Filament.degreeDict - A dictionary with key as segment index (start node, end node) and
-        value = segment branching angle
-
-    Filament.diameterDict - A dictionary with key as segment index (start node, end node) and
-        value = avg diameter of the segment
-
-    Filament.volumeDict - A dictionary with key as segment index (start node, end node) and
-        value = volume of the segment
 
     Notes
     --------
@@ -102,8 +79,8 @@ class Filament:
 
     def dfs_iterative(self):
         """
-        Iterate over the graph in a depth-first-search. If a branch or end point is found, retrieve the segment
-        and calculate its statistics
+        Iterate over the graph in a depth-first-search. If a branch or end point is
+        found, retrieve the segment and calculate its statistics
         """
         startTime = time.time()
         visited, stack = set(), [self.start]
@@ -146,7 +123,8 @@ class Filament:
         )
 
         if self.removeBorderEndPts:
-            self._removeBorderPtsFromEndPts()  # remove image border points from end points list
+            # remove image border points from end points list
+            self._removeBorderPtsFromEndPts()
 
         if self.removeEndPtsFromSmallFilaments:
             if len(self.segmentsDict) < 5:
@@ -169,9 +147,9 @@ class Filament:
             if seg[1] in self.brPtsDict.keys():
                 self.segmentStats[seg]["branching Points"] += 1
 
-    #############################
-    ### Segment Interpolation ###
-    #############################
+    ##############################
+    # ## Segment Interpolation ###
+    ##############################
     # Build interpolation delta
     def _delta_calc(self, num_verts, vis_radius):
         # base = 3 if num_verts > 50 else 2
@@ -194,7 +172,9 @@ class Filament:
         else:
             spline_degree = max(1, num_verts - 1)
 
-        # The optimal number of interpolated segment points for visualization was determined emperically as a trade-off value between ground-truth length and computational costs.
+        # The optimal number of interpolated segment points for visualization was
+        # determined emperically as a trade-off value between ground-truth length
+        # and computational costs.
         delta = self._delta_calc(num_verts, vis_radius)
 
         # Find the segment length based on our cubic BSpline.
@@ -228,9 +208,9 @@ class Filament:
         segmentList = [node]
         while True:
             node = self._predDict.get(node)
-            if (
-                node is None
-            ):  # may happen due to postprocessing removing predecessors of old branching points
+            if node is None:
+                # may happen due to postprocessing removing predecessors of old
+                # branching points
                 return None
             segmentList.insert(0, node)
             if len(self.graph[node]) == 1 or len(self.graph[node]) > 2:
@@ -440,18 +420,21 @@ class Filament:
                     for k, v in self.segmentsDict.items()
                     if k[0] == brPt or k[1] == brPt
                 ]
-                # delete old segments from segment dictionaries (either one segment if circle otherwise 2 segments)
+                # delete old segments from segment dictionaries (either one
+                # segment if circle otherwise 2 segments)
                 if len(segments) > 0:
                     segKey1 = (segments[0][0], segments[0][-1])
                     del self.segmentsDict[segKey1]
                     del self.segmentStats[segKey1]
                     if (
                         len(segments) != 1
-                    ):  # if segment is not a circle delete second segment from dictionaries
+                    ):  # if segment is not a circle delete second segment from
+                        # dictionaries
                         segKey2 = (segments[1][0], segments[1][-1])
                         del self.segmentsDict[segKey2]
                         del self.segmentStats[segKey2]
-                        # combine both segments to one segment and calculate its statistics
+                        # combine both segments to one segment and calculate its
+                        # statistics
                         if segments[0][-1] == brPt and segments[1][0] == brPt:
                             combSegments = segments[0] + segments[1][1:]
                         elif segments[0][0] == brPt and segments[1][-1] == brPt:
@@ -466,18 +449,20 @@ class Filament:
             elif len(self.graph[brPt]) == 1:
                 del self.brPtsDict[brPt]
                 self.endPtsList.append(brPt)
-            # all branches of a branch point were removed => delete branch point from dict
+            # all branches of a branch point were removed => delete branch point from
+            # dict
             elif len(self.graph[brPt]) == 0:
                 del self.brPtsDict[brPt]
 
     def _removeSmallAndSegmentsBelowDiameterLengthRatio(self, cut_neighbor_brpt_segs):
         """
-        Removes all branches with a length below a specified limit and length below the scaled diameter
-        and removes their statistics from the dictionaries. After branch removal branch points are reassigned
-        (either they remain branch point, become normal point or end point) and statistics of new segments
-        are recalculated.
+        Removes all branches with a length below a specified limit and length below the
+        scaled diameter and removes their statistics from the dictionaries. After branch
+        removal branch points are reassigned (either they remain branch point, become
+        normal point or end point) and statistics of new segments are recalculated.
         """
-        # find segments with endpoint(s) in lengthDict which are below length/diameter ratio
+        # find segments with endpoint(s) in lengthDict which are below length/diameter
+        # ratio
         keysToRemoveList = []
         for segKey in self.segmentStats:
             if cut_neighbor_brpt_segs:
@@ -487,7 +472,8 @@ class Filament:
                     and (segKey[0] in self.endPtsList or segKey[1] in self.endPtsList)
                 ) or (self.segmentStats[segKey]["length"] <= self.lengthLim):
                     keysToRemoveList.append(segKey)
-            # dont cut segments which are 2 branching points with length below pixel dimension
+            # dont cut segments which are 2 branching points with length below pixel
+            # dimension
             else:
                 if not (
                     segKey[0] in self.brPtsDict

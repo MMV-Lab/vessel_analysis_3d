@@ -1,4 +1,4 @@
-# this is adopted from https://github.com/RUB-Bioinf/VesselExpress/blob/master/VesselExpress/modules/networkx_graph_from_array.py
+# this is adopted from https://github.com/RUB-Bioinf/VesselExpress/blob/master/VesselExpress/modules/networkx_graph_from_array.py  # noqa E501
 
 import itertools
 import numpy as np
@@ -214,5 +214,5 @@ def get_networkx_graph_from_array(binary_arr):
     dict_of_indices_and_adjacent_coordinates = _set_adjacency_list(binary_arr)
     networkx_graph = nx.from_dict_of_lists(dict_of_indices_and_adjacent_coordinates)
     _remove_clique_edges(networkx_graph)
-    # print("time taken to obtain networkxgraph is %0.3f seconds" % (time.time() - start))
+
     return networkx_graph

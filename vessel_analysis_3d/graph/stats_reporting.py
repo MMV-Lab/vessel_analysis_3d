@@ -6,7 +6,8 @@ from .core import GraphObj
 
 def save_everything(gh: GraphObj, out_path, base_name):
 
-    # create files containing all statisics in one csv per category (segment, filament, branches and endPtsRatio)
+    # create files containing all statisics in one csv per category (segment, filament,
+    # branches and endPtsRatio)
     saveAllStatsAsCSV(
         gh.segStatsDict, out_path / f"{base_name}_Segment_Statistics.csv", base_name
     )
@@ -123,7 +124,16 @@ def reportAllFilStats(dictionary, imgName):
         list_item = [imgName, filament, segs, endPts, brPts]
         list.append(list_item)
 
-    return pd.DataFrame(list, columns=["Image", "FilamentID", "No. Segments", "No. Terminal Points", "No. Branching Points"])
+    return pd.DataFrame(
+        list,
+        columns=[
+            "Image",
+            "FilamentID",
+            "No. Segments",
+            "No. Terminal Points",
+            "No. Branching Points",
+        ],
+    )
 
 
 def reportBranchesBrPt(dictionary, imgName):
@@ -134,4 +144,7 @@ def reportBranchesBrPt(dictionary, imgName):
             list_item = [imgName, filament, segment, branches]
             list.append(list_item)
 
-    return pd.DataFrame(list, columns=["Image", "FilamentID", "BranchID", "No. Branches per BranchPoint"])
+    return pd.DataFrame(
+        list,
+        columns=["Image", "FilamentID", "BranchID", "No. Branches per BranchPoint"],
+    )

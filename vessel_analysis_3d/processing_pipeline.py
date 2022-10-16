@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# code adapted from https://github.com/RUB-Bioinf/VesselExpress/blob/master/VesselExpress/workflow/scripts/graphAnalysis.py
+# code adapted from https://github.com/RUB-Bioinf/VesselExpress/blob/master/VesselExpress/workflow/scripts/graphAnalysis.py  # noqa E501
 
 # Imports should be grouped into:
 # Standard library imports
@@ -66,8 +66,11 @@ class Pipeline3D(object):
 
         # create a random folder for each run
         current_time = datetime.now()
-        time_pref = str(current_time)[:-7].replace(" ", "_").replace("-", "_").replace(":", "_")
-        self.tmp_path = Path(tempfile.TemporaryDirectory(prefix=time_pref + "_", dir=tmp_path).name)
+        time_pref = str(current_time)[:-7]
+        time_pref = time_pref.replace(" ", "_").replace("-", "_").replace(":", "_")
+        self.tmp_path = Path(
+            tempfile.TemporaryDirectory(prefix=time_pref + "_", dir=tmp_path).name
+        )
         self.tmp_path.mkdir(exist_ok=True)
 
     def config_analysis(self, param_dict):
@@ -121,15 +124,16 @@ class Pipeline3D(object):
         # get all endpoints
         endPts = []
         for i in gh.endPointsDict.values():
-            for l in i:
-                endPts.append(l)
+            for li in i:
+                endPts.append(li)
 
         if save_path is None:
             # return final skeleton as an array and branch points as a list
             reports = report_everything(gh, basename)
             return skl_final, brPts, endPts, reports
         else:
-            # save the final skeleton and visualization of branchpoints and endpoints on image as TIFFs
+            # save the final skeleton and visualization of branchpoints and endpoints
+            # on image as TIFFs
             brPt_img = np.zeros(seg.shape)
             for ind in brPts:
                 brPt_img[ind] = 255
@@ -169,7 +173,13 @@ class Pipeline3D(object):
             skl[skl > 0] = 1
 
             # run analysis
-            self.process_one_file(seg, skl, self.analysis_parameters, save_path=Path(self.tmp_path), basename=fn.stem)
+            self.process_one_file(
+                seg,
+                skl,
+                self.analysis_parameters,
+                save_path=Path(self.tmp_path),
+                basename=fn.stem,
+            )
 
     # Representation's (reprs) are useful when using interactive Python sessions or
     # when you log an object. They are the shorthand of the object state. In this case,
