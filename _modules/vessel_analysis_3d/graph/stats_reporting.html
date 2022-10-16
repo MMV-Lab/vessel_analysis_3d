@@ -200,7 +200,8 @@
 
 <div class="viewcode-block" id="save_everything"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.save_everything">[docs]</a><span class="k">def</span> <span class="nf">save_everything</span><span class="p">(</span><span class="n">gh</span><span class="p">:</span> <span class="n">GraphObj</span><span class="p">,</span> <span class="n">out_path</span><span class="p">,</span> <span class="n">base_name</span><span class="p">):</span>
 
-    <span class="c1"># create files containing all statisics in one csv per category (segment, filament, branches and endPtsRatio)</span>
+    <span class="c1"># create files containing all statisics in one csv per category (segment, filament,</span>
+    <span class="c1"># branches and endPtsRatio)</span>
     <span class="n">saveAllStatsAsCSV</span><span class="p">(</span>
         <span class="n">gh</span><span class="o">.</span><span class="n">segStatsDict</span><span class="p">,</span> <span class="n">out_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_name</span><span class="si">}</span><span class="s2">_Segment_Statistics.csv&quot;</span><span class="p">,</span> <span class="n">base_name</span>
     <span class="p">)</span>
@@ -317,7 +318,16 @@
         <span class="n">list_item</span> <span class="o">=</span> <span class="p">[</span><span class="n">imgName</span><span class="p">,</span> <span class="n">filament</span><span class="p">,</span> <span class="n">segs</span><span class="p">,</span> <span class="n">endPts</span><span class="p">,</span> <span class="n">brPts</span><span class="p">]</span>
         <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">list_item</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Image&quot;</span><span class="p">,</span> <span class="s2">&quot;FilamentID&quot;</span><span class="p">,</span> <span class="s2">&quot;No. Segments&quot;</span><span class="p">,</span> <span class="s2">&quot;No. Terminal Points&quot;</span><span class="p">,</span> <span class="s2">&quot;No. Branching Points&quot;</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="nb">list</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;Image&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;FilamentID&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;No. Segments&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;No. Terminal Points&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;No. Branching Points&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="reportBranchesBrPt"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.reportBranchesBrPt">[docs]</a><span class="k">def</span> <span class="nf">reportBranchesBrPt</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">imgName</span><span class="p">):</span>
@@ -328,7 +338,10 @@
             <span class="n">list_item</span> <span class="o">=</span> <span class="p">[</span><span class="n">imgName</span><span class="p">,</span> <span class="n">filament</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">branches</span><span class="p">]</span>
             <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">list_item</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Image&quot;</span><span class="p">,</span> <span class="s2">&quot;FilamentID&quot;</span><span class="p">,</span> <span class="s2">&quot;BranchID&quot;</span><span class="p">,</span> <span class="s2">&quot;No. Branches per BranchPoint&quot;</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="nb">list</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Image&quot;</span><span class="p">,</span> <span class="s2">&quot;FilamentID&quot;</span><span class="p">,</span> <span class="s2">&quot;BranchID&quot;</span><span class="p">,</span> <span class="s2">&quot;No. Branches per BranchPoint&quot;</span><span class="p">],</span>
+    <span class="p">)</span></div>
 </pre></div>
 
            </div>

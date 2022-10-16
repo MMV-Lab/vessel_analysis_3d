@@ -250,49 +250,6 @@
     <span class="k">return</span> <span class="n">volume</span></div>
 
 
-<span class="c1"># def getVolume(skelRadii, segment, segLength, dimensions, fast=True):</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#         Calculate volume and average diameter of a segment</span>
-<span class="c1">#</span>
-<span class="c1">#         Parameters</span>
-<span class="c1">#         ----------</span>
-<span class="c1">#         skelRadii: numpy array</span>
-<span class="c1">#             array containing the distance to the closest background point for each voxel</span>
-<span class="c1">#         segment : list</span>
-<span class="c1">#             list of nodes in the segment</span>
-<span class="c1">#         segLength: float</span>
-<span class="c1">#             segment length</span>
-<span class="c1">#         dimensions: list</span>
-<span class="c1">#             pixel dimensions [z, y, x]</span>
-<span class="c1">#         fast: bool</span>
-<span class="c1">#             if true computes fast volume calculation</span>
-<span class="c1">#</span>
-<span class="c1">#         Returns</span>
-<span class="c1">#         -------</span>
-<span class="c1">#         volume, diameter : float</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     sumRadii = 0</span>
-<span class="c1">#     # faster version takes the average radius of the whole segment and calculates it&#39;s volume</span>
-<span class="c1">#     if fast:</span>
-<span class="c1">#         for skelPt in segment:</span>
-<span class="c1">#             sumRadii += skelRadii[skelPt]</span>
-<span class="c1">#         avgRadius = sumRadii / len(segment)</span>
-<span class="c1">#         diameter = avgRadius * 2</span>
-<span class="c1">#         volume = math.pi * avgRadius ** 2 * segLength</span>
-<span class="c1">#     # slower version calculates the surface for each pixel multiplied by the distance to the next pixel</span>
-<span class="c1">#     else:</span>
-<span class="c1">#         volume = 0</span>
-<span class="c1">#         for index, skelPt in enumerate(segment):</span>
-<span class="c1">#             if index + 1 != len(segment):</span>
-<span class="c1">#                 vect = [j - i for i, j in zip(skelPt, segment[index+1])]</span>
-<span class="c1">#                 vect = [a * b for a, b in zip(vect, dimensions)]  # multiply with pixel dimensions</span>
-<span class="c1">#                 volume += math.pi * skelRadii[skelPt] ** 2 * np.linalg.norm(vect)</span>
-<span class="c1">#             sumRadii += skelRadii[skelPt]</span>
-<span class="c1">#         diameter = (sumRadii / len(segment)) * 2</span>
-<span class="c1">#</span>
-<span class="c1">#     return volume, diameter</span>
-
-
 <div class="viewcode-block" id="get_z_angle"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.measurement.get_z_angle">[docs]</a><span class="k">def</span> <span class="nf">get_z_angle</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">pixelDims</span><span class="p">):</span>
     <span class="n">zVector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="n">v1</span> <span class="o">=</span> <span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>

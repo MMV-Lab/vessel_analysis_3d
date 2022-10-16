@@ -224,34 +224,6 @@
 <dd class="field-odd"><p><strong>graph</strong> (<em>networkx graph</em>) – networkx graph of a skeleton</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<p>Graph.segmentsTotal - total number of segments (branches between branch/end point and branch/end point)</p>
-<dl class="simple">
-<dt>Graph.segmentsDict - A dictionary with the nth disjoint graph as the key containing a dictionary</dt><dd><p>with key as the segment index (start node, end node) and value = list of nodes</p>
-</dd>
-<dt>Graph.lengthDict - A dictionary with the nth disjoint graph as the key containing a dictionary</dt><dd><p>with key as the segment index (start node, end node) and value = length of the segment</p>
-</dd>
-</dl>
-<p>Graph.sumLengthDict - A dictionary with the nth disjoint graph as the key and the total length as the value</p>
-<dl class="simple">
-<dt>Graph.straightnessDict - A dictionary with the nth disjoint graph as the key containing a dictionary</dt><dd><p>with key as the segment index (start node, end node) and
-value = straightness of the segment</p>
-</dd>
-<dt>Graph.branchPointsDict - A dictionary with the nth disjoint graph as the key and the list of</dt><dd><p>branch points as the value</p>
-</dd>
-<dt>Graph.endPointsDict - A dictionary with the nth disjoint graph as the key and the list of</dt><dd><p>end points as the value</p>
-</dd>
-<dt>Graph.countBranchPointsDict - A dictionary with the nth disjoint graph as the key and the number of</dt><dd><p>branch points as the value</p>
-</dd>
-<dt>Graph.countEndPointsDict -  A dictionary with the nth disjoint graph as the key and the number of</dt><dd><p>end points as the value</p>
-</dd>
-<dt>Graph.degreeDict - A dictionary with the nth disjoint graph as the key containing a dictionary</dt><dd><p>with key as the segment index (start node, end node) and value = segment branching angle</p>
-</dd>
-<dt>Graph.volumeDict - A dictionary with the nth disjoint graph as the key containing a dictionary</dt><dd><p>with key as the segment index (start node, end node) and value = volume of the segment</p>
-</dd>
-<dt>Graph.diameterDict - A dictionary with the nth disjoint graph as the key containing a dictionary</dt><dd><p>with key as the segment index (start node, end node) and value = avg diameter of the segment</p>
-</dd>
-</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="vessel_analysis_3d.graph.core.GraphObj.connected_component_subgraphs">
 <span class="sig-name descname"><span class="pre">connected_component_subgraphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vessel_analysis_3d/graph/core.html#GraphObj.connected_component_subgraphs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vessel_analysis_3d.graph.core.GraphObj.connected_component_subgraphs" title="Permalink to this definition">¶</a></dt>
@@ -302,7 +274,7 @@ value = straightness of the segment</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>graph</strong> (<em>dictionary of lists (adjacency list) with key as node and value = list with its neighboring nodes</em>)</p></li>
+<li><p><strong>graph</strong> (<em>dictionary of lists (adjacency list) with key as node and value = list with</em>) – its neighboring nodes</p></li>
 <li><p><strong>start</strong> (<em>list of coordinates</em>) – beginning point for DFS (must be an end point)
 3D: [z, y, x]   2D: [y, x]</p></li>
 <li><p><strong>skelRadii</strong> (<em>array containing the distance to the closest background point (=radius)</em>)</p></li>
@@ -311,30 +283,13 @@ value = straightness of the segment</p>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<p>Filament.endPtsList - A list containing all nodes with only one other node connected to them</p>
-<p>Filament.branchPtsList - A list containing all nodes with more than 2 nodes connected to them</p>
-<dl class="simple">
-<dt>Filament.segmentsDict - A dictionary containing all segments (path from branch/end point to branch/end point)</dt><dd><p>with key as segment index (start node, end node) and value = list of nodes in segment</p>
-</dd>
-<dt>Filament.lengthDict - A dictionary with key as segment index (start node, end node) and</dt><dd><p>value = length of the segment</p>
-</dd>
-<dt>Filament.straightnessDict - A dictionary with key as segment index (start node, end node) and</dt><dd><p>value = straightness of the segment</p>
-</dd>
-<dt>Filament.degreeDict - A dictionary with key as segment index (start node, end node) and</dt><dd><p>value = segment branching angle</p>
-</dd>
-<dt>Filament.diameterDict - A dictionary with key as segment index (start node, end node) and</dt><dd><p>value = avg diameter of the segment</p>
-</dd>
-<dt>Filament.volumeDict - A dictionary with key as segment index (start node, end node) and</dt><dd><p>value = volume of the segment</p>
-</dd>
-</dl>
 <p class="rubric">Notes</p>
 <p>straightness = curveDisplacement / curveLength</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="vessel_analysis_3d.graph.filament.Filament.dfs_iterative">
 <span class="sig-name descname"><span class="pre">dfs_iterative</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vessel_analysis_3d/graph/filament.html#Filament.dfs_iterative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vessel_analysis_3d.graph.filament.Filament.dfs_iterative" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iterate over the graph in a depth-first-search. If a branch or end point is found, retrieve the segment
-and calculate its statistics</p>
+<dd><p>Iterate over the graph in a depth-first-search. If a branch or end point is
+found, retrieve the segment and calculate its statistics</p>
 </dd></dl>
 
 </dd></dl>

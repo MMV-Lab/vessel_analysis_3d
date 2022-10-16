@@ -195,7 +195,7 @@
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="c1"># code adapted from https://github.com/RUB-Bioinf/VesselExpress/blob/master/VesselExpress/workflow/scripts/graphAnalysis.py</span>
+<span class="c1"># code adapted from https://github.com/RUB-Bioinf/VesselExpress/blob/master/VesselExpress/workflow/scripts/graphAnalysis.py  # noqa E501</span>
 
 <span class="c1"># Imports should be grouped into:</span>
 <span class="c1"># Standard library imports</span>
@@ -260,8 +260,11 @@
 
         <span class="c1"># create a random folder for each run</span>
         <span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="n">time_pref</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">current_time</span><span class="p">)[:</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">time_pref</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">tmp_path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">time_pref</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">current_time</span><span class="p">)[:</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span>
+        <span class="n">time_pref</span> <span class="o">=</span> <span class="n">time_pref</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">time_pref</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">tmp_path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Pipeline3D.config_analysis"><a class="viewcode-back" href="../../vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D.config_analysis">[docs]</a>    <span class="k">def</span> <span class="nf">config_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">):</span>
@@ -315,15 +318,16 @@
         <span class="c1"># get all endpoints</span>
         <span class="n">endPts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gh</span><span class="o">.</span><span class="n">endPointsDict</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
-                <span class="n">endPts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">li</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                <span class="n">endPts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">li</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># return final skeleton as an array and branch points as a list</span>
             <span class="n">reports</span> <span class="o">=</span> <span class="n">report_everything</span><span class="p">(</span><span class="n">gh</span><span class="p">,</span> <span class="n">basename</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">skl_final</span><span class="p">,</span> <span class="n">brPts</span><span class="p">,</span> <span class="n">endPts</span><span class="p">,</span> <span class="n">reports</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># save the final skeleton and visualization of branchpoints and endpoints on image as TIFFs</span>
+            <span class="c1"># save the final skeleton and visualization of branchpoints and endpoints</span>
+            <span class="c1"># on image as TIFFs</span>
             <span class="n">brPt_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">brPts</span><span class="p">:</span>
                 <span class="n">brPt_img</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
@@ -363,7 +367,13 @@
             <span class="n">skl</span><span class="p">[</span><span class="n">skl</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
             <span class="c1"># run analysis</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">process_one_file</span><span class="p">(</span><span class="n">seg</span><span class="p">,</span> <span class="n">skl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_parameters</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_path</span><span class="p">),</span> <span class="n">basename</span><span class="o">=</span><span class="n">fn</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_one_file</span><span class="p">(</span>
+                <span class="n">seg</span><span class="p">,</span>
+                <span class="n">skl</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">analysis_parameters</span><span class="p">,</span>
+                <span class="n">save_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_path</span><span class="p">),</span>
+                <span class="n">basename</span><span class="o">=</span><span class="n">fn</span><span class="o">.</span><span class="n">stem</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
     <span class="c1"># Representation&#39;s (reprs) are useful when using interactive Python sessions or</span>
     <span class="c1"># when you log an object. They are the shorthand of the object state. In this case,</span>

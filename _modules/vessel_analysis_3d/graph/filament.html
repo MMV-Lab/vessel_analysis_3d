@@ -210,7 +210,8 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    graph : dictionary of lists (adjacency list) with key as node and value = list with its neighboring nodes</span>
+<span class="sd">    graph : dictionary of lists (adjacency list) with key as node and value = list with</span>
+<span class="sd">            its neighboring nodes</span>
 
 <span class="sd">    start : list of coordinates</span>
 <span class="sd">        beginning point for DFS (must be an end point)</span>
@@ -222,30 +223,6 @@
 
 <span class="sd">    lengthLimit : float</span>
 <span class="sd">        minimum length (all branches below this length will be removed)</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    Filament.endPtsList - A list containing all nodes with only one other node connected to them</span>
-
-<span class="sd">    Filament.branchPtsList - A list containing all nodes with more than 2 nodes connected to them</span>
-
-<span class="sd">    Filament.segmentsDict - A dictionary containing all segments (path from branch/end point to branch/end point)</span>
-<span class="sd">        with key as segment index (start node, end node) and value = list of nodes in segment</span>
-
-<span class="sd">    Filament.lengthDict - A dictionary with key as segment index (start node, end node) and</span>
-<span class="sd">        value = length of the segment</span>
-
-<span class="sd">    Filament.straightnessDict - A dictionary with key as segment index (start node, end node) and</span>
-<span class="sd">        value = straightness of the segment</span>
-
-<span class="sd">    Filament.degreeDict - A dictionary with key as segment index (start node, end node) and</span>
-<span class="sd">        value = segment branching angle</span>
-
-<span class="sd">    Filament.diameterDict - A dictionary with key as segment index (start node, end node) and</span>
-<span class="sd">        value = avg diameter of the segment</span>
-
-<span class="sd">    Filament.volumeDict - A dictionary with key as segment index (start node, end node) and</span>
-<span class="sd">        value = volume of the segment</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
@@ -296,8 +273,8 @@
 
 <div class="viewcode-block" id="Filament.dfs_iterative"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.filament.Filament.dfs_iterative">[docs]</a>    <span class="k">def</span> <span class="nf">dfs_iterative</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Iterate over the graph in a depth-first-search. If a branch or end point is found, retrieve the segment</span>
-<span class="sd">        and calculate its statistics</span>
+<span class="sd">        Iterate over the graph in a depth-first-search. If a branch or end point is</span>
+<span class="sd">        found, retrieve the segment and calculate its statistics</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">visited</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(),</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">]</span>
@@ -340,7 +317,8 @@
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">removeBorderEndPts</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_removeBorderPtsFromEndPts</span><span class="p">()</span>  <span class="c1"># remove image border points from end points list</span>
+            <span class="c1"># remove image border points from end points list</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_removeBorderPtsFromEndPts</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">removeEndPtsFromSmallFilaments</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
@@ -363,9 +341,9 @@
             <span class="k">if</span> <span class="n">seg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">seg</span><span class="p">][</span><span class="s2">&quot;branching Points&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
-    <span class="c1">#############################</span>
-    <span class="c1">### Segment Interpolation ###</span>
-    <span class="c1">#############################</span>
+    <span class="c1">##############################</span>
+    <span class="c1"># ## Segment Interpolation ###</span>
+    <span class="c1">##############################</span>
     <span class="c1"># Build interpolation delta</span>
     <span class="k">def</span> <span class="nf">_delta_calc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_verts</span><span class="p">,</span> <span class="n">vis_radius</span><span class="p">):</span>
         <span class="c1"># base = 3 if num_verts &gt; 50 else 2</span>
@@ -388,7 +366,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">spline_degree</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_verts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
-        <span class="c1"># The optimal number of interpolated segment points for visualization was determined emperically as a trade-off value between ground-truth length and computational costs.</span>
+        <span class="c1"># The optimal number of interpolated segment points for visualization was</span>
+        <span class="c1"># determined emperically as a trade-off value between ground-truth length</span>
+        <span class="c1"># and computational costs.</span>
         <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delta_calc</span><span class="p">(</span><span class="n">num_verts</span><span class="p">,</span> <span class="n">vis_radius</span><span class="p">)</span>
 
         <span class="c1"># Find the segment length based on our cubic BSpline.</span>
@@ -422,9 +402,9 @@
         <span class="n">segmentList</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predDict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span>
-            <span class="p">):</span>  <span class="c1"># may happen due to postprocessing removing predecessors of old branching points</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># may happen due to postprocessing removing predecessors of old</span>
+                <span class="c1"># branching points</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="n">segmentList</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -634,18 +614,21 @@
                     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
                     <span class="k">if</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span> <span class="ow">or</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span>
                 <span class="p">]</span>
-                <span class="c1"># delete old segments from segment dictionaries (either one segment if circle otherwise 2 segments)</span>
+                <span class="c1"># delete old segments from segment dictionaries (either one</span>
+                <span class="c1"># segment if circle otherwise 2 segments)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">segKey1</span> <span class="o">=</span> <span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
                     <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">segKey1</span><span class="p">]</span>
                     <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey1</span><span class="p">]</span>
                     <span class="k">if</span> <span class="p">(</span>
                         <span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span>
-                    <span class="p">):</span>  <span class="c1"># if segment is not a circle delete second segment from dictionaries</span>
+                    <span class="p">):</span>  <span class="c1"># if segment is not a circle delete second segment from</span>
+                        <span class="c1"># dictionaries</span>
                         <span class="n">segKey2</span> <span class="o">=</span> <span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
                         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentsDict</span><span class="p">[</span><span class="n">segKey2</span><span class="p">]</span>
                         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey2</span><span class="p">]</span>
-                        <span class="c1"># combine both segments to one segment and calculate its statistics</span>
+                        <span class="c1"># combine both segments to one segment and calculate its</span>
+                        <span class="c1"># statistics</span>
                         <span class="k">if</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span> <span class="ow">and</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span><span class="p">:</span>
                             <span class="n">combSegments</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
                         <span class="k">elif</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span> <span class="ow">and</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">brPt</span><span class="p">:</span>
@@ -660,18 +643,20 @@
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">brPt</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="p">[</span><span class="n">brPt</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">brPt</span><span class="p">)</span>
-            <span class="c1"># all branches of a branch point were removed =&gt; delete branch point from dict</span>
+            <span class="c1"># all branches of a branch point were removed =&gt; delete branch point from</span>
+            <span class="c1"># dict</span>
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">brPt</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="p">[</span><span class="n">brPt</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_removeSmallAndSegmentsBelowDiameterLengthRatio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cut_neighbor_brpt_segs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Removes all branches with a length below a specified limit and length below the scaled diameter</span>
-<span class="sd">        and removes their statistics from the dictionaries. After branch removal branch points are reassigned</span>
-<span class="sd">        (either they remain branch point, become normal point or end point) and statistics of new segments</span>
-<span class="sd">        are recalculated.</span>
+<span class="sd">        Removes all branches with a length below a specified limit and length below the</span>
+<span class="sd">        scaled diameter and removes their statistics from the dictionaries. After branch</span>
+<span class="sd">        removal branch points are reassigned (either they remain branch point, become</span>
+<span class="sd">        normal point or end point) and statistics of new segments are recalculated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># find segments with endpoint(s) in lengthDict which are below length/diameter ratio</span>
+        <span class="c1"># find segments with endpoint(s) in lengthDict which are below length/diameter</span>
+        <span class="c1"># ratio</span>
         <span class="n">keysToRemoveList</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">segKey</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">cut_neighbor_brpt_segs</span><span class="p">:</span>
@@ -681,7 +666,8 @@
                     <span class="ow">and</span> <span class="p">(</span><span class="n">segKey</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span> <span class="ow">or</span> <span class="n">segKey</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endPtsList</span><span class="p">)</span>
                 <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segKey</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lengthLim</span><span class="p">):</span>
                     <span class="n">keysToRemoveList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">segKey</span><span class="p">)</span>
-            <span class="c1"># dont cut segments which are 2 branching points with length below pixel dimension</span>
+            <span class="c1"># dont cut segments which are 2 branching points with length below pixel</span>
+            <span class="c1"># dimension</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
                     <span class="n">segKey</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span>
