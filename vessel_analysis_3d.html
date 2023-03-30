@@ -33,9 +33,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     
@@ -260,6 +257,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="vessel_analysis_3d.graph.html#module-vessel_analysis_3d.graph.stats_reporting">vessel_analysis_3d.graph.stats_reporting module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.getAllFilStats"><code class="docutils literal notranslate"><span class="pre">getAllFilStats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.getAllStats"><code class="docutils literal notranslate"><span class="pre">getAllStats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.getBranchesBrPt"><code class="docutils literal notranslate"><span class="pre">getBranchesBrPt()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.reportAllFilStats"><code class="docutils literal notranslate"><span class="pre">reportAllFilStats()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.reportAllStats"><code class="docutils literal notranslate"><span class="pre">reportAllStats()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.stats_reporting.reportBranchesBrPt"><code class="docutils literal notranslate"><span class="pre">reportBranchesBrPt()</span></code></a></li>
@@ -299,11 +299,22 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="vessel_analysis_3d.processing_pipeline.Pipeline3D.process_one_file">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">process_one_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vessel_analysis_3d/processing_pipeline.html#Pipeline3D.process_one_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vessel_analysis_3d.processing_pipeline.Pipeline3D.process_one_file" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">process_one_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vessel_analysis_3d/processing_pipeline.html#Pipeline3D.process_one_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vessel_analysis_3d.processing_pipeline.Pipeline3D.process_one_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>process one image, results are either returned as variables or saved to files</p>
 <section id="parameters">
 <h3>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading">¶</a></h3>
-<p>seg: numpy.ndarray</p>
+<p>seg: numpy.ndarray
+skl: numpy.ndarray
+param_dict: Dict</p>
+<blockquote>
+<div><p>all paramters for stats calculation</p>
+</div></blockquote>
+<dl class="simple">
+<dt>save_path: Path</dt><dd><p>if provided, the stats will be saved to CSV, otherwise returned as DataFrame</p>
+</dd>
+<dt>basename: str</dt><dd><p>a unique identifier for this file</p>
+</dd>
+</dl>
 </section>
 </dd></dl>
 

@@ -33,9 +33,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     
@@ -214,7 +211,7 @@
 <hr class="docutils" />
 <section id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading">¶</a></h2>
-<p>In general, the analysis pipeline aims to convert segmented 3d vascular structures into statistics, with the consists of 3 steps:</p>
+<p>In general, the analysis pipeline aims to convert segmented 3d vascular structures into statistics, with the following 3 steps:</p>
 <ol class="arabic simple">
 <li><p>Binary (segmentation) to preliminary skeleton</p></li>
 <li><p>Preliminary skeleton to network representation (including network pruning)</p></li>
@@ -222,7 +219,7 @@
 </ol>
 <p>You can run analysis like <code class="docutils literal notranslate"><span class="pre">run_vessel_analysis</span> <span class="pre">--config</span> <span class="pre">./example_configs/example.yaml</span></code>.</p>
 <p>Or, you can do this analysis in other functions by calling the processing pipeline</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">vessel_analysis_3d.processing_pipeline</span> <span class="kn">import</span> <span class="n">process_one_file</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">vessel_analysis_3d.processing_pipeline</span> <span class="kn">import</span> <span class="n">Pipeline3D</span>
 <span class="kn">from</span> <span class="nn">skimage.morphology</span> <span class="kn">import</span> <span class="n">skeletonize</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -234,7 +231,7 @@
 <span class="n">SKL</span><span class="p">[</span><span class="n">SKL</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="c1"># Support PARAMS contains all parameters</span>
-<span class="n">skl_final</span><span class="p">,</span> <span class="n">brPts</span><span class="p">,</span> <span class="n">endPts</span><span class="p">,</span> <span class="n">reports</span> <span class="o">=</span> <span class="n">process_one_file</span><span class="p">(</span><span class="n">SEG</span><span class="p">,</span> <span class="n">SKL</span><span class="p">,</span> <span class="n">PARAMS</span><span class="p">)</span>
+<span class="n">skl_final</span><span class="p">,</span> <span class="n">brPts</span><span class="p">,</span> <span class="n">endPts</span><span class="p">,</span> <span class="n">reports</span> <span class="o">=</span> <span class="n">Pipeline3D</span><span class="o">.</span><span class="n">process_one_file</span><span class="p">(</span><span class="n">SEG</span><span class="p">,</span> <span class="n">SKL</span><span class="p">,</span> <span class="n">PARAMS</span><span class="p">)</span>
 
 <span class="c1"># skl_final is your final skeleton</span>
 <span class="c1"># brPts and endPts are two lists for the positions of branch points and end points</span>

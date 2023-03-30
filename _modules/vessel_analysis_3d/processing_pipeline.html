@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     
@@ -230,7 +227,7 @@
 
 
 <div class="viewcode-block" id="Pipeline3D"><a class="viewcode-back" href="../../vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D">[docs]</a><span class="k">class</span> <span class="nc">Pipeline3D</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The parent object class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -239,7 +236,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">analysis_parameters</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Pipeline3D.config_data"><a class="viewcode-back" href="../../vessel_analysis_3d.html#vessel_analysis_3d.processing_pipeline.Pipeline3D.config_data">[docs]</a>    <span class="k">def</span> <span class="nf">config_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        locate segmentation files and update parameters for output paths</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">seg_p</span> <span class="o">=</span> <span class="n">param_dict</span><span class="p">[</span><span class="s2">&quot;input_dir&quot;</span><span class="p">]</span>
@@ -292,14 +289,20 @@
         <span class="n">skl</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">param_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
         <span class="n">save_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">basename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">basename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;process one image, results are either returned as variables or saved to files</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;process one image, results are either returned as variables or saved to files</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">        -------------</span>
 <span class="sd">        seg: numpy.ndarray</span>
-
+<span class="sd">        skl: numpy.ndarray</span>
+<span class="sd">        param_dict: Dict</span>
+<span class="sd">            all paramters for stats calculation</span>
+<span class="sd">        save_path: Path</span>
+<span class="sd">            if provided, the stats will be saved to CSV, otherwise returned as DataFrame</span>
+<span class="sd">        basename: str</span>
+<span class="sd">            a unique identifier for this file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># skeleton to graph</span>
         <span class="n">networkxGraph</span> <span class="o">=</span> <span class="n">get_networkx_graph_from_array</span><span class="p">(</span><span class="n">skl</span><span class="p">)</span>

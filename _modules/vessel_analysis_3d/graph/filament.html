@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     
@@ -205,7 +202,7 @@
 
 
 <div class="viewcode-block" id="Filament"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.filament.Filament">[docs]</a><span class="k">class</span> <span class="nc">Filament</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Find statistics on a graph of a skeleton</span>
 
 <span class="sd">    Parameters</span>
@@ -272,7 +269,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Filament.dfs_iterative"><a class="viewcode-back" href="../../../vessel_analysis_3d.graph.html#vessel_analysis_3d.graph.filament.Filament.dfs_iterative">[docs]</a>    <span class="k">def</span> <span class="nf">dfs_iterative</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterate over the graph in a depth-first-search. If a branch or end point is</span>
 <span class="sd">        found, retrieve the segment and calculate its statistics</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -387,7 +384,7 @@
         <span class="k">return</span> <span class="n">coords_list</span>
 
     <span class="k">def</span> <span class="nf">_getSegment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the segment of a branch or end node by iterating over its predecessors</span>
 
 <span class="sd">        Parameters</span>
@@ -412,7 +409,7 @@
         <span class="k">return</span> <span class="n">segmentList</span>
 
     <span class="k">def</span> <span class="nf">_getBranchingDegree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.25</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates the branching degree of a segment</span>
 
 <span class="sd">        Parameters</span>
@@ -479,7 +476,7 @@
         <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_setSegStats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">interpolate</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the statistics for a segment</span>
 
 <span class="sd">        Parameters</span>
@@ -550,7 +547,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">segmentStats</span><span class="p">[</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">segment</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;zAngle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">zAngle</span>
 
     <span class="k">def</span> <span class="nf">_removeBorderPtsFromEndPts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes all end points which are image border points from end points list.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">endPtsToRemove</span> <span class="o">=</span> <span class="p">[]</span>
@@ -649,7 +646,7 @@
                 <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">brPtsDict</span><span class="p">[</span><span class="n">brPt</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_removeSmallAndSegmentsBelowDiameterLengthRatio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cut_neighbor_brpt_segs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes all branches with a length below a specified limit and length below the</span>
 <span class="sd">        scaled diameter and removes their statistics from the dictionaries. After branch</span>
 <span class="sd">        removal branch points are reassigned (either they remain branch point, become</span>
