@@ -98,14 +98,20 @@ class Pipeline3D(object):
         skl: np.ndarray,
         param_dict: Dict,
         save_path: Path = None,
-        basename: str = None,
+        basename: str = "default",
     ):
         """process one image, results are either returned as variables or saved to files
 
         Parameters:
         -------------
         seg: numpy.ndarray
-
+        skl: numpy.ndarray
+        param_dict: Dict
+            all paramters for stats calculation
+        save_path: Path
+            if provided, the stats will be saved to CSV, otherwise returned as DataFrame
+        basename: str
+            a unique identifier for this file
         """
         # skeleton to graph
         networkxGraph = get_networkx_graph_from_array(skl)

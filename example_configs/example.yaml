@@ -1,5 +1,5 @@
 data:
-  input_dir: /mnt/eternus/users/Shuo/project/datasets/VesselExpress_Data/Figure3/Hippocampus/Binary
+  input_dir: /mnt/eternus/project_data/vesselexpress/Figure3/Hippocampus/Binary
   input_type: Binary_*.tiff
   output_dir: /mnt/eternus/users/Jianxu/projects/vessel_analysis_3d/out/  # this optional, default is the "_tmp" folder under the working directory
 

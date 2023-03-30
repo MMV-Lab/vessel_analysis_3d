@@ -11,7 +11,7 @@ A Python package for analyzing 3D vascular structures from segmentations
 
 ## Quick Start
 
-In general, the analysis pipeline aims to convert segmented 3d vascular structures into statistics, with the consists of 3 steps:
+In general, the analysis pipeline aims to convert segmented 3d vascular structures into statistics, with the following 3 steps:
 
 1. Binary (segmentation) to preliminary skeleton
 
@@ -24,7 +24,7 @@ You can run analysis like `run_vessel_analysis --config ./example_configs/exampl
 Or, you can do this analysis in other functions by calling the processing pipeline
 
 ```python
-from vessel_analysis_3d.processing_pipeline import process_one_file
+from vessel_analysis_3d.processing_pipeline import Pipeline3D
 from skimage.morphology import skeletonize
 import numpy as np
 
@@ -36,7 +36,7 @@ SKL = SKL.astype(np.uint8)
 SKL[SKL > 0] = 1
 
 # Support PARAMS contains all parameters
-skl_final, brPts, endPts, reports = process_one_file(SEG, SKL, PARAMS)
+skl_final, brPts, endPts, reports = Pipeline3D.process_one_file(SEG, SKL, PARAMS)
 
 # skl_final is your final skeleton
 # brPts and endPts are two lists for the positions of branch points and end points
