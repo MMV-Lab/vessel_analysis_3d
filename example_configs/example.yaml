@@ -1,7 +1,7 @@
 data:
-  input_dir: /mnt/eternus/project_data/vesselexpress/Figure3/Hippocampus/Binary
+  input_dir: /mnt/eternus/users/Jair/Test/test_vessel_analysis_3d/Test_pred/img/
   input_type: Binary_*.tiff
-  output_dir: /mnt/eternus/users/Jianxu/projects/vessel_analysis_3d/out/  # this optional, default is the "_tmp" folder under the working directory
+  output_dir: /mnt/eternus/users/Jair/Test/test_vessel_analysis_3d/Test_pred/out/  # this optional, default is the "_tmp" folder under the working directory
 
 analysis:
   pixelDimensions: [2.0, 1.015625, 1.015625]
