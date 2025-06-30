@@ -18,8 +18,8 @@ from datetime import datetime
 
 # Third party
 import numpy as np
-from aicsimageio import AICSImage
-from aicsimageio.writers import OmeTiffWriter
+from bioio import BioImage
+from bioio.writers import OmeTiffWriter
 from skimage.morphology import skeletonize
 
 # Relative
@@ -168,8 +168,7 @@ class Pipeline3D(object):
     def run(self):
         for fn in self.filenames:
             # load the segmentation
-            seg_reader = AICSImage(fn)
-            seg = seg_reader.get_image_data("ZYX", C=0, T=0)
+            seg = BioImage(fn).get_image_data("ZYX", C=0, T=0)
             seg = seg.astype(np.uint8)
             seg[seg > 0] = 1
 

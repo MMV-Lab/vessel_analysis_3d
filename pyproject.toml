@@ -1,0 +1,84 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vessel_analysis_3d"
+version = "0.0.1" 
+description = "A Python package for analyzing 3D vascular structures from segmentations"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Jianxu Chen", email = "jianxuchen.ai@gmail.com"},
+]
+keywords = ["vessel_analysis_3d"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+]
+dependencies = [
+    "bioio==1.6.1",
+    "bioio-ome-tiff==1.1.0", 
+    "bioio-ome-zarr==1.2.0",
+    "bioio-tifffile==1.1.0",
+    "bioio-lif==1.1.0",
+    "scipy>=1.9.1",
+    "scikit-image>=0.19.3",
+    "networkx>=2.8.6",
+    "matplotlib>=3.6.0",
+    "geomdl>=5.3.1",
+    "botocore==1.38.38",
+    "lxml_html_clean",
+]
+
+[project.optional-dependencies]
+setup = [
+    "pytest-runner>=5.2",
+]
+test = [
+    "black>=19.10b0",
+    "codecov>=2.1.4",
+    "flake8>=3.8.3",
+    "flake8-debugger>=3.2.1",
+    "pytest>=5.4.3",
+    "pytest-cov>=2.9.0",
+    "pytest-raises>=0.11",
+]
+dev = [
+    "pytest-runner>=5.2",
+    "black>=19.10b0",
+    "codecov>=2.1.4",
+    "flake8>=3.8.3",
+    "flake8-debugger>=3.2.1",
+    "pytest>=5.4.3",
+    "pytest-cov>=2.9.0",
+    "pytest-raises>=0.11",
+    "bump2version>=1.0.1",
+    "coverage>=5.1",
+    "ipython>=7.15.0",
+    "m2r2>=0.2.7",
+    "Sphinx>=3.4.3",
+    "sphinx_rtd_theme>=0.5.1",
+    "tox>=3.15.2",
+    "twine>=3.1.1",
+    "wheel>=0.34.2",
+]
+
+[project.urls]
+Homepage = "https://github.com/MMV-Lab/vessel_analysis_3d"
+
+[project.scripts]
+run_vessel_analysis = "vessel_analysis_3d.bin.run_analysis:main"
+
+[tool.pytest.ini_options]
+collect_ignore = ["setup.py"]
+
+[tool.flake8]
+exclude = ["docs/"]
+ignore = ["E203", "E402", "W291", "W503", "E501"]
+max-line-length = 88

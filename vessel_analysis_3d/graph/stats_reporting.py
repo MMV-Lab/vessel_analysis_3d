@@ -64,6 +64,11 @@ def getAllStats(dictionary: Dict, imgName: str) -> List:
         list[0].append(i)
     for filament in dictionary.keys():
         for segment in dictionary[filament]:
+            final = []
+            for element in segment:
+                element= tuple(int(x) for x in element)
+                final.append(element)
+            segment = tuple(final)
             list_item = [imgName, filament, segment]
             for stat in dictionary[filament][segment]:
                 list_item.append(dictionary[filament][segment][stat])
@@ -96,6 +101,7 @@ def getBranchesBrPt(dictionary, imgName):
     list = [["Image", "FilamentID", "BranchID", "No. Branches per BranchPoint"]]
     for filament in dictionary.keys():
         for segment in dictionary[filament]:
+            segment = tuple(int(x) for x in segment)
             branches = dictionary[filament][segment]
             list_item = [imgName, filament, segment, branches]
             list.append(list_item)
