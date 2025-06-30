@@ -18,13 +18,13 @@ vessel\_analysis\_3d.processing\_pipeline module
 
 .. automodule:: vessel_analysis_3d.processing_pipeline
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: vessel_analysis_3d
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

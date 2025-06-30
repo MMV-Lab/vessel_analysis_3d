@@ -9,45 +9,45 @@ vessel\_analysis\_3d.graph.core module
 
 .. automodule:: vessel_analysis_3d.graph.core
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 vessel\_analysis\_3d.graph.filament module
 ------------------------------------------
 
 .. automodule:: vessel_analysis_3d.graph.filament
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 vessel\_analysis\_3d.graph.measurement module
 ---------------------------------------------
 
 .. automodule:: vessel_analysis_3d.graph.measurement
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 vessel\_analysis\_3d.graph.networkx\_from\_array module
 -------------------------------------------------------
 
 .. automodule:: vessel_analysis_3d.graph.networkx_from_array
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 vessel\_analysis\_3d.graph.stats\_reporting module
 --------------------------------------------------
 
 .. automodule:: vessel_analysis_3d.graph.stats_reporting
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: vessel_analysis_3d.graph
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
