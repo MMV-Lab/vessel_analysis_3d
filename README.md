@@ -46,9 +46,9 @@ skl_final, brPts, endPts, reports = Pipeline3D.process_one_file(SEG, SKL, PARAMS
 ## Installation
 
 
-Before starting, we recommend to [create a new conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-with-commands) or [a virtual environment](https://docs.python.org/3/library/venv.html) with Python 3.9+.
+Before starting, we recommend to [create a new conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-with-commands) or [a virtual environment](https://docs.python.org/3/library/venv.html) with Python 3.10+.
 
-```
+```bash
 conda create -y -n 3danalysis -c conda-forge python=3.11
 conda activate 3danalysis
 ```
