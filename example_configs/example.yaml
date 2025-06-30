@@ -2,7 +2,6 @@ data:
   input_dir: /mnt/eternus/users/Jianxu/data/Figure3/Hippocampus/Binary/
   input_type: Binary_*.tiff
   output_dir: /path/to/output/folder  # this optional, default is the "_tmp" folder under the working directory
-
 analysis:
   pixelDimensions: [2.0, 1.015625, 1.015625]
   pruningScale: 1.5
