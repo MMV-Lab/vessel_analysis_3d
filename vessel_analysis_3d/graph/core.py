@@ -217,15 +217,15 @@ class GraphObj:
                     # fill dictionaries containing all filament, segment and branch
                     # point statistics
                     self.segStatsDict[ithDisjointGraph] = filament.segmentStats
-                    self.filStatsDict[ithDisjointGraph][
-                        "TerminalPoints"
-                    ] = self.countEndPointsDict[ithDisjointGraph]
-                    self.filStatsDict[ithDisjointGraph][
-                        "BranchPoints"
-                    ] = self.countBranchPointsDict[ithDisjointGraph]
-                    self.filStatsDict[ithDisjointGraph][
-                        "Segments"
-                    ] = self.countSegmentsDict[ithDisjointGraph]
+                    self.filStatsDict[ithDisjointGraph]["TerminalPoints"] = (
+                        self.countEndPointsDict[ithDisjointGraph]
+                    )
+                    self.filStatsDict[ithDisjointGraph]["BranchPoints"] = (
+                        self.countBranchPointsDict[ithDisjointGraph]
+                    )
+                    self.filStatsDict[ithDisjointGraph]["Segments"] = (
+                        self.countSegmentsDict[ithDisjointGraph]
+                    )
                     self.branchesBrPtDict[ithDisjointGraph] = filament.brPtsDict
                 else:
                     self.infoDict["filaments"] -= 1

@@ -97,13 +97,13 @@ class Filament:
                     ):  # cycle found
                         if len(self.graph[neighbor]) > 2:  # neighbor is branch point
                             oldPred = self._predDict[neighbor]
-                            self._predDict[
-                                neighbor
-                            ] = vertex  # change predecessor to get segment of cycle
+                            self._predDict[neighbor] = (
+                                vertex  # change predecessor to get segment of cycle
+                            )
                             segment = self._getSegment(neighbor)
-                            self._predDict[
-                                neighbor
-                            ] = oldPred  # change back to old predecessor
+                            self._predDict[neighbor] = (
+                                oldPred  # change back to old predecessor
+                            )
                             self._setSegStats(segment, interpolate=self.interpolate)
                 if len(self.graph[vertex]) == 1:  # end point found
                     self.endPtsList.append(vertex)
