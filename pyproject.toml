@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -12,14 +12,13 @@ license = {file = "LICENSE"}
 authors = [
     {name = "Jianxu Chen", email = "jianxuchen.ai@gmail.com"},
 ]
-keywords = ["vessel_analysis_3d"]
+keywords = ["vessel analysis", "morphology", "topology"]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
     "bioio==1.6.1",
@@ -69,16 +68,51 @@ dev = [
     "wheel>=0.34.2",
 ]
 
+all = [
+    "vessel_analysis_3d[dev]",
+    "vessel_analysis_3d[test]",
+    "vessel_analysis_3d[setup]",
+]
+
 [project.urls]
 Homepage = "https://github.com/MMV-Lab/vessel_analysis_3d"
+
+[tool.setuptools]
+include-package-data = true
+zip-safe = false
+
+[tool.setuptools.packages.find]
+include = ["vessel_analysis_3d"]
 
 [project.scripts]
 run_vessel_analysis = "vessel_analysis_3d.bin.run_analysis:main"
 
 [tool.pytest.ini_options]
-collect_ignore = ["setup.py"]
+addopts = "--cov=vessel_analysis_3d --no-cov-on-fail --cov-report=term-missing --cov-report=xml --cov-branch --durations=10"
+testpaths = [
+    "vessel_analysis_3d/tests",
+]
+python_files = "test_*.py"
+
 
 [tool.flake8]
-exclude = ["docs/"]
-ignore = ["E203", "E402", "W291", "W503", "E501"]
+exclude = [
+    "docs/",
+    ".git/",
+    "__pycache__/",
+    "build/",
+    "dist/",
+    ".venv/",
+    ".tox/",
+    "*.egg-info/",
+]
+ignore = [
+	"E203",
+	"E402",
+	"W291",
+	"W503",
+	"W293",
+	"W292",
+	"E501",
+] 
 max-line-length = 88
