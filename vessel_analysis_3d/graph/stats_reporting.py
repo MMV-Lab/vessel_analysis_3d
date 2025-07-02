@@ -66,7 +66,7 @@ def getAllStats(dictionary: Dict, imgName: str) -> List:
         for segment in dictionary[filament]:
             final = []
             for element in segment:
-                element= tuple(int(x) for x in element)
+                element = tuple(int(x) for x in element)
                 final.append(element)
             segment = tuple(final)
             list_item = [imgName, filament, segment]
