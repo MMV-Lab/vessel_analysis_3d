@@ -82,7 +82,10 @@ include-package-data = true
 zip-safe = false
 
 [tool.setuptools.packages.find]
-include = ["vessel_analysis_3d"]
+include = ["vessel_analysis_3d", "vessel_analysis_3d.*"]
+
+[tool.setuptools.package-dir]
+vessel_analysis_3d = "vessel_analysis_3d"
 
 [project.scripts]
 run_vessel_analysis = "vessel_analysis_3d.bin.run_analysis:main"
