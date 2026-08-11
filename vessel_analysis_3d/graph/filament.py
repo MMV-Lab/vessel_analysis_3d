@@ -7,7 +7,15 @@ import math
 from scipy import interpolate
 from geomdl import knotvector
 
-from .measurement import getLength, getVolumeCylinder, getVolume, getRadius, get_z_angle
+from .measurement import (
+    getLength,
+    getVolumeCylinder,
+    getSurfaceAreaCylinder,
+    getVolume,
+    getRadius,
+    getRadiusMinMax,
+    get_z_angle,
+)
 
 
 class Filament:
@@ -51,6 +59,9 @@ class Filament:
         removeEndPtsFromSmallFilaments,
         interpolate,
         cut_neighbor_brpt_segs,
+        minBranchLengthUm,
+        minBranchRadiusUm,
+        minJunctionRadiusUm,
     ):
         self.graph = graph
         self.start = start
@@ -66,6 +77,9 @@ class Filament:
         self.removeEndPtsFromSmallFilaments = removeEndPtsFromSmallFilaments
         self.interpolate = interpolate
         self.cut_neighbor_brpt_segs = cut_neighbor_brpt_segs
+        self.minBranchLengthUm = minBranchLengthUm
+        self.minBranchRadiusUm = minBranchRadiusUm
+        self.minJunctionRadiusUm = minJunctionRadiusUm
         self.endPtsList = []
         self.brPtsDict = {}
         self.segmentsDict = {}
@@ -76,6 +90,12 @@ class Filament:
         self.postprocEndPts = 0
         # dictionary containing all segment statistics
         self.segmentStats = defaultdict(dict)
+        # per-segment diameter profile: key -> list of
+        # (position_um, diameter_um, z, y, x) along the segment's real,
+        # possibly-curved skeleton path (not the aggregate mean/min/max in
+        # segmentStats). Always kept in sync with segmentStats: both are set
+        # together in _setSegStats and removed together in _removeSegments.
+        self.segmentProfiles = {}
 
     def dfs_iterative(self):
         """
@@ -128,9 +148,7 @@ class Filament:
 
         if self.removeEndPtsFromSmallFilaments:
             if len(self.segmentsDict) < 5:
-                endPtsToRemove = self.endPtsList
-                for endPt in endPtsToRemove:
-                    self.endPtsList.remove(endPt)
+                self.endPtsList = []
 
         self.postprocessTime = time.time() - postprocStart
 
@@ -277,12 +295,41 @@ class Filament:
         segVect = [j - i for i, j in zip(segment[0], segPt)]
         segVect = [a * b for a, b in zip(segVect, self.pixelDims)]
 
-        cosine_angle = np.dot(segPredVect, segVect) / (
-            np.linalg.norm(segPredVect) * np.linalg.norm(segVect)
-        )
+        segPredNorm = np.linalg.norm(segPredVect)
+        segNorm = np.linalg.norm(segVect)
+        if segPredNorm <= 1e-12 or segNorm <= 1e-12:
+            return 0.0
+
+        cosine_angle = np.dot(segPredVect, segVect) / (segPredNorm * segNorm)
+        cosine_angle = float(np.clip(cosine_angle, -1.0, 1.0))
         angle = np.arccos(round(cosine_angle, 4))
 
         return round(np.degrees(angle), 4)
+
+    def _computeDiameterProfile(self, segment, radiusMat):
+        """
+        Diameter at every skeleton voxel along a segment's real (possibly
+        curved) path, with cumulative physical distance from the segment's
+        first node -- unlike the mean/min/max in segmentStats, this is not
+        aggregated away, so a viewer can show diameter at a chosen spacing
+        along the actual path instead of one value for the whole segment.
+
+        Returns a list of (position_um, diameter_um, z, y, x) tuples, one per
+        node in `segment`, in order.
+        """
+        profile = []
+        cumDist = 0.0
+        prevPt = None
+        for pt in segment:
+            if prevPt is not None:
+                vect = [
+                    (a - b) * d for a, b, d in zip(pt, prevPt, self.pixelDims)
+                ]
+                cumDist += float(np.linalg.norm(vect))
+            diameter = 2.0 * float(radiusMat[pt])
+            profile.append((cumDist, diameter, int(pt[0]), int(pt[1]), int(pt[2])))
+            prevPt = pt
+        return profile
 
     def _setSegStats(self, segment, interpolate):
         """
@@ -304,6 +351,30 @@ class Filament:
         else:
             radius = getRadius(self.skelRadii, segment)
 
+        # min/max radius across the segment's own skeleton nodes (not the
+        # interpolated/smoothed path) -- same basis as the mean radius above
+        if self.smallRAMmode:
+            minRadius, maxRadius = getRadiusMinMax(
+                da.from_zarr(
+                    "tmp_zarr" + os.sep + self.fileName + "_radiusMatrix.zarr"
+                ),
+                segment,
+            )
+        else:
+            minRadius, maxRadius = getRadiusMinMax(self.skelRadii, segment)
+
+        # full per-voxel diameter profile along the segment's real skeleton
+        # path (see self.segmentProfiles docstring in __init__)
+        if self.smallRAMmode:
+            radiusMatForProfile = da.from_zarr(
+                "tmp_zarr" + os.sep + self.fileName + "_radiusMatrix.zarr"
+            )
+        else:
+            radiusMatForProfile = self.skelRadii
+        self.segmentProfiles[segment[0], segment[len(segment) - 1]] = (
+            self._computeDiameterProfile(segment, radiusMatForProfile)
+        )
+
         if interpolate:
             coords = self._seg_interpolate(np.asarray(segment), radius)
         else:
@@ -318,6 +389,10 @@ class Filament:
 
         # calculate segment length
         segLength = getLength(coords, self.pixelDims)
+        if segLength <= 0:
+            straightness = 1.0
+        else:
+            straightness = curveDisplacement / segLength
 
         # calculate segment volume
         if interpolate:
@@ -334,6 +409,10 @@ class Filament:
         else:
             volume = getVolumeCylinder(radius, segLength)
 
+        # calculate segment surface area (lateral surface of the cylinder
+        # approximation, same model as volume above)
+        surfaceArea = getSurfaceAreaCylinder(radius, segLength)
+
         # calculate branching degree
         branchingDegree = self._getBranchingDegree(segment, self.branchingThr)
 
@@ -341,11 +420,20 @@ class Filament:
         self.segmentStats[segment[0], segment[len(segment) - 1]]["diameter"] = (
             radius * 2
         )
+        self.segmentStats[segment[0], segment[len(segment) - 1]]["minDiameter"] = (
+            minRadius * 2
+        )
+        self.segmentStats[segment[0], segment[len(segment) - 1]]["maxDiameter"] = (
+            maxRadius * 2
+        )
         self.segmentStats[segment[0], segment[len(segment) - 1]]["straightness"] = (
-            curveDisplacement / segLength
+            straightness
         )
         self.segmentStats[segment[0], segment[len(segment) - 1]]["length"] = segLength
         self.segmentStats[segment[0], segment[len(segment) - 1]]["volume"] = volume
+        self.segmentStats[segment[0], segment[len(segment) - 1]][
+            "surfaceArea"
+        ] = surfaceArea
         self.segmentStats[segment[0], segment[len(segment) - 1]][
             "branchingAngle"
         ] = branchingDegree
@@ -400,6 +488,7 @@ class Filament:
             self._deletePath(self.segmentsDict[key])
             del self.segmentsDict[key]
             del self.segmentStats[key]
+            del self.segmentProfiles[key]
             if key[0] in self.endPtsList:
                 self.endPtsList.remove(key[0])
             if key[1] in self.endPtsList:
@@ -426,6 +515,7 @@ class Filament:
                     segKey1 = (segments[0][0], segments[0][-1])
                     del self.segmentsDict[segKey1]
                     del self.segmentStats[segKey1]
+                    del self.segmentProfiles[segKey1]
                     if (
                         len(segments) != 1
                     ):  # if segment is not a circle delete second segment from
@@ -433,6 +523,7 @@ class Filament:
                         segKey2 = (segments[1][0], segments[1][-1])
                         del self.segmentsDict[segKey2]
                         del self.segmentStats[segKey2]
+                        del self.segmentProfiles[segKey2]
                         # combine both segments to one segment and calculate its
                         # statistics
                         if segments[0][-1] == brPt and segments[1][0] == brPt:
@@ -465,12 +556,19 @@ class Filament:
         # ratio
         keysToRemoveList = []
         for segKey in self.segmentStats:
+            seg_length = self.segmentStats[segKey]["length"]
+            seg_diameter = self.segmentStats[segKey]["diameter"]
+            seg_is_terminal = segKey[0] in self.endPtsList or segKey[1] in self.endPtsList
+            is_short_by_length = seg_length <= self.lengthLim
+            is_short_by_branch_rule = seg_length < self.minBranchLengthUm
+            is_thin_by_diameter = seg_diameter < self.minBranchRadiusUm * 2
+
             if cut_neighbor_brpt_segs:
                 if (
-                    self.segmentStats[segKey]["length"]
-                    < self.diaScale * self.segmentStats[segKey]["diameter"]
-                    and (segKey[0] in self.endPtsList or segKey[1] in self.endPtsList)
-                ) or (self.segmentStats[segKey]["length"] <= self.lengthLim):
+                    (seg_length < self.diaScale * seg_diameter and seg_is_terminal)
+                    or is_short_by_length
+                    or (is_short_by_branch_rule and is_thin_by_diameter)
+                ):
                     keysToRemoveList.append(segKey)
             # dont cut segments which are 2 branching points with length below pixel
             # dimension
@@ -478,15 +576,13 @@ class Filament:
                 if not (
                     segKey[0] in self.brPtsDict
                     and segKey[1] in self.brPtsDict
-                    and self.segmentStats[segKey]["length"] <= self.lengthLim
+                    and is_short_by_length
                 ):
                     if (
-                        self.segmentStats[segKey]["length"]
-                        < self.diaScale * self.segmentStats[segKey]["diameter"]
-                        and (
-                            segKey[0] in self.endPtsList or segKey[1] in self.endPtsList
-                        )
-                    ) or (self.segmentStats[segKey]["length"] <= self.lengthLim):
+                        (seg_length < self.diaScale * seg_diameter and seg_is_terminal)
+                        or is_short_by_length
+                        or (is_short_by_branch_rule and is_thin_by_diameter)
+                    ):
                         keysToRemoveList.append(segKey)
         self.postprocBranches = len(keysToRemoveList)
         self._removeSegments(keysToRemoveList)

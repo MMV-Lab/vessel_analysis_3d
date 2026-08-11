@@ -51,14 +51,33 @@ class GraphObj:
         expFlag: bool = False,
         smallRAMmode: bool = False,
         fileName: Union[str, Path] = None,
+        minBranchLengthUm: float = 4.0,
+        minBranchRadiusUm: float = 1.0,
+        minJunctionRadiusUm: float = 1.0,
+        maskOpeningRadiusUm: float = 0.75,
+        clusterCollapseScale: float = 3.0,
+        maskTipRecoverySteps: int = 1,
+        rawSegmentation=None,
     ):
         self.skeleton = skeleton
+        self.rawSegmentation = (
+            rawSegmentation if rawSegmentation is not None else segmentation
+        )
         self.networkxGraph = networkxGraph
         self.pixelDims = pixelDimensions
         self.prunScale = pruningScale
         self.lengthLim = lengthLimit
         self.diaScale = diaScale
         self.branchingThresh = branchingThreshold
+        self.minBranchLengthUm = minBranchLengthUm
+        self.minBranchRadiusUm = minBranchRadiusUm
+        self.minJunctionRadiusUm = minJunctionRadiusUm
+        # consumed as mask preprocessing in Pipeline3D.run() before this class is
+        # constructed; kept here only so the analysis-parameters dict can be
+        # forwarded to this constructor unfiltered
+        self.maskOpeningRadiusUm = maskOpeningRadiusUm
+        self.maskTipRecoverySteps = maskTipRecoverySteps
+        self.clusterCollapseScale = clusterCollapseScale
         self.removeBorderEndPts = removeBorderEndPts
         self.removeEndPtsFromSmallFilaments = removeEndPtsFromSmallFilaments
         self.interpolate = interpolate
@@ -92,13 +111,17 @@ class GraphObj:
         self.nodesFinal = set()
         self.runTimeDict = {
             "distTransformation": 0,
+            "clusterCollapse": 0,
             "pruning": 0,
+            "endpointExtension": 0,
             "dfsComp": 0,
             "postProcessing": 0,
             "statCalculation": 0,
         }
         self.infoDict = {
+            "clusterCollapse": 0,
             "pruning": 0,
+            "endpointsExtended": 0,
             "filaments": 0,
             "segments": 0,
             "postProcBranches": 0,
@@ -107,6 +130,7 @@ class GraphObj:
         self.nodeDegreeDict = dict(nx.degree(self.networkxGraph))
         # dictionaries containing all filament, segment and branch point statistics
         self.segStatsDict = defaultdict(dict)
+        self.segmentProfilesDict = defaultdict(dict)
         self.filStatsDict = defaultdict(dict)
         self.branchesBrPtDict = defaultdict(dict)
 
@@ -139,11 +163,14 @@ class GraphObj:
             self.radiusMatrix.to_zarr(
                 "tmp_zarr" + os.sep + self.fileName + "_radiusMatrix.zarr"
             )
-            self._prune(
-                da.from_zarr("tmp_zarr" + os.sep + self.fileName + "_radiusMatrix.zarr")
+            radiusMat = da.from_zarr(
+                "tmp_zarr" + os.sep + self.fileName + "_radiusMatrix.zarr"
             )
         else:
-            self._prune(self.radiusMatrix)
+            radiusMat = self.radiusMatrix
+        self._collapse_dense_clusters(radiusMat)
+        self._prune(radiusMat)
+        self._extend_endpoints_to_raw_boundary(self.rawSegmentation)
 
         self.filaments = list(self.connected_component_subgraphs(self.networkxGraph))
         # print("found {} filaments".format(len(self.filaments)))
@@ -186,6 +213,9 @@ class GraphObj:
                     self.removeEndPtsFromSmallFilaments,
                     self.interpolate,
                     self.cut_neighbor_brpt_segs,
+                    self.minBranchLengthUm,
+                    self.minBranchRadiusUm,
+                    self.minJunctionRadiusUm,
                 )
                 filament.dfs_iterative()
                 self.segmentsDict[ithDisjointGraph] = filament.segmentsDict
@@ -217,6 +247,9 @@ class GraphObj:
                     # fill dictionaries containing all filament, segment and branch
                     # point statistics
                     self.segStatsDict[ithDisjointGraph] = filament.segmentStats
+                    self.segmentProfilesDict[ithDisjointGraph] = (
+                        filament.segmentProfiles
+                    )
                     self.filStatsDict[ithDisjointGraph]["TerminalPoints"] = (
                         self.countEndPointsDict[ithDisjointGraph]
                     )
@@ -301,43 +334,219 @@ class GraphObj:
                 }
             )
 
-    def _prune(self, radiusMat):
+    def _collapse_dense_clusters(self, radiusMat):
         """
-        This implements the pruning as described by Montero & Lang
-        Skeleton pruning by contour approximation and the integer
-        medial axis transform. Computers & Graphics 36, 477-487 (2012).
-        Branches are removed when |ep - bp|^2 <= s * |f - bp|^2
-        where ep = end point, bp = branch point, s = scaling factor,
-        f = closest boundary point
+        Collapse small, locally cyclic or plate-like voxel clusters into a single
+        representative junction node.
+
+        Lee's topological thinning only guarantees topology preservation, not a
+        1-voxel-wide curve everywhere: at a roughly blob-shaped confluence (e.g. a
+        3-way junction where the branches meet at comparable widths) or where
+        boundary roughness crosses itself, it can leave a small tangle of
+        interconnected voxels, or even a residual 2D surface patch, instead of a
+        single point. These form cycles in the skeleton graph and are invisible to
+        the endpoint-based pruning in `_prune` (a cycle has no degree-1 node to
+        start a walk from). Each such cluster is replaced by its highest-radius
+        node -- the best proxy for the true anatomical junction centre -- as long
+        as the cluster's physical extent is small relative to the local vessel
+        radius, so that a genuine, larger-scale vascular loop is left untouched.
         """
         startTime = time.time()
-        endPtsList = [k for (k, v) in self.nodeDegreeDict.items() if v == 1]
-        branchesToRemove = []
-        for endPt in endPtsList:
-            visited, stack = set(), [endPt]
-            branch = []
-            while stack:
-                vertex = stack.pop()
-                if vertex not in visited:
-                    visited.add(vertex)
-                    branch.append(vertex)
-                    neighbors = [n for n in self.networkxGraph.neighbors(vertex)]
-                    for neighbor in neighbors:
-                        if neighbor not in visited:
-                            stack.append(neighbor)
-                    if len(neighbors) > 2:  # branch point found
-                        if (
-                            getLength(branch, self.pixelDims)
-                            <= radiusMat[vertex] * self.prunScale
-                        ):
-                            branchesToRemove.append(branch)
-                        break
-        # delete branches from adjacency matrix besides branch points
-        for branch in branchesToRemove:
-            for node in branch[:-1]:
-                self.networkxGraph.remove_node(node)
+        total_collapsed = 0
+        changed = True
+        while changed:
+            changed = False
+            for component in list(nx.biconnected_components(self.networkxGraph)):
+                if len(component) < 3:
+                    continue  # a single edge is not a cycle
+                if not all(self.networkxGraph.has_node(n) for n in component):
+                    # overlaps a cluster collapsed earlier in this pass via a
+                    # shared articulation point; revisit on the next pass
+                    continue
+
+                nodes = list(component)
+                radii = [float(radiusMat[n]) for n in nodes]
+                max_radius = max(radii)
+                coords = np.array(nodes, dtype=float) * np.array(self.pixelDims)
+                diffs = coords[:, None, :] - coords[None, :, :]
+                cluster_diameter_um = float(np.sqrt((diffs**2).sum(-1)).max())
+
+                if cluster_diameter_um >= self.clusterCollapseScale * max_radius:
+                    continue  # likely a genuine larger-scale vascular loop
+
+                representative = nodes[int(np.argmax(radii))]
+                outside_neighbors = set()
+                for n in nodes:
+                    for neighbor in self.networkxGraph.neighbors(n):
+                        if neighbor not in component:
+                            outside_neighbors.add(neighbor)
+
+                for n in nodes:
+                    if n != representative:
+                        self.networkxGraph.remove_node(n)
+                for neighbor in outside_neighbors:
+                    if not self.networkxGraph.has_edge(representative, neighbor):
+                        self.networkxGraph.add_edge(representative, neighbor)
+
+                total_collapsed += 1
+                changed = True
+        self.nodeDegreeDict = dict(nx.degree(self.networkxGraph))
+        self.runTimeDict["clusterCollapse"] = round(time.time() - startTime, 3)
+        self.infoDict["clusterCollapse"] = total_collapsed
+
+    def _prune(self, radiusMat):
+        """
+        This implements a conservative pruning step for weak, noise-like branches.
+
+        The old heuristic only removed branches based on a short path-length to the
+        first branch point. For imperfect, weakly connected liver segmentations, this
+        can incorrectly keep thin bridge-like artifacts. We now prune a branch if it is
+        short in physical units and/or its local radius is below a physical threshold.
+
+        This runs to a fixed point: removing a spur can drop its branch point's
+        degree to 2 (it stops being a branch point, correctly merging into a single
+        through-segment) or to 1 (it becomes a new end point). A rough, few-voxel
+        bridge in the segmentation often produces a small cascade of such nearby
+        branch points, so a single pass only cleans the outermost one. Looping until
+        no branch is removed catches the whole cascade instead of leaving the inner
+        spurious branch points behind.
+        """
+        startTime = time.time()
+        total_pruned = 0
+        while True:
+            endPtsList = [k for (k, v) in self.nodeDegreeDict.items() if v == 1]
+            branchesToRemove = []
+            for endPt in endPtsList:
+                visited, stack = set(), [endPt]
+                branch = []
+                while stack:
+                    vertex = stack.pop()
+                    if vertex not in visited:
+                        visited.add(vertex)
+                        branch.append(vertex)
+                        neighbors = [n for n in self.networkxGraph.neighbors(vertex)]
+                        for neighbor in neighbors:
+                            if neighbor not in visited:
+                                stack.append(neighbor)
+                        if len(neighbors) > 2:  # branch point found
+                            branch_length_um = getLength(branch, self.pixelDims)
+                            branch_point_radius_um = float(radiusMat[vertex])
+                            branch_mean_radius_um = float(
+                                np.mean([radiusMat[n] for n in branch[:-1]])
+                            )
+                            is_short_branch = branch_length_um < self.minBranchLengthUm
+                            is_junction_thin = (
+                                branch_point_radius_um < self.minJunctionRadiusUm
+                            )
+                            is_branch_thin = branch_mean_radius_um < self.minBranchRadiusUm
+                            is_weak_branch = is_junction_thin or is_branch_thin
+
+                            # Absolute thresholds assume a locally cylindrical vessel,
+                            # which does not hold at bulges or where two vessels touch.
+                            # As a scale-independent complement, also prune a spur whose
+                            # length is short relative to the trunk radius it attaches
+                            # to (pruningScale): a real bifurcation's branches are
+                            # normally at least on the order of the trunk's own radius,
+                            # while a noise spur off a rough boundary is much shorter
+                            # than the trunk it sits on regardless of absolute size.
+                            is_short_relative_to_trunk = (
+                                branch_length_um
+                                < self.prunScale * branch_point_radius_um
+                            )
+
+                            # For liver-vessel masks, only the branch-point and the
+                            # interior support of the branch are reliable. Short and
+                            # weakly supported branches are removed; true vessel tips
+                            # are preserved.
+                            if (is_short_branch and is_weak_branch) or is_short_relative_to_trunk:
+                                branchesToRemove.append(branch)
+                            break
+            if not branchesToRemove:
+                break
+            # delete branches from adjacency matrix besides branch points
+            for branch in branchesToRemove:
+                for node in branch[:-1]:
+                    if self.networkxGraph.has_node(node):
+                        self.networkxGraph.remove_node(node)
+            total_pruned += len(branchesToRemove)
+            self.nodeDegreeDict = dict(nx.degree(self.networkxGraph))
         self.runTimeDict["pruning"] = round(time.time() - startTime, 3)
-        self.infoDict["pruning"] = len(branchesToRemove)
+        self.infoDict["pruning"] = total_pruned
+
+    def _extend_endpoints_to_raw_boundary(
+        self, raw_segmentation, tangent_lookback: int = 5, max_extension_um: float = 50.0
+    ):
+        """
+        Extend true skeleton endpoints outward to the boundary of the raw
+        (pre-opening) segmentation, along each endpoint's local tangent.
+
+        Mask preprocessing (see Pipeline3D.run()) trims a few voxels off every
+        tapering vessel tip along with the noise it is meant to suppress, and
+        widening that opening was shown to reconnect most of the noise instead
+        of just recovering the tips. Since each endpoint here is already final
+        (after cluster collapse and pruning), it is walked straight outward, in
+        physical space, through the untouched raw mask until it leaves the
+        vessel. This only ever extends an existing leaf along its own
+        established direction, so it cannot create a new branch point, and a
+        suppressed noise spike -- not collinear with the segment -- is not
+        picked up.
+        """
+        startTime = time.time()
+        pixel_dims = np.array(self.pixelDims, dtype=float)
+        step_phys = float(pixel_dims.min()) / 2.0
+        max_steps = int(round(max_extension_um / step_phys))
+        shape = raw_segmentation.shape
+
+        endpoints = [n for n, d in self.networkxGraph.degree() if d == 1]
+        extended = 0
+        for endpoint in endpoints:
+            # walk backward through the single-neighbor chain to estimate the
+            # local tangent direction at this endpoint
+            path = [endpoint]
+            prev, cur = None, endpoint
+            for _ in range(tangent_lookback):
+                neighbors = [n for n in self.networkxGraph.neighbors(cur) if n != prev]
+                if not neighbors:
+                    break
+                prev, cur = cur, neighbors[0]
+                path.append(cur)
+                if self.networkxGraph.degree(cur) != 2:
+                    break  # reached a branch point or another endpoint
+            if len(path) < 2:
+                continue
+
+            start_phys = np.array(path[-1], dtype=float) * pixel_dims
+            end_phys = np.array(path[0], dtype=float) * pixel_dims
+            direction = end_phys - start_phys
+            norm = np.linalg.norm(direction)
+            if norm < 1e-9:
+                continue
+            direction = direction / norm
+
+            radius_here = float(self.radiusMatrix[endpoint])
+            pos_phys = end_phys.copy()
+            last_voxel = endpoint
+            did_extend = False
+            for _ in range(max_steps):
+                pos_phys = pos_phys + step_phys * direction
+                voxel = tuple(int(round(v)) for v in pos_phys / pixel_dims)
+                if any(v < 0 or v >= s for v, s in zip(voxel, shape)):
+                    break
+                if not raw_segmentation[voxel]:
+                    break
+                if voxel == last_voxel:
+                    continue
+                self.networkxGraph.add_edge(last_voxel, voxel)
+                self.radiusMatrix[voxel] = radius_here
+                last_voxel = voxel
+                did_extend = True
+            if did_extend:
+                extended += 1
+
+        if extended:
+            self.nodeDegreeDict = dict(nx.degree(self.networkxGraph))
+        self.runTimeDict["endpointExtension"] = round(time.time() - startTime, 3)
+        self.infoDict["endpointsExtended"] = extended
 
     def connected_component_subgraphs(self, G):
         for c in nx.connected_components(G):

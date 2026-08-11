@@ -33,14 +33,33 @@ def getLength(path, dimensions):
 
 
 def getRadius(distTrans, segment):
+    if len(segment) == 0:
+        return 0.0
     sumRadii = 0
     for skelPt in segment:
-        sumRadii += distTrans[skelPt]
-    return sumRadii / len(segment)
+        sumRadii += float(distTrans[skelPt])
+    radius = sumRadii / len(segment)
+    if not np.isfinite(radius):
+        return 0.0
+    return radius
+
+
+def getRadiusMinMax(distTrans, segment):
+    if len(segment) == 0:
+        return 0.0, 0.0
+    radii = [float(distTrans[skelPt]) for skelPt in segment]
+    radii = [r for r in radii if np.isfinite(r)]
+    if not radii:
+        return 0.0, 0.0
+    return min(radii), max(radii)
 
 
 def getVolumeCylinder(radius, segLength):
     return math.pi * radius**2 * segLength
+
+
+def getSurfaceAreaCylinder(radius, segLength):
+    return 2 * math.pi * radius * segLength
 
 
 def getVolume(skelRadii, segment, dimensions):
