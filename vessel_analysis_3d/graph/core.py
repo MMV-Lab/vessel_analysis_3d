@@ -33,13 +33,6 @@ class GraphObj:
         networkx graph of a skeleton
     """
 
-    # Hard cap on the number of nodes a biconnected component may have to be
-    # eligible for collapsing in _collapse_dense_clusters. A genuine
-    # Lee-thinning tangle at a junction is a handful of voxels; this bounds
-    # how large a "cluster" can be regardless of any single node's local EDT
-    # radius, which the relative diameter/radius check alone cannot do.
-    _MAX_COLLAPSE_CLUSTER_NODES = 20
-
     def __init__(
         self,
         segmentation,
@@ -376,18 +369,6 @@ class GraphObj:
                     continue
 
                 nodes = list(component)
-                if len(nodes) > self._MAX_COLLAPSE_CLUSTER_NODES:
-                    # A genuine Lee-thinning artifact tangle is a handful of
-                    # voxels. The diameter/radius check below can be fooled by
-                    # a single outlier-large local radius (e.g. one thick
-                    # vessel node in an otherwise large biconnected
-                    # component), which would let a real, large-scale cycle
-                    # (an anastomosis, or several unrelated small tangles
-                    # bridged by an unrelated path) pass as "collapsible".
-                    # Node count is a size proxy that a single outlier radius
-                    # cannot distort, so it catches those cases regardless of
-                    # local vessel thickness.
-                    continue
                 radii = [float(radiusMat[n]) for n in nodes]
                 max_radius = max(radii)
                 coords = np.array(nodes, dtype=float) * np.array(self.pixelDims)
