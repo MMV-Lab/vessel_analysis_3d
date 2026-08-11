@@ -81,6 +81,12 @@ class Filament:
         self.minBranchRadiusUm = minBranchRadiusUm
         self.minJunctionRadiusUm = minJunctionRadiusUm
         self.endPtsList = []
+        # true endpoints excluded from endPtsList by removeBorderEndPts
+        # (touch the volume boundary, so likely a field-of-view crop
+        # artifact rather than a real vessel terminus -- kept here, not
+        # discarded, so a viewer can show them separately without having to
+        # recompute anything)
+        self.borderEndPts = []
         self.brPtsDict = {}
         self.segmentsDict = {}
         self._predDict = {}
@@ -473,6 +479,7 @@ class Filament:
                     self.postprocEndPts += 1
         for endPt in endPtsToRemove:
             self.endPtsList.remove(endPt)
+        self.borderEndPts.extend(endPtsToRemove)
 
     def _deletePath(self, path):
         for i in range(len(path) - 1):

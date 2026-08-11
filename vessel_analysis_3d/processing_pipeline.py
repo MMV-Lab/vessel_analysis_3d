@@ -217,6 +217,14 @@ class Pipeline3D(object):
             for li in i:
                 endPts.append(li)
 
+        # true endpoints excluded because they touch the volume boundary
+        # (see removeBorderEndPts) -- kept separate so a viewer can show them
+        # on demand without changing the official endPts/reports numbers
+        borderEndPts = []
+        for i in gh.borderEndPointsDict.values():
+            for li in i:
+                borderEndPts.append(li)
+
         if save_path is None:
             # return final skeleton as an array and branch points as a list
             reports = report_everything(gh, basename)
@@ -231,6 +239,10 @@ class Pipeline3D(object):
             endPt_img = np.zeros(seg.shape, dtype=np.uint8)
             for ind in endPts:
                 endPt_img[ind] = 255
+
+            borderEndPt_img = np.zeros(seg.shape, dtype=np.uint8)
+            for ind in borderEndPts:
+                borderEndPt_img[ind] = 255
 
             skl_final = skl_final.astype(np.uint8)
             skl_final[skl_final > 0] = 255
@@ -255,6 +267,11 @@ class Pipeline3D(object):
             self._write_ome_tiff(
                 save_path / f"{basename}_end_points.ome.tiff",
                 endPt_img,
+                out_meta,
+            )
+            self._write_ome_tiff(
+                save_path / f"{basename}_border_end_points.ome.tiff",
+                borderEndPt_img,
                 out_meta,
             )
 

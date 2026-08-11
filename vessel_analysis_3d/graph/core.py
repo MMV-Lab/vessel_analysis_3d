@@ -103,6 +103,7 @@ class GraphObj:
         self.countSegmentsDict = {}
         self.branchPointsDict = {}
         self.endPointsDict = {}
+        self.borderEndPointsDict = {}
         self.countBranchPointsDict = {}
         self.countEndPointsDict = {}
         self.compTime = 0
@@ -232,6 +233,9 @@ class GraphObj:
                     )
                     self.branchPointsDict[ithDisjointGraph] = filament.brPtsDict
                     self.endPointsDict[ithDisjointGraph] = filament.endPtsList
+                    self.borderEndPointsDict[ithDisjointGraph] = (
+                        filament.borderEndPts
+                    )
                     self.countBranchPointsDict[ithDisjointGraph] = len(
                         filament.brPtsDict
                     )
