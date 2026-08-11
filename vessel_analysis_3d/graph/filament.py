@@ -93,6 +93,7 @@ class Filament:
         self.compTime = 0
         self.postprocessTime = 0
         self.postprocBranches = 0
+        self.postprocProtectedBridges = 0
         self.postprocEndPts = 0
         # dictionary containing all segment statistics
         self.segmentStats = defaultdict(dict)
@@ -489,10 +490,69 @@ class Filament:
         self.graph.get(u).remove(v)
         self.graph.get(v).remove(u)
 
+    def _is_bridge_between_substantial_structure(self, path):
+        """
+        Check whether removing this segment would sever two otherwise-
+        independent, non-trivial parts of the network apart, as opposed to
+        simply pruning a genuine dead-end leaf (the normal, intended case).
+
+        A segment's own interior nodes are private to it (degree 2, not
+        shared with anything else), so removing them is always safe in
+        isolation -- the only question is its two endpoint nodes. If either
+        endpoint has no other connections left once this segment's edges are
+        gone, that endpoint (and everything beyond it) simply *was* this
+        segment, and removing it is the normal leaf-pruning outcome. But if
+        BOTH endpoints still have other structure attached, and there is no
+        alternate path between them, this segment is the sole bridge holding
+        two real sub-trees together -- removing it would silently orphan
+        one of them (this is what "length <= lengthLim" and similar
+        thin/short heuristics have no way of noticing on their own, since
+        they only look at the segment itself, never at what it connects).
+
+        Returns True if removal is unsafe (a real bridge), False if safe.
+        """
+        u, v = path[0], path[-1]
+        if u == v:
+            return False  # a closed loop; removing it only opens the cycle
+
+        edges = list(zip(path[:-1], path[1:]))
+        for a, b in edges:
+            if b in self.graph.get(a, []):
+                self.graph[a].remove(b)
+            if a in self.graph.get(b, []):
+                self.graph[b].remove(a)
+        try:
+            if not self.graph.get(u) or not self.graph.get(v):
+                return False  # one side has nothing else -- a genuine leaf tip
+            visited, stack = {u}, [u]
+            while stack:
+                node = stack.pop()
+                if node == v:
+                    return False  # still connected via another path -- safe
+                for neighbor in self.graph.get(node, []):
+                    if neighbor not in visited:
+                        visited.add(neighbor)
+                        stack.append(neighbor)
+            return True  # both sides have other structure and no other path
+        finally:
+            for a, b in edges:
+                self.graph.setdefault(a, [])
+                self.graph.setdefault(b, [])
+                if b not in self.graph[a]:
+                    self.graph[a].append(b)
+                if a not in self.graph[b]:
+                    self.graph[b].append(a)
+
     def _removeSegments(self, keys):
         brPtCandidates = set()
+        actuallyRemoved = 0
         for key in keys:
-            self._deletePath(self.segmentsDict[key])
+            path = self.segmentsDict[key]
+            if self._is_bridge_between_substantial_structure(path):
+                self.postprocProtectedBridges += 1
+                continue
+            actuallyRemoved += 1
+            self._deletePath(path)
             del self.segmentsDict[key]
             del self.segmentStats[key]
             del self.segmentProfiles[key]
@@ -505,6 +565,7 @@ class Filament:
                 brPtCandidates.add(key[0])
             if key[1] in self.brPtsDict:
                 brPtCandidates.add(key[1])
+        self.postprocBranches = actuallyRemoved
         # check if branch points still remain branch points after postprocessing
         for brPt in brPtCandidates:
             # branch point becomes normal point connecting two segments together
@@ -591,5 +652,8 @@ class Filament:
                         or (is_short_by_branch_rule and is_thin_by_diameter)
                     ):
                         keysToRemoveList.append(segKey)
-        self.postprocBranches = len(keysToRemoveList)
+        # _removeSegments sets self.postprocBranches itself, to the count
+        # actually removed (a candidate is skipped, not removed, if it's the
+        # sole bridge between two otherwise-independent parts of the tree --
+        # see _is_bridge_between_substantial_structure)
         self._removeSegments(keysToRemoveList)
