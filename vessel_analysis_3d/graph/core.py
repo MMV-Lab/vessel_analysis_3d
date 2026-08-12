@@ -7,6 +7,7 @@ from pathlib import Path
 import csv
 
 from scipy.ndimage import center_of_mass, distance_transform_edt
+from scipy.ndimage import label as ndi_label
 import networkx as nx
 import dask.array as da
 
@@ -515,9 +516,7 @@ class GraphObj:
         self.runTimeDict["pruning"] = round(time.time() - startTime, 3)
         self.infoDict["pruning"] = total_pruned
 
-    def _boundary_centroid_voxel(
-        self, raw_segmentation, seed_voxel, boundary_axis, exit_voxel, local_radius_um
-    ):
+    def _boundary_centroid_voxel(self, raw_segmentation, seed_voxel, boundary_axis, exit_voxel):
         """
         Find the true centroid of the vessel's cross-section where it is cut
         by the imaged volume's boundary, on the plane perpendicular to
@@ -527,20 +526,12 @@ class GraphObj:
         estimates its direction from a handful of interior skeleton nodes;
         at a border-cut cross-section, that estimate does not have to point
         at the section's centroid, so the walk can land on a side wall
-        instead -- 84.3um off-center in one real example.
-
-        This looks at the raw mask directly on the boundary plane, but only
-        within a local physical window around `seed_voxel`, sized off the
-        vessel's own local radius (`local_radius_um`) -- taking the centroid
-        of the *whole* connected foreground region there is not safe: on
-        real data, two skeleton endpoints ~21um apart were found sharing one
-        1101-voxel connected region at their cut plane (their two vessels'
-        raw masks happened to touch there), and both got redirected to the
-        same, meaningless averaged centroid, landing 54-85um off -- worse
-        than not correcting them at all. Restricting to a local window means
-        a nearby, separate vessel's pixels never contribute to the centroid
-        in the first place, regardless of whether the two masks are
-        connected on this specific plane.
+        instead -- 84.3um off-center in one real example. This looks at the
+        raw mask directly on the boundary plane itself and returns the
+        centroid of whichever connected foreground region is nearest
+        `seed_voxel` (there can be more than one vessel cross-section on the
+        same boundary plane), so the endpoint can be redirected there for
+        its final approach instead of trusting the tangent all the way out.
         """
         shape = raw_segmentation.shape
         boundary_index = 0 if exit_voxel[boundary_axis] < 0 else shape[boundary_axis] - 1
@@ -551,28 +542,20 @@ class GraphObj:
         if not plane.any():
             return None
 
+        labeled, _ = ndi_label(plane)
         other_axes = [a for a in range(3) if a != boundary_axis]
-        other_scale = np.array([self.pixelDims[a] for a in other_axes])
-        seed_2d = np.array([seed_voxel[a] for a in other_axes], dtype=float)
-
-        search_radius_um = max(10.0, 1.5 * local_radius_um)
-        yy, xx = np.indices(plane.shape)
-        dist_um = np.sqrt(
-            ((yy - seed_2d[0]) * other_scale[0]) ** 2
-            + ((xx - seed_2d[1]) * other_scale[1]) ** 2
+        seed_2d = tuple(
+            int(np.clip(seed_voxel[a], 0, plane.shape[i] - 1))
+            for i, a in enumerate(other_axes)
         )
-        local_mask = plane & (dist_um <= search_radius_um)
 
-        if not local_mask.any():
-            # seed missed the mask by a hair (e.g. right at a tapering
-            # edge) -- fall back to the single nearest foreground pixel,
-            # never the whole (possibly unrelated) connected region
+        region_label = labeled[seed_2d]
+        if region_label == 0:
             coords_2d = np.argwhere(plane)
-            dists = np.sum((coords_2d - seed_2d) ** 2, axis=1)
-            centroid_2d = coords_2d[np.argmin(dists)]
-        else:
-            centroid_2d = center_of_mass(local_mask)
+            dists = np.sum((coords_2d - np.array(seed_2d)) ** 2, axis=1)
+            region_label = labeled[tuple(coords_2d[np.argmin(dists)])]
 
+        centroid_2d = center_of_mass(plane, labeled, region_label)
         target = [0, 0, 0]
         target[boundary_axis] = boundary_index
         for a, v in zip(other_axes, centroid_2d):
@@ -659,7 +642,7 @@ class GraphObj:
                     # estimate all the way to the edge, which can drift
                     # toward a side wall.
                     target = self._boundary_centroid_voxel(
-                        raw_segmentation, last_voxel, out_of_bounds_axis, voxel, radius_here
+                        raw_segmentation, last_voxel, out_of_bounds_axis, voxel
                     )
                     if target is None:
                         break
