@@ -515,121 +515,69 @@ class GraphObj:
         self.runTimeDict["pruning"] = round(time.time() - startTime, 3)
         self.infoDict["pruning"] = total_pruned
 
-    def _local_mask_centroid_voxel(
-        self,
-        raw_segmentation,
-        seed_voxel,
-        local_radius_um,
-        boundary_axis=None,
-        boundary_index=None,
-        forward_direction=None,
+    def _boundary_centroid_voxel(
+        self, raw_segmentation, seed_voxel, boundary_axis, exit_voxel, local_radius_um
     ):
         """
-        Find the true local centroid of the vessel's mass around
-        `seed_voxel`, within a physical window sized off the vessel's own
-        local radius (`local_radius_um`).
+        Find the true centroid of the vessel's cross-section where it is cut
+        by the imaged volume's boundary, on the plane perpendicular to
+        `boundary_axis`.
 
         A straight tangent walk (see `_extend_endpoints_to_raw_boundary`)
         estimates its direction from a handful of interior skeleton nodes;
-        that estimate has no reason to point at a nearby cross-section's
-        true centroid, so the walk can land on a side wall instead -- 84.3um
-        off-center in one real example.
+        at a border-cut cross-section, that estimate does not have to point
+        at the section's centroid, so the walk can land on a side wall
+        instead -- 84.3um off-center in one real example.
 
-        Two distinct situations call this, both handled here:
-        - The walk is about to step outside the *imaged volume's own edge*
-          (`boundary_axis`/`boundary_index` given): the corrected landing
-          point must lie exactly on that flat plane, so the search is
-          restricted to it.
-        - The walk is about to step off the *raw segmentation mask itself*
-          (a genuine vessel tip or taper, `boundary_axis=None`): there is no
-          single flat cutting plane here -- a real tip can end at an
-          arbitrarily-shaped surface -- so the search is a full 3D
-          neighborhood around the seed instead, additionally restricted to
-          the forward hemisphere relative to `forward_direction` (the walk's
-          current direction). Without that restriction, a short, thin tip
-          attached to a much larger body (found on a synthetic torus+arm
-          phantom) can have its 3D window's centroid pulled back toward that
-          larger body's mass -- redirecting the walk backward into territory
-          it already walked through and adding an edge that closes a small
-          spurious cycle, instead of forward toward the tip's own true edge.
-
-        Either way, the search is restricted to a LOCAL window, never the
-        whole connected region there: on real data, two skeleton endpoints
-        ~21um apart were found sharing one 1101-voxel connected region at a
-        shared boundary plane (their two vessels' raw masks happened to
-        touch there), and both got redirected to the same, meaningless
-        averaged centroid, landing 54-85um off -- worse than not correcting
-        them at all. Restricting to a local window means a nearby, separate
-        vessel's pixels never contribute to the centroid in the first
-        place, regardless of whether the two masks are connected there.
+        This looks at the raw mask directly on the boundary plane, but only
+        within a local physical window around `seed_voxel`, sized off the
+        vessel's own local radius (`local_radius_um`) -- taking the centroid
+        of the *whole* connected foreground region there is not safe: on
+        real data, two skeleton endpoints ~21um apart were found sharing one
+        1101-voxel connected region at their cut plane (their two vessels'
+        raw masks happened to touch there), and both got redirected to the
+        same, meaningless averaged centroid, landing 54-85um off -- worse
+        than not correcting them at all. Restricting to a local window means
+        a nearby, separate vessel's pixels never contribute to the centroid
+        in the first place, regardless of whether the two masks are
+        connected on this specific plane.
         """
         shape = raw_segmentation.shape
+        boundary_index = 0 if exit_voxel[boundary_axis] < 0 else shape[boundary_axis] - 1
+
+        slicer = [slice(None)] * 3
+        slicer[boundary_axis] = boundary_index
+        plane = raw_segmentation[tuple(slicer)] > 0
+        if not plane.any():
+            return None
+
+        other_axes = [a for a in range(3) if a != boundary_axis]
+        other_scale = np.array([self.pixelDims[a] for a in other_axes])
+        seed_2d = np.array([seed_voxel[a] for a in other_axes], dtype=float)
+
         search_radius_um = max(10.0, 1.5 * local_radius_um)
-
-        if boundary_axis is not None:
-            slicer = [slice(None)] * 3
-            slicer[boundary_axis] = boundary_index
-            region = raw_segmentation[tuple(slicer)] > 0
-            if not region.any():
-                return None
-            other_axes = [a for a in range(3) if a != boundary_axis]
-            other_scale = np.array([self.pixelDims[a] for a in other_axes])
-            seed_local = np.array([seed_voxel[a] for a in other_axes], dtype=float)
-            yy, xx = np.indices(region.shape)
-            dist_um = np.sqrt(
-                ((yy - seed_local[0]) * other_scale[0]) ** 2
-                + ((xx - seed_local[1]) * other_scale[1]) ** 2
-            )
-            forward_mask = None
-        else:
-            pixel_dims = np.array(self.pixelDims, dtype=float)
-            radius_vox = np.array([int(np.ceil(search_radius_um / d)) for d in pixel_dims])
-            lo = [max(0, seed_voxel[a] - radius_vox[a]) for a in range(3)]
-            hi = [min(shape[a], seed_voxel[a] + radius_vox[a] + 1) for a in range(3)]
-            region = raw_segmentation[lo[0] : hi[0], lo[1] : hi[1], lo[2] : hi[2]] > 0
-            if not region.any():
-                return None
-            zz, yy, xx = np.indices(region.shape)
-            seed_local = np.array([seed_voxel[a] - lo[a] for a in range(3)], dtype=float)
-            offset_phys = np.stack(
-                [(zz - seed_local[0]) * pixel_dims[0],
-                 (yy - seed_local[1]) * pixel_dims[1],
-                 (xx - seed_local[2]) * pixel_dims[2]],
-                axis=-1,
-            )
-            dist_um = np.linalg.norm(offset_phys, axis=-1)
-            forward_mask = None
-            if forward_direction is not None:
-                forward_mask = (offset_phys @ np.asarray(forward_direction)) >= 0
-
-        local_mask = region & (dist_um <= search_radius_um)
-        if forward_mask is not None:
-            local_mask = local_mask & forward_mask
+        yy, xx = np.indices(plane.shape)
+        dist_um = np.sqrt(
+            ((yy - seed_2d[0]) * other_scale[0]) ** 2
+            + ((xx - seed_2d[1]) * other_scale[1]) ** 2
+        )
+        local_mask = plane & (dist_um <= search_radius_um)
 
         if not local_mask.any():
-            # either the seed missed the mask by a hair (e.g. right at a
-            # tapering edge), or the forward restriction excluded
-            # everything -- fall back to the single nearest foreground
-            # voxel (still respecting the forward restriction if any),
+            # seed missed the mask by a hair (e.g. right at a tapering
+            # edge) -- fall back to the single nearest foreground pixel,
             # never the whole (possibly unrelated) connected region
-            search_region = region & forward_mask if forward_mask is not None else region
-            if not search_region.any():
-                search_region = region
-            coords = np.argwhere(search_region)
-            if len(coords) == 0:
-                return None
-            dists = np.sum((coords - seed_local) ** 2, axis=1)
-            centroid_local = coords[np.argmin(dists)]
+            coords_2d = np.argwhere(plane)
+            dists = np.sum((coords_2d - seed_2d) ** 2, axis=1)
+            centroid_2d = coords_2d[np.argmin(dists)]
         else:
-            centroid_local = center_of_mass(local_mask)
+            centroid_2d = center_of_mass(local_mask)
 
-        if boundary_axis is not None:
-            target = [0, 0, 0]
-            target[boundary_axis] = boundary_index
-            for a, v in zip(other_axes, centroid_local):
-                target[a] = int(round(v))
-            return tuple(target)
-        return tuple(int(round(centroid_local[a] + lo[a])) for a in range(3))
+        target = [0, 0, 0]
+        target[boundary_axis] = boundary_index
+        for a, v in zip(other_axes, centroid_2d):
+            target[a] = int(round(v))
+        return tuple(target)
 
     def _extend_endpoints_to_raw_boundary(
         self, raw_segmentation, tangent_lookback: int = 5, max_extension_um: float = 50.0
@@ -710,9 +658,8 @@ class GraphObj:
                     # boundary plane instead of trusting the tangent
                     # estimate all the way to the edge, which can drift
                     # toward a side wall.
-                    boundary_index = 0 if voxel[out_of_bounds_axis] < 0 else shape[out_of_bounds_axis] - 1
-                    target = self._local_mask_centroid_voxel(
-                        raw_segmentation, last_voxel, radius_here, out_of_bounds_axis, boundary_index
+                    target = self._boundary_centroid_voxel(
+                        raw_segmentation, last_voxel, out_of_bounds_axis, voxel, radius_here
                     )
                     if target is None:
                         break
@@ -724,30 +671,9 @@ class GraphObj:
                     direction = remaining / remaining_dist
                     steps_until_target = max(1, int(np.ceil(remaining_dist / step_phys)))
                     continue  # retry from the same position with the corrected direction
-                if not raw_segmentation[voxel]:
-                    if steps_until_target is not None:
-                        break  # already redirected once and still off the mask -- give up
-                    # Leaving the raw mask itself -- a genuine vessel tip or
-                    # taper, not a field-of-view crop. There is no flat
-                    # cutting plane here (a real tip can end at an
-                    # arbitrarily-shaped surface), so redirect toward the
-                    # local 3D centroid of mass around the last valid
-                    # position instead of trusting the tangent estimate,
-                    # which has no reason to point at that centroid either.
-                    target = self._local_mask_centroid_voxel(
-                        raw_segmentation, last_voxel, radius_here, forward_direction=direction
-                    )
-                    if target is None:
-                        break
-                    target_phys = np.array(target, dtype=float) * pixel_dims
-                    remaining = target_phys - pos_phys
-                    remaining_dist = np.linalg.norm(remaining)
-                    if remaining_dist < 1e-9:
-                        break
-                    direction = remaining / remaining_dist
-                    steps_until_target = max(1, int(np.ceil(remaining_dist / step_phys)))
-                    continue
                 pos_phys = next_pos_phys
+                if not raw_segmentation[voxel]:
+                    break
                 if voxel != last_voxel:
                     self.networkxGraph.add_edge(last_voxel, voxel)
                     self.radiusMatrix[voxel] = radius_here
