@@ -6,8 +6,7 @@ from typing import Union
 from pathlib import Path
 import csv
 
-from scipy.ndimage import center_of_mass, distance_transform_edt
-from scipy.ndimage import label as ndi_label
+from scipy.ndimage import distance_transform_edt
 import networkx as nx
 import dask.array as da
 
@@ -516,52 +515,6 @@ class GraphObj:
         self.runTimeDict["pruning"] = round(time.time() - startTime, 3)
         self.infoDict["pruning"] = total_pruned
 
-    def _boundary_centroid_voxel(self, raw_segmentation, seed_voxel, boundary_axis, exit_voxel):
-        """
-        Find the true centroid of the vessel's cross-section where it is cut
-        by the imaged volume's boundary, on the plane perpendicular to
-        `boundary_axis`.
-
-        A straight tangent walk (see `_extend_endpoints_to_raw_boundary`)
-        estimates its direction from a handful of interior skeleton nodes;
-        at a border-cut cross-section, that estimate does not have to point
-        at the section's centroid, so the walk can land on a side wall
-        instead -- 84.3um off-center in one real example. This looks at the
-        raw mask directly on the boundary plane itself and returns the
-        centroid of whichever connected foreground region is nearest
-        `seed_voxel` (there can be more than one vessel cross-section on the
-        same boundary plane), so the endpoint can be redirected there for
-        its final approach instead of trusting the tangent all the way out.
-        """
-        shape = raw_segmentation.shape
-        boundary_index = 0 if exit_voxel[boundary_axis] < 0 else shape[boundary_axis] - 1
-
-        slicer = [slice(None)] * 3
-        slicer[boundary_axis] = boundary_index
-        plane = raw_segmentation[tuple(slicer)] > 0
-        if not plane.any():
-            return None
-
-        labeled, _ = ndi_label(plane)
-        other_axes = [a for a in range(3) if a != boundary_axis]
-        seed_2d = tuple(
-            int(np.clip(seed_voxel[a], 0, plane.shape[i] - 1))
-            for i, a in enumerate(other_axes)
-        )
-
-        region_label = labeled[seed_2d]
-        if region_label == 0:
-            coords_2d = np.argwhere(plane)
-            dists = np.sum((coords_2d - np.array(seed_2d)) ** 2, axis=1)
-            region_label = labeled[tuple(coords_2d[np.argmin(dists)])]
-
-        centroid_2d = center_of_mass(plane, labeled, region_label)
-        target = [0, 0, 0]
-        target[boundary_axis] = boundary_index
-        for a, v in zip(other_axes, centroid_2d):
-            target[a] = int(round(v))
-        return tuple(target)
-
     def _extend_endpoints_to_raw_boundary(
         self, raw_segmentation, tangent_lookback: int = 5, max_extension_um: float = 50.0
     ):
@@ -616,60 +569,19 @@ class GraphObj:
             pos_phys = end_phys.copy()
             last_voxel = endpoint
             did_extend = False
-            # None until the walk is redirected toward a boundary-plane
-            # centroid (see below); then counts down so the walk stops
-            # exactly there instead of continuing past it in a straight
-            # line for the rest of its step budget.
-            steps_until_target = None
             for _ in range(max_steps):
-                next_pos_phys = pos_phys + step_phys * direction
-                voxel = tuple(int(round(v)) for v in next_pos_phys / pixel_dims)
-                out_of_bounds_axis = next(
-                    (
-                        axis
-                        for axis, (v, s) in enumerate(zip(voxel, shape))
-                        if v < 0 or v >= s
-                    ),
-                    None,
-                )
-                if out_of_bounds_axis is not None:
-                    if steps_until_target is not None:
-                        break  # already redirected once and still off the array -- give up
-                    # Leaving the imaged volume, not the vessel -- this is a
-                    # border cut, not a real tip. Redirect the remaining
-                    # approach at the true cross-sectional centroid on this
-                    # boundary plane instead of trusting the tangent
-                    # estimate all the way to the edge, which can drift
-                    # toward a side wall.
-                    target = self._boundary_centroid_voxel(
-                        raw_segmentation, last_voxel, out_of_bounds_axis, voxel
-                    )
-                    if target is None:
-                        break
-                    target_phys = np.array(target, dtype=float) * pixel_dims
-                    remaining = target_phys - pos_phys
-                    remaining_dist = np.linalg.norm(remaining)
-                    if remaining_dist < 1e-9:
-                        break
-                    direction = remaining / remaining_dist
-                    steps_until_target = max(1, int(np.ceil(remaining_dist / step_phys)))
-                    continue  # retry from the same position with the corrected direction
-                pos_phys = next_pos_phys
+                pos_phys = pos_phys + step_phys * direction
+                voxel = tuple(int(round(v)) for v in pos_phys / pixel_dims)
+                if any(v < 0 or v >= s for v, s in zip(voxel, shape)):
+                    break
                 if not raw_segmentation[voxel]:
                     break
-                if voxel != last_voxel:
-                    self.networkxGraph.add_edge(last_voxel, voxel)
-                    self.radiusMatrix[voxel] = radius_here
-                    last_voxel = voxel
-                    did_extend = True
-                if steps_until_target is not None:
-                    # count every iteration once redirected (even a
-                    # zero-progress one, where voxel == last_voxel), so a
-                    # sub-voxel-sized remaining distance still terminates
-                    # the walk at the target instead of continuing on
-                    steps_until_target -= 1
-                    if steps_until_target <= 0:
-                        break
+                if voxel == last_voxel:
+                    continue
+                self.networkxGraph.add_edge(last_voxel, voxel)
+                self.radiusMatrix[voxel] = radius_here
+                last_voxel = voxel
+                did_extend = True
             if did_extend:
                 extended += 1
 
