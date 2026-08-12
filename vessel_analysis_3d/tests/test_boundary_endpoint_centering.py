@@ -12,7 +12,7 @@ from vessel_analysis_3d.graph.networkx_from_array import get_networkx_graph_from
 #
 # Real-data motivation (2026-08-11/12): Simon flagged a real endpoint sitting
 # at the edge of a border-cut cross-section instead of centered on it,
-# measured 84.3um off the true cut-face centroid. GraphObj._boundary_centroid_voxel
+# measured 84.3um off the true cut-face centroid. GraphObj._local_mask_centroid_voxel
 # fixes this by looking at the raw mask directly on the boundary plane and
 # redirecting the walk's final approach there, instead of trusting the
 # tangent estimate all the way to the edge.
@@ -85,13 +85,13 @@ def _extended_tip_at(y_cut, redirect_enabled):
     skl[skl > 0] = 1
     graph = get_networkx_graph_from_array(skl)
 
-    orig = GraphObj._boundary_centroid_voxel
+    orig = GraphObj._local_mask_centroid_voxel
     if not redirect_enabled:
-        GraphObj._boundary_centroid_voxel = lambda self, *a, **k: None
+        GraphObj._local_mask_centroid_voxel = lambda self, *a, **k: None
     try:
         gh = GraphObj(seg, skl, graph, rawSegmentation=seg, **PARAMS)
     finally:
-        GraphObj._boundary_centroid_voxel = orig
+        GraphObj._local_mask_centroid_voxel = orig
 
     endpoints = [n for n, d in gh.networkxGraph.degree() if d == 1]
     tips = [n for n in endpoints if n[1] == y_cut]
@@ -122,7 +122,7 @@ def test_without_the_redirect_the_endpoint_is_measurably_off_center():
 
 
 def test_nearby_separate_vessel_does_not_pull_the_centroid_off_target():
-    """Real-data regression, tested directly against _boundary_centroid_voxel
+    """Real-data regression, tested directly against _local_mask_centroid_voxel
     rather than through the full skeletonize+extension pipeline (Lee's
     algorithm's own tip-retraction behavior on a flat-cut cylinder made the
     full pipeline unreliable to construct a clean synthetic reproduction
@@ -163,8 +163,8 @@ def test_nearby_separate_vessel_does_not_pull_the_centroid_off_target():
 
     for seed_y, true_center_y in [(y_a, y_a), (y_b, y_b)]:
         seed = (5, seed_y, 4)
-        exit_voxel = (5, seed_y, 5)  # one step further in x -- out of array bounds
-        target = gh._boundary_centroid_voxel(raw_segmentation, seed, 2, exit_voxel, float(r))
+        boundary_index = shape[2] - 1  # x==4 is the array's true last index
+        target = gh._local_mask_centroid_voxel(raw_segmentation, seed, float(r), 2, boundary_index)
         assert target is not None
         offset = abs(target[1] - true_center_y)
         assert offset <= 1.5, (
