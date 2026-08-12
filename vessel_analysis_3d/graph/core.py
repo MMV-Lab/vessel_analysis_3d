@@ -340,8 +340,8 @@ class GraphObj:
 
     def _collapse_dense_clusters(self, radiusMat):
         """
-        Collapse small, locally cyclic or plate-like voxel clusters into a single
-        representative junction node.
+        Simplify small, locally cyclic or plate-like voxel clusters down to a
+        thin, cycle-free connecting structure.
 
         Lee's topological thinning only guarantees topology preservation, not a
         1-voxel-wide curve everywhere: at a roughly blob-shaped confluence (e.g. a
@@ -350,13 +350,26 @@ class GraphObj:
         interconnected voxels, or even a residual 2D surface patch, instead of a
         single point. These form cycles in the skeleton graph and are invisible to
         the endpoint-based pruning in `_prune` (a cycle has no degree-1 node to
-        start a walk from). Each such cluster is replaced by its highest-radius
-        node -- the best proxy for the true anatomical junction centre -- as long
-        as the cluster's physical extent is small relative to the local vessel
-        radius, so that a genuine, larger-scale vascular loop is left untouched.
+        start a walk from).
+
+        For each such cluster (as long as its physical extent is small relative
+        to the local vessel radius, so a genuine, larger-scale vascular loop is
+        left untouched), every node is dropped *except* those lying on a
+        shortest-path tree from the cluster's highest-radius node -- the best
+        proxy for the true anatomical junction centre -- out to each of the
+        cluster's attachment points (the nodes that actually touch the rest of
+        the skeleton). This eliminates the cycles that made the cluster "dense"
+        in the first place (a single-root shortest-path tree is cycle-free by
+        construction), while keeping a real, physically continuous voxel path
+        through the junction -- unlike collapsing to one point, this doesn't
+        leave a visual gap in the exported skeleton, and unlike the earlier
+        collapse-to-one-point design, it never adds a graph edge that didn't
+        already exist (attachment points keep their original edges to their
+        outside neighbors untouched), so it can't create a connection between
+        nodes that were never actually adjacent.
         """
         startTime = time.time()
-        total_collapsed = 0
+        total_simplified = 0
         changed = True
         while changed:
             changed = False
@@ -364,7 +377,7 @@ class GraphObj:
                 if len(component) < 3:
                     continue  # a single edge is not a cycle
                 if not all(self.networkxGraph.has_node(n) for n in component):
-                    # overlaps a cluster collapsed earlier in this pass via a
+                    # overlaps a cluster simplified earlier in this pass via a
                     # shared articulation point; revisit on the next pass
                     continue
 
@@ -379,24 +392,49 @@ class GraphObj:
                     continue  # likely a genuine larger-scale vascular loop
 
                 representative = nodes[int(np.argmax(radii))]
-                outside_neighbors = set()
-                for n in nodes:
-                    for neighbor in self.networkxGraph.neighbors(n):
-                        if neighbor not in component:
-                            outside_neighbors.add(neighbor)
+                component_set = set(nodes)
+                attachment_points = {
+                    n
+                    for n in nodes
+                    if any(
+                        neighbor not in component_set
+                        for neighbor in self.networkxGraph.neighbors(n)
+                    )
+                }
+
+                cluster_subgraph = self.networkxGraph.subgraph(nodes)
+                paths = nx.single_source_shortest_path(cluster_subgraph, representative)
+                nodes_to_keep = {representative}
+                for ap in attachment_points:
+                    nodes_to_keep.update(paths[ap])
+
+                tree_edges = {
+                    frozenset((paths[m][-2], paths[m][-1]))
+                    for m in nodes_to_keep
+                    if m != representative
+                }
 
                 for n in nodes:
-                    if n != representative:
+                    if n not in nodes_to_keep:
                         self.networkxGraph.remove_node(n)
-                for neighbor in outside_neighbors:
-                    if not self.networkxGraph.has_edge(representative, neighbor):
-                        self.networkxGraph.add_edge(representative, neighbor)
+                # Nodes kept on the tree can still be joined by an original
+                # "chord" edge that isn't part of the tree (e.g. two branches
+                # of the shortest-path tree that also happened to be directly
+                # adjacent in the raw cluster). Left in place, that chord
+                # keeps the retained set cyclic, so the next pass's
+                # biconnected_components() finds it again -- reprocessing an
+                # ~1000-node cluster's O(n^2) diameter check every pass
+                # without making progress. Tree_edges alone already connect
+                # every kept node, so dropping chords is always safe.
+                for u, v in list(self.networkxGraph.subgraph(nodes_to_keep).edges()):
+                    if frozenset((u, v)) not in tree_edges:
+                        self.networkxGraph.remove_edge(u, v)
 
-                total_collapsed += 1
+                total_simplified += 1
                 changed = True
         self.nodeDegreeDict = dict(nx.degree(self.networkxGraph))
         self.runTimeDict["clusterCollapse"] = round(time.time() - startTime, 3)
-        self.infoDict["clusterCollapse"] = total_collapsed
+        self.infoDict["clusterCollapse"] = total_simplified
 
     def _prune(self, radiusMat):
         """
