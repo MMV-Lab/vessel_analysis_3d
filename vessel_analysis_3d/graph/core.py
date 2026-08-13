@@ -7,12 +7,14 @@ from pathlib import Path
 import csv
 
 from scipy.ndimage import distance_transform_edt
+from skimage.morphology import skeletonize
 import networkx as nx
 import dask.array as da
 
 # from dask.distributed import Client
 from .filament import Filament
 from .measurement import getLength
+from .networkx_from_array import get_networkx_graph_from_array
 
 
 class distance_transform_edt_dask:
@@ -515,14 +517,21 @@ class GraphObj:
         self.runTimeDict["pruning"] = round(time.time() - startTime, 3)
         self.infoDict["pruning"] = total_pruned
 
-    def _local_mask_lateral_correction(self, raw_segmentation, pos_phys, pixel_dims, window_um, direction):
+    def _local_mask_lateral_correction(
+        self, raw_segmentation, pos_phys, pixel_dims, window_um, direction, slab_half_um: float = 3.0
+    ):
         """
         Estimate the sideways pull, in physical space, from the current walk
-        position toward the local raw-mask centroid within a small isotropic
-        window (radius `window_um`, scaled to the vessel's own local radius by
-        the caller). Only the component of that pull perpendicular to
-        `direction` is returned -- the along-direction component is discarded
-        so this can only steer the walk, never stall or reverse it.
+        position toward the local raw-mask centroid within a thin cross-
+        sectional disk (radius `window_um`, scaled to the vessel's own local
+        radius by the caller; half-thickness `slab_half_um` along `direction`)
+        centered at the walk position. Restricting to a disk instead of a full
+        3D ball keeps mask ahead of/behind the current position -- which can
+        be asymmetric near a taper or bend -- from biasing the centroid away
+        from the true perpendicular center. Only the component of the pull
+        perpendicular to `direction` is returned -- the along-direction
+        component is discarded so this can only steer the walk, never stall
+        or reverse it.
         """
         radius_vox = np.ceil(window_um / pixel_dims).astype(int)
         center_vox = np.round(pos_phys / pixel_dims).astype(int)
@@ -534,8 +543,13 @@ class GraphObj:
         local_idx = np.argwhere(crop)
         if local_idx.shape[0] == 0:
             return None
-        centroid_vox = local_idx.mean(axis=0) + lo
-        lateral = centroid_vox * pixel_dims - pos_phys
+        local_phys = local_idx * pixel_dims + lo * pixel_dims
+        along = (local_phys - pos_phys) @ direction
+        in_slab = np.abs(along) <= slab_half_um
+        if not in_slab.any():
+            return None
+        centroid_phys = local_phys[in_slab].mean(axis=0)
+        lateral = centroid_phys - pos_phys
         lateral = lateral - np.dot(lateral, direction) * direction
         lateral_norm = np.linalg.norm(lateral)
         if lateral_norm < 1e-9:
