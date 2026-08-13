@@ -515,28 +515,64 @@ class GraphObj:
         self.runTimeDict["pruning"] = round(time.time() - startTime, 3)
         self.infoDict["pruning"] = total_pruned
 
+    def _local_mask_lateral_correction(self, raw_segmentation, pos_phys, pixel_dims, window_um, direction):
+        """
+        Estimate the sideways pull, in physical space, from the current walk
+        position toward the local raw-mask centroid within a small isotropic
+        window (radius `window_um`, scaled to the vessel's own local radius by
+        the caller). Only the component of that pull perpendicular to
+        `direction` is returned -- the along-direction component is discarded
+        so this can only steer the walk, never stall or reverse it.
+        """
+        radius_vox = np.ceil(window_um / pixel_dims).astype(int)
+        center_vox = np.round(pos_phys / pixel_dims).astype(int)
+        lo = np.maximum(center_vox - radius_vox, 0)
+        hi = np.minimum(center_vox + radius_vox + 1, raw_segmentation.shape)
+        if np.any(hi <= lo):
+            return None
+        crop = raw_segmentation[lo[0]:hi[0], lo[1]:hi[1], lo[2]:hi[2]]
+        local_idx = np.argwhere(crop)
+        if local_idx.shape[0] == 0:
+            return None
+        centroid_vox = local_idx.mean(axis=0) + lo
+        lateral = centroid_vox * pixel_dims - pos_phys
+        lateral = lateral - np.dot(lateral, direction) * direction
+        lateral_norm = np.linalg.norm(lateral)
+        if lateral_norm < 1e-9:
+            return None
+        return lateral / lateral_norm
+
     def _extend_endpoints_to_raw_boundary(
-        self, raw_segmentation, tangent_lookback: int = 5, max_extension_um: float = 50.0
+        self,
+        raw_segmentation,
+        tangent_lookback: int = 5,
+        max_extension_um: float = 50.0,
+        retangent_interval_um: float = 5.0,
     ):
         """
         Extend true skeleton endpoints outward to the boundary of the raw
-        (pre-opening) segmentation, along each endpoint's local tangent.
+        (pre-opening) segmentation, following each endpoint's local vessel
+        centerline.
 
         Mask preprocessing (see Pipeline3D.run()) trims a few voxels off every
         tapering vessel tip along with the noise it is meant to suppress, and
         widening that opening was shown to reconnect most of the noise instead
         of just recovering the tips. Since each endpoint here is already final
-        (after cluster collapse and pruning), it is walked straight outward, in
+        (after cluster collapse and pruning), it is walked outward, in
         physical space, through the untouched raw mask until it leaves the
-        vessel. This only ever extends an existing leaf along its own
-        established direction, so it cannot create a new branch point, and a
-        suppressed noise spike -- not collinear with the segment -- is not
-        picked up.
+        vessel. The initial direction is the endpoint's own tangent, but since
+        a vessel can curve over the length of the extension, the direction is
+        re-estimated every `retangent_interval_um` by pulling it toward the
+        raw mask's local centroid in a small window scaled to the endpoint's
+        own radius -- this only ever nudges the walk sideways, never lets it
+        jump, so it still cannot create a new branch point or pick up a
+        disconnected noise spike.
         """
         startTime = time.time()
         pixel_dims = np.array(self.pixelDims, dtype=float)
         step_phys = float(pixel_dims.min()) / 2.0
         max_steps = int(round(max_extension_um / step_phys))
+        retangent_interval_steps = max(1, int(round(retangent_interval_um / step_phys)))
         shape = raw_segmentation.shape
 
         endpoints = [n for n, d in self.networkxGraph.degree() if d == 1]
@@ -566,9 +602,11 @@ class GraphObj:
             direction = direction / norm
 
             radius_here = float(self.radiusMatrix[endpoint])
+            window_um = max(6.0, 1.2 * radius_here)
             pos_phys = end_phys.copy()
             last_voxel = endpoint
             did_extend = False
+            steps_since_retangent = 0
             for _ in range(max_steps):
                 pos_phys = pos_phys + step_phys * direction
                 voxel = tuple(int(round(v)) for v in pos_phys / pixel_dims)
@@ -576,12 +614,21 @@ class GraphObj:
                     break
                 if not raw_segmentation[voxel]:
                     break
-                if voxel == last_voxel:
-                    continue
-                self.networkxGraph.add_edge(last_voxel, voxel)
-                self.radiusMatrix[voxel] = radius_here
-                last_voxel = voxel
-                did_extend = True
+                if voxel != last_voxel:
+                    self.networkxGraph.add_edge(last_voxel, voxel)
+                    self.radiusMatrix[voxel] = radius_here
+                    last_voxel = voxel
+                    did_extend = True
+
+                steps_since_retangent += 1
+                if steps_since_retangent >= retangent_interval_steps:
+                    steps_since_retangent = 0
+                    lateral = self._local_mask_lateral_correction(
+                        raw_segmentation, pos_phys, pixel_dims, window_um, direction
+                    )
+                    if lateral is not None:
+                        direction = direction + 0.5 * lateral
+                        direction = direction / np.linalg.norm(direction)
             if did_extend:
                 extended += 1
 
