@@ -21,7 +21,7 @@ from datetime import datetime
 import logging
 import numpy as np
 import zarr
-from scipy.ndimage import binary_closing, binary_dilation, binary_erosion
+from scipy.ndimage import binary_closing, binary_dilation, binary_erosion, gaussian_filter
 from tifffile import imread, imwrite
 try:
     from bioio import BioImage
@@ -150,6 +150,39 @@ class Pipeline3D(object):
 
         if "minJunctionRadiusUm" not in param_dict:
             self.analysis_parameters["minJunctionRadiusUm"] = 25.0
+
+        if "maskSmoothingSigmaUm" not in param_dict:
+            # Gaussian blur-and-rethreshold applied ONLY to the mask used to
+            # decide skeleton topology (see run()) -- never to the mask
+            # GraphObj measures radius/diameter against or that gets
+            # exported (Simon, 2026-08-17: "dont overwrite the actual
+            # segmentation and keep the real segmentation in the output").
+            # A rough, non-smooth vessel wall gives Lee's thinning many
+            # small local bumps to route a spurious medial-axis branch
+            # toward -- that's correct behavior for a noisy boundary, not a
+            # thinning bug, so post-hoc graph pruning
+            # (GraphObj._prune_off_center_spurs) was fighting a losing,
+            # ever-more-complex battle against it. Smoothing removes the
+            # bumps before skeletonization ever sees them, attacking the
+            # actual root cause. Morphological opening (maskOpeningRadiusUm)
+            # targets a different failure mode -- isolated thin
+            # protrusions/bridges -- and does not smooth surface texture
+            # nearly as effectively per voxel of tissue lost.
+            #
+            # Swept sigma 5-30um on segmentation_test: 20um gave the best
+            # raw-endpoint reduction (306->154, -50%) but was confirmed,
+            # after Simon flagged specific missing branches with exact
+            # coordinates, to erase real thin anatomy outright -- one
+            # flagged branch's true (unsmoothed) skeleton passed only 17um
+            # away, but 175um away after 20um smoothing (i.e. genuinely
+            # gone, not just shifted). 10um is the chosen tradeoff: recovers
+            # that branch as a real endpoint (51um away) while still
+            # cutting raw endpoints 306->233 (-24%); 15um recovers it too
+            # (42um away) with more reduction (-41%) but regressed a second,
+            # more marginal flagged branch. Revisit this tradeoff (favoring
+            # branch recall over maximum cleanup) if either direction proves
+            # wrong on more data.
+            self.analysis_parameters["maskSmoothingSigmaUm"] = 10.0
 
         if "maskOpeningRadiusUm" not in param_dict:
             self.analysis_parameters["maskOpeningRadiusUm"] = 3.0
@@ -318,21 +351,50 @@ class Pipeline3D(object):
                 predictor=predictor,
             )
 
-    def _extract_zarr_metadata(self, root, source_path: Optional[Path] = None):
+    def _extract_zarr_metadata(
+        self, root, level: str = "0", source_path: Optional[Path] = None
+    ):
+        """
+        Physical pixel size for the specific resolution `level` actually
+        being loaded (see `_load_segmentation`). An OME-NGFF multiscale
+        pyramid stores one `coordinateTransformations` scale per level, and
+        those scales genuinely differ level to level (each is coarser than
+        the last) -- so this must look up the entry whose own declared
+        `path` matches the array we loaded, not just take the first entry
+        in the list. Position only happens to agree with `level == "0"` by
+        convention; silently relying on that breaks (wrong physical scale
+        applied to the loaded array, corrupting every length/diameter/
+        volume measurement by the pyramid's downsample factor) the moment
+        a dataset lists levels in a different order, omits level "0", or a
+        future caller loads a non-"0" level without this lookup being
+        level-aware.
+        """
         metadata: Dict = {"axes": "ZYX"}
         multiscales = getattr(root, "attrs", {}).get("multiscales")
         if isinstance(multiscales, list) and len(multiscales) > 0:
-            dataset = multiscales[0].get("datasets", [])[0]
-            ct = dataset.get("coordinateTransformations", [])
-            if ct and isinstance(ct, list):
-                scale = ct[0].get("scale")
-                if isinstance(scale, (list, tuple)) and len(scale) >= 3:
-                    metadata["PhysicalSizeZ"] = float(scale[0])
-                    metadata["PhysicalSizeY"] = float(scale[1])
-                    metadata["PhysicalSizeX"] = float(scale[2])
-                    metadata["PhysicalSizeZUnit"] = "µm"
-                    metadata["PhysicalSizeYUnit"] = "µm"
-                    metadata["PhysicalSizeXUnit"] = "µm"
+            datasets = multiscales[0].get("datasets", [])
+            dataset = next((d for d in datasets if d.get("path") == level), None)
+            if dataset is None and datasets:
+                dataset = datasets[0]
+                source = f" for {source_path}" if source_path is not None else ""
+                print(
+                    f"Warning: no multiscale dataset entry with path == {level!r}"
+                    f"{source}; falling back to the first listed entry "
+                    f"(path={dataset.get('path')!r}) -- physical pixel size may not "
+                    "match the loaded resolution level",
+                    file=sys.stderr,
+                )
+            if dataset is not None:
+                ct = dataset.get("coordinateTransformations", [])
+                if ct and isinstance(ct, list):
+                    scale = ct[0].get("scale")
+                    if isinstance(scale, (list, tuple)) and len(scale) >= 3:
+                        metadata["PhysicalSizeZ"] = float(scale[0])
+                        metadata["PhysicalSizeY"] = float(scale[1])
+                        metadata["PhysicalSizeX"] = float(scale[2])
+                        metadata["PhysicalSizeZUnit"] = "µm"
+                        metadata["PhysicalSizeYUnit"] = "µm"
+                        metadata["PhysicalSizeXUnit"] = "µm"
 
         if "PhysicalSizeX" not in metadata:
             source = f" for {source_path}" if source_path is not None else ""
@@ -354,11 +416,26 @@ class Pipeline3D(object):
     def _load_segmentation(self, fn):
         if self._is_zarr_root(fn):
             z = zarr.open_group(fn, mode="r")
-            self.input_metadata = self._extract_zarr_metadata(z, fn)
-            if "0" in z:
-                seg = z["0"]
+            # OME-NGFF convention: level "0" is the full-resolution array.
+            # Fall back to whichever array key actually exists (not a
+            # subgroup) if a dataset ever omits it, and always resolve
+            # metadata against this *same* key (see _extract_zarr_metadata)
+            # so a mismatched multiscale level can never silently apply
+            # the wrong physical pixel size to the array we actually use.
+            array_keys = list(z.array_keys())
+            if "0" in array_keys:
+                level = "0"
+            elif array_keys:
+                level = array_keys[0]
+                print(
+                    f"Warning: zarr group {fn} has no resolution level '0'; "
+                    f"using level {level!r} instead",
+                    file=sys.stderr,
+                )
             else:
-                seg = next(iter(z.values()))
+                raise ValueError(f"No arrays found in zarr group: {fn}")
+            self.input_metadata = self._extract_zarr_metadata(z, level=level, source_path=fn)
+            seg = z[level]
             return np.asarray(seg)
 
         if BioImage is not None:
@@ -367,7 +444,7 @@ class Pipeline3D(object):
                 if self._is_zarr_root(Path(fn)):
                     try:
                         z = zarr.open_group(fn, mode="r")
-                        self.input_metadata = self._extract_zarr_metadata(z, fn)
+                        self.input_metadata = self._extract_zarr_metadata(z, source_path=fn)
                     except Exception:
                         self.input_metadata = {"axes": "ZYX"}
                 else:
@@ -435,8 +512,46 @@ class Pipeline3D(object):
                 closed = binary_closing(opened, structure=footprint)
                 seg = closed.astype(np.uint8)
 
+            # Topology-only mask, used *exclusively* to decide where
+            # skeletonize() puts the skeleton -- never assigned back to `seg`
+            # or `seg_raw`, so it never reaches GraphObj's radius/diameter
+            # measurements or the exported segmentation (Simon, 2026-08-17:
+            # "dont overwrite the actual segmentation and keep the real
+            # segmentation in the output. Use the smoothing temporarily for
+            # the skeleton only"). Smooths away sub-resolution boundary
+            # roughness that otherwise gives Lee's thinning many small local
+            # bumps to route a spurious medial-axis branch toward -- see
+            # maskSmoothingSigmaUm's default comment in config_analysis for
+            # the reasoning and validation. Built from seg_raw and then
+            # opened with the same footprint as `seg` above, matching the
+            # smooth-then-open order that was validated.
+            mask_smoothing_sigma_um = float(
+                self.analysis_parameters.get("maskSmoothingSigmaUm", 20.0)
+            )
+            if mask_smoothing_sigma_um > 0:
+                pixel_dims = self.analysis_parameters.get("pixelDimensions", [1.0, 1.0, 1.0])
+                sigma_vox = mask_smoothing_sigma_um / np.array(pixel_dims, dtype=float)
+                blurred = gaussian_filter(seg_raw.astype(np.float32), sigma=sigma_vox)
+                seg_smoothed = (blurred >= 0.5).astype(np.uint8)
+                if mask_opening_radius_um > 0:
+                    footprint = _anisotropic_ellipsoid_footprint(mask_opening_radius_um, pixel_dims)
+                    seg_smoothed_mask = seg_smoothed > 0
+                    eroded_s = binary_erosion(seg_smoothed_mask, structure=footprint)
+                    opened_s = binary_dilation(
+                        eroded_s,
+                        structure=footprint,
+                        iterations=mask_recovery_steps,
+                        mask=seg_smoothed_mask,
+                    )
+                    closed_s = binary_closing(opened_s, structure=footprint)
+                    seg_for_skeleton = closed_s.astype(np.uint8)
+                else:
+                    seg_for_skeleton = seg_smoothed
+            else:
+                seg_for_skeleton = seg
+
             # segmentation -> skeleton
-            skl = skeletonize(seg > 0, method="lee")
+            skl = skeletonize(seg_for_skeleton > 0, method="lee")
             skl = skl.astype(np.uint8)
             skl[skl > 0] = 1
 

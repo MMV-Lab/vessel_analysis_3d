@@ -62,6 +62,7 @@ class Filament:
         minBranchLengthUm,
         minBranchRadiusUm,
         minJunctionRadiusUm,
+        recenteredEndpoints=frozenset(),
     ):
         self.graph = graph
         self.start = start
@@ -80,6 +81,7 @@ class Filament:
         self.minBranchLengthUm = minBranchLengthUm
         self.minBranchRadiusUm = minBranchRadiusUm
         self.minJunctionRadiusUm = minJunctionRadiusUm
+        self.recenteredEndpoints = recenteredEndpoints
         self.endPtsList = []
         # true endpoints excluded from endPtsList by removeBorderEndPts
         # (touch the volume boundary, so likely a field-of-view crop
@@ -630,10 +632,27 @@ class Filament:
             is_short_by_length = seg_length <= self.lengthLim
             is_short_by_branch_rule = seg_length < self.minBranchLengthUm
             is_thin_by_diameter = seg_diameter < self.minBranchRadiusUm * 2
+            # a segment ending at a deliberately re-centered endpoint (see
+            # GraphObj._find_trustworthy_anchor) was intentionally truncated
+            # right where its own local geometry stopped being trustworthy
+            # -- that's often exactly why it's short relative to its own
+            # diameter, not evidence of a raw skeletonization artifact,
+            # which is what this specific rule exists to catch. The other
+            # weak-branch rules (absolute shortness, thin-and-short) still
+            # apply -- this only exempts the diameter-relative one.
+            is_recentered = (
+                segKey[0] in self.recenteredEndpoints
+                or segKey[1] in self.recenteredEndpoints
+            )
+            is_short_stub = (
+                seg_length < self.diaScale * seg_diameter
+                and seg_is_terminal
+                and not is_recentered
+            )
 
             if cut_neighbor_brpt_segs:
                 if (
-                    (seg_length < self.diaScale * seg_diameter and seg_is_terminal)
+                    is_short_stub
                     or is_short_by_length
                     or (is_short_by_branch_rule and is_thin_by_diameter)
                 ):
@@ -647,7 +666,7 @@ class Filament:
                     and is_short_by_length
                 ):
                     if (
-                        (seg_length < self.diaScale * seg_diameter and seg_is_terminal)
+                        is_short_stub
                         or is_short_by_length
                         or (is_short_by_branch_rule and is_thin_by_diameter)
                     ):
