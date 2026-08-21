@@ -1,68 +1,79 @@
-# 3D Vascular Structure Analysis
+# vessel_analysis_3d (BioPrint-Segmentation fork)
 
-[![Build Status](https://github.com/MMV-Lab/vessel_analysis_3d/workflows/Build%20Main/badge.svg)](https://github.com/MMV-Lab/vessel_analysis_3d/actions)
-[![Documentation](https://github.com/MMV-Lab/vessel_analysis_3d/workflows/Documentation/badge.svg)](https://MMV-Lab.github.io/vessel_analysis_3d/)
-[![Code Coverage](https://codecov.io/gh/MMV-Lab/vessel_analysis_3d/branch/main/graph/badge.svg)](https://codecov.io/gh/MMV-Lab/vessel_analysis_3d)
+Fork of [MMV-Lab/vessel_analysis_3d](https://github.com/MMV-Lab/vessel_analysis_3d), branch
+`feature/skeletonization-and-morphometrics`. Converts a binary 3D vessel segmentation into a
+skeleton graph and per-segment/per-filament morphometrics (diameter, length, straightness,
+branching angle, volume, surface area, ...), tuned here for large, densely-vascularized
+bioprinted-tissue segmentations rather than the original small-scale use case.
 
-A Python package for analyzing 3D vascular structures from segmentations
+## What's changed from upstream
 
----
+- **Mask smoothing is skeleton-only.** A Gaussian-smoothed, morphologically-opened copy of the
+  mask decides skeleton topology; every measurement and export still uses the real, unsmoothed
+  segmentation.
+- **Redundancy-gated spur pruning** for rough vessel walls, instead of a single absolute
+  threshold that could delete real anatomy.
+- **Isolated components are no longer cascade-pruned to nothing.** A standalone, genuinely
+  branched structure with no larger trunk to fall back on now has its own longest throughline
+  restored if pruning would otherwise remove it entirely.
+- **Endpoint extension is bounded by cumulative direction change**, fixing "hook" artifacts
+  where the skeleton could double back on itself near a blunt or ambiguous tip.
+- **Segments trace the real skeleton path**, not a straight line between their endpoints;
+  length/straightness/volume/surface area are measured along that real path.
+- **Per-segment `boundaryClipped` flag**: a segment is flagged if raw-mask foreground sits
+  within `boundaryClipMarginUm` (default 25um) of both a volume face and one of its own
+  skeleton nodes -- catches a vessel truncated at the crop edge whether it terminates there or
+  just runs alongside it. Flagged segments are marked, never excluded, from any stat.
+- **Border-endpoint exclusion** uses the same physical-margin test (was an exact-boundary-voxel
+  check, which mask-opening erosion routinely defeated).
 
+## Known limitations
 
-## Quick Start
+- Lee's thinning can produce **no skeleton at all** through some wide/short mask regions, even
+  when the mask there is fully solid -- there is no segment to flag or measure in that case.
+- A **thick vessel truncated exactly at the volume edge** can be skipped for the same reason,
+  most often for vessels cut off by the crop boundary rather than a real anatomical end.
 
-In general, the analysis pipeline aims to convert segmented 3d vascular structures into statistics, with the following 3 steps:
+Both are upstream of anything this package's graph/pruning logic can fix from the skeleton
+alone; see the docstring of `Filament._removeBorderPtsFromEndPts` for the full detail.
 
-1. Binary (segmentation) to preliminary skeleton
-
-2. Preliminary skeleton to network representation (including network pruning)
-
-3. Extract statistics
-
-You can run analysis like `run_vessel_analysis --config ./example_configs/example.yaml`.
-
-Or, you can do this analysis in other functions by calling the processing pipeline
+## Quick start
 
 ```python
 from vessel_analysis_3d.processing_pipeline import Pipeline3D
 from skimage.morphology import skeletonize
 import numpy as np
 
-# Suppose SEG is the segmentation
+# SEG: your binary segmentation as a numpy array
+SKL = skeletonize(SEG > 0, method="lee").astype(np.uint8)
 
-# get preliminary skeleton
-SKL = skeletonize(SEG > 0, method="lee")
-SKL = SKL.astype(np.uint8)
-SKL[SKL > 0] = 1
-
-# Support PARAMS contains all parameters
+# PARAMS: dict of analysis parameters, see example_configs/example.yaml
 skl_final, brPts, endPts, reports = Pipeline3D.process_one_file(SEG, SKL, PARAMS)
-
-# skl_final is your final skeleton
-# brPts and endPts are two lists for the positions of branch points and end points
-# reports contain three pandas DataFrames ready for plotting
 ```
 
+Or from the command line:
+
+```bash
+run_vessel_analysis --config /path/to/your_config.yaml
+```
+
+See `example_configs/example.yaml` for a starting point -- copy it and fill in your own
+`input_dir`/`output_dir` and pixel dimensions.
+
 ## Installation
-
-
-Before starting, we recommend to [create a new conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-with-commands) or [a virtual environment](https://docs.python.org/3/library/venv.html) with Python 3.10+.
 
 ```bash
 conda create -y -n 3danalysis -c conda-forge python=3.11
 conda activate 3danalysis
+pip install git+https://github.com/MMV-Lab/vessel_analysis_3d.git@feature/skeletonization-and-morphometrics
 ```
 
-**Stable Release:** `pip install vessel_analysis_3d`<br> (not released yet)
-**Development Head:** `pip install git+https://github.com/MMV-Lab/vessel_analysis_3d.git`
+## Tests
 
-## Documentation
-
-For full package documentation please visit [MMV-Lab.github.io/vessel_analysis_3d](https://MMV-Lab.github.io/vessel_analysis_3d).
+```bash
+pytest vessel_analysis_3d/tests/
+```
 
 ## Development
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the code.
-
-**MIT license**
-
+See [CONTRIBUTING.md](CONTRIBUTING.md). **MIT license**, see [LICENSE](LICENSE).

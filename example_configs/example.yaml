@@ -1,10 +1,18 @@
 data:
-  input_dir: /mnt/eternus/users/Jianxu/data/Figure3/Hippocampus/Binary/
-  input_type: Binary_*.tiff
-  output_dir: /path/to/output/folder  # this optional, default is the "_tmp" folder under the working directory
+  input_dir: /path/to/segmentation_input/       # folder of binary segmentation files
+  input_type: "*.tiff"                          # glob pattern matched within input_dir
+  output_dir: /path/to/output/                  # optional; default is "_tmp" under the working directory
 analysis:
-  pixelDimensions: [2.0, 1.015625, 1.015625]
+  pixelDimensions: [2.0, 1.0, 1.0]               # [z, y, x] physical voxel size, in um
   pruningScale: 1.5
   lengthLimit: 3
   diaScale: 2
   branchingThreshold: 0.25
+  minBranchLengthUm: 4.0
+  minBranchRadiusUm: 1.0
+  minJunctionRadiusUm: 1.0
+  maskOpeningRadiusUm: 0.75
+  maskSmoothingSigmaUm: 10.0                     # skeleton-only smoothing; see README "What's changed"
+  maskTipRecoverySteps: 1
+  clusterCollapseScale: 3.0
+  boundaryClipMarginUm: 25.0                     # see README "What's changed" -- boundaryClipped flag
