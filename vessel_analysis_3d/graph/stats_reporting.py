@@ -169,11 +169,14 @@ def computeSummaryStats(gh: GraphObj, imgName: str) -> Dict:
     tissue mask, so this is the best available denominator.
     """
     diameters, lengths, surface_areas = [], [], []
+    boundary_clipped_segments = 0
     for filament_segs in gh.segStatsDict.values():
         for stats in filament_segs.values():
             diameters.append(stats["diameter"])
             lengths.append(stats["length"])
             surface_areas.append(stats.get("surfaceArea", 0.0))
+            if stats.get("boundaryClipped", False):
+                boundary_clipped_segments += 1
 
     total_branch_points = sum(gh.countBranchPointsDict.values())
     total_terminal_points = sum(gh.countEndPointsDict.values())
@@ -206,6 +209,17 @@ def computeSummaryStats(gh: GraphObj, imgName: str) -> Dict:
         "totalBranchPoints": total_branch_points,
         "totalTerminalPoints": total_terminal_points,
         "totalSegments": total_segments,
+        # segments flagged by GraphObj._flag_boundary_clipped_segments (raw
+        # mask within boundaryClipMarginUm of both a volume face and one of
+        # the segment's own skeleton nodes) -- included in every number
+        # above ("out-of-competition" is not "excluded"), just called out
+        # here so a reader knows what fraction of the pooled stats may
+        # include a partially-clipped cross-section without
+        # cross-referencing Segment_Statistics.csv.
+        "boundaryClippedSegments": boundary_clipped_segments,
+        "boundaryClippedFraction": (
+            boundary_clipped_segments / total_segments if total_segments else float("nan")
+        ),
         "totalVesselLength_mm": total_length_mm,
         "tissueVolume_mm3": tissue_volume_mm3,
         "vesselVolumeFraction": vessel_volume_fraction,

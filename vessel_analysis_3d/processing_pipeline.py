@@ -197,6 +197,10 @@ class Pipeline3D(object):
         if "clusterCollapseScale" not in param_dict:
             self.analysis_parameters["clusterCollapseScale"] = 3.0
 
+        if "boundaryClipMarginUm" not in param_dict:
+            # see GraphObj._flag_boundary_clipped_segments
+            self.analysis_parameters["boundaryClipMarginUm"] = 25.0
+
     def process_one_file(
         self,
         seg: np.ndarray,

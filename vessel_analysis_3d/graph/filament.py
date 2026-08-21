@@ -15,6 +15,7 @@ from .measurement import (
     getRadius,
     getRadiusMinMax,
     get_z_angle,
+    touchesVolumeBoundary,
 )
 
 
@@ -372,6 +373,19 @@ class Filament:
         else:
             minRadius, maxRadius = getRadiusMinMax(self.skelRadii, segment)
 
+        # Placeholder here -- whether this segment is boundary-clipped is
+        # decided later, globally, by GraphObj._flag_boundary_clipped_segments
+        # (core.py). That check needs the raw mask and every filament's
+        # final segments at once, neither of which is available yet at
+        # this per-filament, per-segment point in the pipeline. An earlier
+        # version checked only this segment's own skeleton-local radius
+        # against its distance to the nearest face, but that misses a
+        # vessel running roughly parallel to a face: its skeleton simply
+        # recenters within whatever cross-section is visible and never
+        # reads as "reaching" the boundary, even though the raw mask
+        # plainly shows it being cut off along its side, not just its tip.
+        boundaryClipped = False
+
         # full per-voxel diameter profile along the segment's real skeleton
         # path (see self.segmentProfiles docstring in __init__)
         if self.smallRAMmode:
@@ -390,14 +404,23 @@ class Filament:
             coords = segment
 
         # calculate straightness
-        vect = [j - i for i, j in zip(coords[0], coords[len(coords) - 1])]
+        vect = [j - i for i, j in zip(segment[0], segment[len(segment) - 1])]
         vect = [
             a * b for a, b in zip(vect, self.pixelDims)
         ]  # multiply pixel length with pixel dimension
         curveDisplacement = np.linalg.norm(vect)
 
-        # calculate segment length
-        segLength = getLength(coords, self.pixelDims)
+        # calculate segment length. Always measured along the real, raw
+        # skeleton path (`segment`), never the interpolated/smoothed
+        # B-spline curve (`coords`, still computed above for the
+        # smallRAMmode volume calc below) -- a B-spline fit through a
+        # decimated set of control points legitimately cuts corners at
+        # sharp bends, understating true length by 20-30% on real
+        # high-tortuosity segments (confirmed directly on segmentation_v30).
+        # This feeds straightness/volume/surfaceArea too, so all of them
+        # now reflect the vessel's actual physical length, not a smoothed
+        # approximation of it.
+        segLength = getLength(segment, self.pixelDims)
         if segLength <= 0:
             straightness = 1.0
         else:
@@ -446,6 +469,9 @@ class Filament:
         self.segmentStats[segment[0], segment[len(segment) - 1]][
             "branchingAngle"
         ] = branchingDegree
+        self.segmentStats[segment[0], segment[len(segment) - 1]][
+            "boundaryClipped"
+        ] = boundaryClipped
 
         # experimental statistics
         if self.expFlag == 1:
@@ -454,32 +480,64 @@ class Filament:
 
     def _removeBorderPtsFromEndPts(self):
         """
-        Removes all end points which are image border points from end points list.
+        Removes end points whose own local vessel radius already reaches a
+        face of the imaged volume from the end points list.
+
+        Uses touchesVolumeBoundary: an endpoint is border-excluded if the
+        vessel is locally wider than its distance to the nearest volume
+        face, meaning the true cross-section almost certainly continues
+        past the crop edge -- this is a field-of-view artifact, not a
+        real anatomical terminus. This single-point radius-vs-distance
+        test is reliable specifically *for endpoints*, unlike for a
+        whole segment: _extend_endpoints_to_raw_boundary already pushes
+        every endpoint as far as the raw mask allows, so an endpoint
+        that's still short of the volume face by less than its own
+        radius really does mean "the mask ends here, not the vessel".
+        The equivalent per-segment "boundaryClipped" flag (see
+        GraphObj._flag_boundary_clipped_segments in core.py) needs a
+        different, mask-attribution-based test instead, because a
+        vessel merely running close to a face never has any single
+        skeleton point read as "reaching" it that way -- see that
+        method's docstring for why.
+
+        CHANGELOG: originally (2026-08-18) this only caught an endpoint
+        touching the *exact* boundary voxel, so a vessel truncated near
+        the crop edge whose segmentation fell just short of literally
+        reaching it (mask-opening erosion, signal falloff) was
+        indistinguishable from a genuine anatomical endpoint -- in
+        practice this meant the border-excluded-endpoints viewer layer
+        came back essentially empty on real data. Widened 2026-08-20 to
+        the physical radius-vs-distance test above, which catches that
+        case directly and needs no extra tunable margin.
+
+        KNOWN LIMITATION (2026-08-20, still open): a thick, short vessel
+        cut off by the volume boundary can sometimes get no endpoint here
+        to even classify, because Lee's thinning never produced any
+        skeleton branch into it at all (confirmed directly: zero raw
+        skeleton voxels near several such regions, despite the raw mask
+        being fully solid there, at 16.6um -- 2 voxels -- from the Z
+        edge). This function has nothing to work with in that case; the
+        gap is upstream of endpoint classification entirely. Fixing it
+        would mean detecting large solid regions touching the boundary
+        with no nearby skeleton and synthesizing a stub endpoint there
+        (which could then flow through this same border-endpoint path),
+        rather than anything this function itself could do -- a real new
+        capability, scoped but deliberately not built yet.
         """
-        endPtsToRemove = []
-        ndims = self.skelRadii.ndim
-        if ndims == 3:
-            z = self.skelRadii.shape[0] - 1
-            y = self.skelRadii.shape[1] - 1
-            x = self.skelRadii.shape[2] - 1
-            for endPt in self.endPtsList:
-                if (
-                    endPt[0] == z
-                    or endPt[1] == y
-                    or endPt[2] == x
-                    or endPt[0] == 0
-                    or endPt[1] == 0
-                    or endPt[2] == 0
-                ):
-                    endPtsToRemove.append(endPt)
-                    self.postprocEndPts += 1
-        elif ndims == 2:
-            y = self.skelRadii.shape[0] - 1
-            x = self.skelRadii.shape[1] - 1
-            for endPt in self.endPtsList:
-                if endPt[0] == y or endPt[1] == x or endPt[0] == 0 or endPt[1] == 0:
-                    endPtsToRemove.append(endPt)
-                    self.postprocEndPts += 1
+        if self.smallRAMmode:
+            distTrans = da.from_zarr(
+                "tmp_zarr" + os.sep + self.fileName + "_radiusMatrix.zarr"
+            )
+        else:
+            distTrans = self.skelRadii
+        endPtsToRemove = [
+            endPt
+            for endPt in self.endPtsList
+            if touchesVolumeBoundary(
+                [endPt], distTrans, self.pixelDims, self.skelRadii.shape
+            )
+        ]
+        self.postprocEndPts += len(endPtsToRemove)
         for endPt in endPtsToRemove:
             self.endPtsList.remove(endPt)
         self.borderEndPts.extend(endPtsToRemove)

@@ -72,7 +72,17 @@ def _build_graph_obj(seg, **overrides):
 
 def test_large_junction_with_attachment_stays_connected_and_cycle_free():
     seg = _build_torus_with_arm()
-    gh = _build_graph_obj(seg)
+    # This fixture's synthetic radii (R_TUBE=12, ARM_RADIUS=4) are far below
+    # PARAMS' production-scale minBranchRadiusUm=25.0 -- fine for every other
+    # test here, but after collapse this specific ring+single-arm topology
+    # legitimately has no remaining branch point (the ring's shortest-path
+    # tree to its one attachment point never itself branches), so
+    # _prune's absolute-radius floor for branch-point-free fragments would
+    # otherwise remove this whole physically-continuous structure. That
+    # floor is intentionally not what this test is checking -- override it
+    # off so this test only exercises _collapse_dense_clusters' connectivity
+    # preservation, its actual subject.
+    gh = _build_graph_obj(seg, minBranchRadiusUm=0.0)
 
     assert gh.infoDict["clusterCollapse"] >= 1
     # a real junction with an attached arm must keep a physically continuous
@@ -171,6 +181,12 @@ def test_dense_blob_with_chord_edges_terminates_and_stays_cycle_free():
     graph = get_networkx_graph_from_array(skl)
     params = dict(PARAMS)
     params["clusterCollapseScale"] = 5.0  # generous, to make sure the blob is eligible
+    # Same reasoning as test_large_junction_with_attachment_...: these
+    # synthetic arm/blob radii are far below the production-scale
+    # minBranchRadiusUm=25.0, and this test is specifically about
+    # cycle-freedom/connectivity after collapse, not the separate absolute-
+    # radius floor for branch-point-free fragments.
+    params["minBranchRadiusUm"] = 0.0
 
     start = time.time()
     gh = GraphObj(seg, skl, graph, rawSegmentation=seg, **params)

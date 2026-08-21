@@ -75,6 +75,30 @@ def getVolume(skelRadii, segment, dimensions):
     return volume
 
 
+def touchesVolumeBoundary(segment, distTrans, dimensions, volumeShape):
+    """
+    True if any point of the segment lies close enough to a face of the
+    imaged volume that the vessel's own local radius there already
+    reaches past that edge -- i.e. the true cross-section is wider than
+    what was captured, not merely that the skeleton happens to run near
+    the edge. This is the same physical test whether it's applied to a
+    whole segment (does this vessel get clipped along its length, e.g.
+    running roughly parallel to the boundary) or to a single endpoint
+    (is this a real terminus or a field-of-view crop artifact).
+    """
+    for skelPt in segment:
+        radius = float(distTrans[skelPt])
+        if not np.isfinite(radius):
+            continue
+        boundaryDist = min(
+            min(coord, extent - 1 - coord) * dim
+            for coord, extent, dim in zip(skelPt, volumeShape, dimensions)
+        )
+        if boundaryDist < radius:
+            return True
+    return False
+
+
 def get_z_angle(segment, pixelDims):
     zVector = [1, 0, 0]
     v1 = segment[0]

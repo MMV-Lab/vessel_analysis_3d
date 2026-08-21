@@ -6,7 +6,7 @@ from typing import Union
 from pathlib import Path
 import csv
 
-from scipy.ndimage import distance_transform_edt
+from scipy.ndimage import distance_transform_edt, maximum_filter
 from scipy.spatial import cKDTree
 from skimage.morphology import skeletonize
 import networkx as nx
@@ -61,6 +61,7 @@ class GraphObj:
         clusterCollapseScale: float = 3.0,
         maskTipRecoverySteps: int = 1,
         maskSmoothingSigmaUm: float = 10.0,
+        boundaryClipMarginUm: float = 25.0,
         rawSegmentation=None,
     ):
         self.skeleton = skeleton
@@ -82,6 +83,14 @@ class GraphObj:
         self.maskOpeningRadiusUm = maskOpeningRadiusUm
         self.maskTipRecoverySteps = maskTipRecoverySteps
         self.maskSmoothingSigmaUm = maskSmoothingSigmaUm
+        # see _flag_boundary_clipped_segments: how close (in physical units)
+        # raw-mask foreground has to run to a volume face before the
+        # segment it belongs to is flagged "boundaryClipped". 25um matches
+        # minBranchRadiusUm -- the same "no vessel below 50um diameter"
+        # domain floor already used elsewhere, so a vessel at least that
+        # wide is never more than one of its own radii from a face it's
+        # actually touching before this catches it.
+        self.boundaryClipMarginUm = boundaryClipMarginUm
         self.clusterCollapseScale = clusterCollapseScale
         self.removeBorderEndPts = removeBorderEndPts
         self.removeEndPtsFromSmallFilaments = removeEndPtsFromSmallFilaments
@@ -128,6 +137,7 @@ class GraphObj:
         self.infoDict = {
             "clusterCollapse": 0,
             "pruning": 0,
+            "isolatedComponentsRestored": 0,
             "offCenterSpursRemoved": 0,
             "endpointsExtended": 0,
             "endpointsRecentered": 0,
@@ -175,6 +185,29 @@ class GraphObj:
                 boundary="reflect",
             )
         self.radiusMatrix = self.distTransf * self.skeleton
+        if not self.smallRAMmode:
+            # Skeleton topology comes from a possibly-smoothed mask (see
+            # maskSmoothingSigmaUm in processing_pipeline.py), so a
+            # skeleton voxel can occasionally sit a voxel or two outside
+            # the true, unsmoothed segmentation at a bend -- there,
+            # distTransf (computed on the true mask) is exactly 0,
+            # producing a physically impossible "vessel pinches to zero
+            # width" reading instead of the node's real local radius.
+            # Confirmed directly on real data (segmentation_v30): 42 of
+            # 33701 skeleton voxels (0.12%) sit just outside the true
+            # mask, corrupting minDiameter for 14 segments (one down to a
+            # literal 0.0um mid-path, bracketed by 95um and 31um
+            # neighbors). Correct only those exact degenerate nodes with
+            # the nearest real tissue's distance-transform value, rather
+            # than touching skeleton topology/connectivity at all -- the
+            # rest of this pipeline extensively validates connectivity
+            # and this must not risk it.
+            degenerate = (self.skeleton > 0) & (self.distTransf == 0)
+            if degenerate.any():
+                nearby_max = maximum_filter(self.distTransf, size=5)
+                self.radiusMatrix = np.where(
+                    degenerate, nearby_max, self.radiusMatrix
+                )
         self.runTimeDict["distTransformation"] = round(time.time() - self.initTime, 3)
 
         # pruning: delete branches with length below the distance to its closest border
@@ -299,6 +332,8 @@ class GraphObj:
                     self.infoDict["filaments"] -= 1
         self.runTimeDict["statCalculation"] = round(time.time() - startTime, 3)
 
+        self._flag_boundary_clipped_segments()
+
         if self.expFlag:
             self.endPtsTopVsBottom = self.top_endPts_vs_bottom_endPts()
 
@@ -315,6 +350,150 @@ class GraphObj:
             self.skeleton = self._get_final_skeleton()
 
             return self.skeleton
+
+    def _flag_boundary_clipped_segments(self):
+        """
+        Flags every segment with raw (unsmoothed) mask foreground within
+        `self.boundaryClipMarginUm` of BOTH a volume face AND one of its
+        own skeleton nodes -- not just segments with an endpoint at the
+        edge, but also a vessel running roughly parallel to a face that
+        never has any skeleton node touch the boundary itself, only its
+        side.
+
+        Ground truth is the raw mask, not a skeleton-derived radius
+        estimate: a skeleton-local-radius check, tried first, misses the
+        parallel case -- the medial axis of a partially-cropped
+        cross-section simply describes the visible slice, it doesn't
+        know anything is missing.
+
+        This is deliberately a purely LOCAL, per-node test -- for each
+        skeleton node close enough to a face to be worth checking, crop
+        a small window of the raw mask around that node (spanning the
+        margin band on the face-normal axis, +-margin on the two
+        in-plane axes) and ask only "is there foreground in here at
+        all". Every node whose crop finds foreground flags its own
+        segment(s); a node shared by several segments (a branch point)
+        flags all of them, since a junction that close to the edge means
+        any of its branches could be the one being truncated.
+
+        CHANGELOG:
+
+        2026-08-20 v1: only looked at the exact boundary voxel layer
+        (face_index 0 / shape-1). Mask-opening erosion/smoothing
+        routinely leaves real edge-truncated vessels a few voxels short
+        of literally touching the array boundary, so this missed them
+        (Simon: "count everything within 25um of the boundary as
+        boundary clipping").
+
+        2026-08-20 v2: widened to a margin-thick slab per face, but
+        grouped ALL foreground in that slab into connected-component
+        "blobs" and attributed each blob to its single nearest skeleton
+        node. This broke down on real, densely-vascularized data: a
+        margin slab commonly contains many physically distinct vessels
+        that happen to touch or bridge within that thin band, so 3D
+        connected-component labeling silently fused them into one mega
+        blob (confirmed on segmentation_v30: one blob alone was 399,194
+        of 485,412 total near-boundary voxels, 82%, obviously dozens of
+        unrelated vessels merged together). That blob's single centroid
+        then got attributed to exactly one nearby segment -- every other
+        real, distinct, genuinely boundary-touching vessel folded into
+        the same merged blob was silently left unflagged, which is
+        exactly what Simon caught by hovering a visibly boundary-hugging
+        vessel that stayed unflagged.
+
+        v3 removed blob grouping entirely -- there is no longer any
+        "which vessel does this merged region belong to" question to get
+        wrong, because nothing is ever merged across vessels: each node
+        only ever looks at the raw mask immediately around itself. But
+        v3's cheap pre-filter (skip a node if its own coordinate is
+        farther than the margin from every face) reintroduced a version
+        of the *original* problem this whole check exists to solve: a
+        node's own position is not a reliable stand-in for how close the
+        raw mask actually gets. Confirmed directly on segmentation_v30: a
+        166um-diameter vessel's skeleton sat flat at z=10-11 (~83-91um
+        from the z=0 face) the entire length Simon was looking at, well
+        past a 25um margin -- while its raw mask was solid foreground
+        all the way to z=1. A vessel that thick simply has its medial
+        axis centered roughly its own radius away from the wall it's
+        actually touching, the same reason the very first version of
+        this check missed a vessel running parallel to a face, just
+        along the face-normal axis instead of laterally this time.
+
+        v4 (this version) widens the pre-filter's reach by each node's
+        own local radius (`self.radiusMatrix[node]`, free -- already
+        computed for every node in this pipeline): a node is worth
+        cropping if its distance to a face is within margin + its own
+        radius, not margin alone. A thick vessel gets a proportionally
+        wider net; the crop step itself (which does the actual, precise
+        mask check) is unchanged.
+        """
+        if self.rawSegmentation is None or not self.segmentsDict:
+            return
+        raw = self.rawSegmentation
+        ndims = raw.ndim
+        pixel_dims = np.asarray(self.pixelDims, dtype=float)
+        margin = float(self.boundaryClipMarginUm)
+
+        # every skeleton node belonging to a final segment, mapped to the
+        # segment(s) that contain it -- shared only at branch/end points
+        node_to_segments = defaultdict(list)
+        for fil_idx, segs in self.segmentsDict.items():
+            for seg_key, nodes in segs.items():
+                for node in nodes:
+                    node_to_segments[node].append((fil_idx, seg_key))
+        if not node_to_segments:
+            return
+
+        margin_voxels = [
+            max(1, min(int(np.ceil(margin / pixel_dims[a])), raw.shape[a]))
+            for a in range(ndims)
+        ]
+
+        flagged = set()
+        for node in node_to_segments:
+            owners = node_to_segments[node]
+            if all(o in flagged for o in owners):
+                continue
+            # a thick vessel's medial axis sits roughly its own radius away
+            # from its true wall -- the same reason the very first version
+            # of this check missed a vessel running parallel to a face,
+            # just along the face-normal axis this time. Confirmed directly
+            # on segmentation_v30: a 166um-diameter vessel's skeleton sat
+            # flat at z=10-11 (~83-91um from the z=0 face, past a 25um
+            # margin) while its raw mask was solid foreground all the way
+            # to z=1 -- a plain distance-to-face pre-filter skipped it
+            # entirely. Reach = margin + local radius so a thick vessel
+            # gets a proportionally wider net to still be worth cropping.
+            local_radius_um = float(self.radiusMatrix[node])
+            reach = margin + local_radius_um
+            for axis in range(ndims):
+                dist_low = node[axis] * pixel_dims[axis]
+                dist_high = (raw.shape[axis] - 1 - node[axis]) * pixel_dims[axis]
+                for side, dist_to_face in ((0, dist_low), (1, dist_high)):
+                    if dist_to_face > reach:
+                        continue
+                    slices = []
+                    for a in range(ndims):
+                        if a == axis:
+                            if side == 0:
+                                slices.append(slice(0, margin_voxels[a]))
+                            else:
+                                slices.append(
+                                    slice(raw.shape[a] - margin_voxels[a], raw.shape[a])
+                                )
+                        else:
+                            lo = max(0, node[a] - margin_voxels[a])
+                            hi = min(raw.shape[a], node[a] + margin_voxels[a] + 1)
+                            slices.append(slice(lo, hi))
+                    if np.any(raw[tuple(slices)] > 0):
+                        flagged.update(owners)
+                        break
+                else:
+                    continue
+                break
+
+        for fil_idx, seg_key in flagged:
+            self.segStatsDict[fil_idx][seg_key]["boundaryClipped"] = True
 
     def _get_final_skeleton(self):
         skel = np.zeros(self.skeleton.shape)
@@ -486,6 +665,35 @@ class GraphObj:
         """
         startTime = time.time()
         total_pruned = 0
+
+        # This cascading removal assumes every branch it evaluates belongs
+        # to a much larger, well-supported trunk -- "a real bifurcation's
+        # branches are normally at least on the order of the trunk's own
+        # radius" only makes sense when there IS a trunk. A standalone
+        # component with no connection to anything else has no such
+        # fallback: if each of its own terminal branches happens to
+        # individually read as weak against these same absolute
+        # thresholds, the cascade can strip them one by one, each removal
+        # legitimately thinning the branch point(s) left behind and
+        # inviting the next one, until a genuinely substantial, real,
+        # multi-branch vessel is reduced to nothing -- confirmed directly
+        # on real data (segmentation_v30): an isolated 99-node structure
+        # with 4 endpoints and a 356um bounding-box diagonal, mean radius
+        # 23.2um (just under the 25um floor), cascaded away completely,
+        # while a comparable isolated structure elsewhere survived only
+        # because its own branches happened not to all read as weak.
+        # Snapshotting which components have a real branch point before
+        # any of this runs -- and restoring the single most substantial
+        # path through one if the cascade below eliminates it outright --
+        # protects exactly this case without touching the cascade itself,
+        # so a branch/spur that legitimately has a large network to fall
+        # back on is pruned exactly as before.
+        substantial_components = [
+            self.networkxGraph.subgraph(component).copy()
+            for component in nx.connected_components(self.networkxGraph)
+            if any(self.networkxGraph.degree(n) > 2 for n in component)
+        ]
+
         while True:
             endPtsList = [k for (k, v) in self.nodeDegreeDict.items() if v == 1]
             branchesToRemove = []
@@ -534,15 +742,83 @@ class GraphObj:
                             if (is_short_branch and is_weak_branch) or is_short_relative_to_trunk:
                                 branchesToRemove.append(branch)
                             break
+                else:
+                    # Stack exhausted without ever finding a branch point:
+                    # this endpoint's entire connected component is a bare
+                    # path (or a single node) with no branching at all, so
+                    # it's never reached by the branch-point-triggered logic
+                    # above. A standalone fragment too thin to be a real
+                    # vessel by the same minBranchRadiusUm floor used
+                    # everywhere else in this function would otherwise
+                    # survive completely untouched, however implausible its
+                    # radius (confirmed on real data, segmentation_v30: an
+                    # isolated 47um-long, 17.68um-diameter fragment survived
+                    # at roughly a third of the configured 50um floor).
+                    # Length isn't checked here, unlike the branch-point
+                    # case -- there's no branch point to be short *relative
+                    # to*, and a standalone fragment failing the absolute
+                    # radius floor is implausible regardless of its length.
+                    # Requiring the far end to also be a real endpoint
+                    # (degree==1) rather than just "no branch point found"
+                    # excludes a single isolated node (e.g. a closed loop
+                    # collapsed to one representative point by
+                    # _collapse_dense_clusters, which has degree 0 and no
+                    # real endpoints at all -- not what this rule is about).
+                    if branch and self.networkxGraph.degree(branch[-1]) == 1:
+                        branch_mean_radius_um = float(
+                            np.mean([radiusMat[n] for n in branch])
+                        )
+                        if branch_mean_radius_um < self.minBranchRadiusUm:
+                            branchesToRemove.append(branch)
             if not branchesToRemove:
                 break
-            # delete branches from adjacency matrix besides branch points
+            # delete branches from adjacency matrix besides branch points.
+            # The branch's last node is only preserved if it's still a real
+            # branch point (degree > 2) at delete time -- for a bare
+            # endpoint-to-endpoint fragment (see the "no branch point
+            # found" case above), the last node is just the far endpoint,
+            # not something to keep, so the whole fragment is removed.
             for branch in branchesToRemove:
-                for node in branch[:-1]:
+                keep_last = (
+                    self.networkxGraph.has_node(branch[-1])
+                    and self.networkxGraph.degree(branch[-1]) > 2
+                )
+                nodes_to_remove = branch[:-1] if keep_last else branch
+                for node in nodes_to_remove:
                     if self.networkxGraph.has_node(node):
                         self.networkxGraph.remove_node(node)
             total_pruned += len(branchesToRemove)
             self.nodeDegreeDict = dict(nx.degree(self.networkxGraph))
+
+        # Restore the single most substantial path through any originally-
+        # branched component the cascade above eliminated completely (see
+        # the comment where substantial_components is built). "Most
+        # substantial" is the path between whichever pair of the
+        # component's own original endpoints sit physically farthest
+        # apart -- a real vessel's longest throughline -- rather than
+        # reintroducing every branch that was individually flagged weak;
+        # this keeps the fix narrowly scoped to "don't let a genuine,
+        # sizeable vessel disappear entirely" without undoing the
+        # cascade's actual noise-pruning judgment on structures that do
+        # have somewhere else to fall back on.
+        pixel_dims = np.array(self.pixelDims, dtype=float)
+        components_restored = 0
+        for snapshot in substantial_components:
+            if any(self.networkxGraph.has_node(n) for n in snapshot.nodes()):
+                continue  # some of it survived; leave the cascade's result as-is
+            endpoints = [n for n, d in snapshot.degree() if d == 1]
+            if len(endpoints) < 2:
+                continue  # shouldn't happen for a component with a branch point, but be safe
+            ends_phys = np.array(endpoints, dtype=float) * pixel_dims
+            dists = np.linalg.norm(ends_phys[:, None, :] - ends_phys[None, :, :], axis=-1)
+            i, j = np.unravel_index(np.argmax(dists), dists.shape)
+            path = nx.shortest_path(snapshot, endpoints[i], endpoints[j])
+            self.networkxGraph.add_edges_from(zip(path[:-1], path[1:]))
+            components_restored += 1
+        if components_restored:
+            self.nodeDegreeDict = dict(nx.degree(self.networkxGraph))
+        self.infoDict["isolatedComponentsRestored"] = components_restored
+
         self.runTimeDict["pruning"] = round(time.time() - startTime, 3)
         self.infoDict["pruning"] = total_pruned
 
@@ -998,6 +1274,7 @@ class GraphObj:
         lookback_fraction: float = 0.1,
         decline_fraction: float = 0.12,
         correction_blend: float = 0.3,
+        max_direction_deviation_deg: float = 90.0,
     ):
         """
         Extend true skeleton endpoints outward through the raw (pre-opening)
@@ -1059,6 +1336,29 @@ class GraphObj:
         to converge to inside a chamber) but far more slowly, which is the
         best a purely local, single-path walk can do here short of
         detecting "I am inside a chamber, not a vessel" outright.
+
+        Even a conservative per-step blend has no memory of where the walk
+        started, though -- nothing previously stopped many small, similarly-
+        biased corrections from *compounding* over the course of one walk.
+        Near an ambiguous or blunt tip, exactly where the ridge search can
+        legitimately keep drifting to one side step after step (the
+        `correction_blend` paragraph above), that compounding can rotate
+        the walk's direction past 90 degrees and even further -- confirmed
+        directly on a real flagged endpoint, a small branch whose extension
+        visibly hooked ~180 degrees back on itself a few steps before
+        terminating, landing the endpoint well inside the vessel instead of
+        at its tip. A real vessel extending outward over a mere
+        `max_extension_um` budget essentially never needs to turn that
+        sharply -- that would mean curving tighter than the vessel's own
+        typical radius within this short a distance -- so
+        `max_direction_deviation_deg` bounds cumulative rotation from the
+        walk's own established outward direction, not just the per-step
+        delta: once a correction would rotate past this bound, that's the
+        same "local geometry is no longer trustworthy" situation this
+        function already stops for elsewhere, so it stops here too, keeping
+        the endpoint at the last position it actually had reliable local
+        evidence for, instead of continuing into a physically implausible
+        reversal.
         """
         startTime = time.time()
         pixel_dims = np.array(self.pixelDims, dtype=float)
@@ -1143,6 +1443,11 @@ class GraphObj:
             if norm < 1e-9:
                 continue
             direction = direction / norm
+            # snapshot of the walk's own established outward direction,
+            # before any per-step ridge correction -- see
+            # max_direction_deviation_deg above
+            initial_direction = direction
+            min_direction_cos = float(np.cos(np.radians(max_direction_deviation_deg)))
 
             radius_here = float(self.radiusMatrix[endpoint])
             half_lookback = max(1, int(round(lookback_fraction * radius_here / step_phys)))
@@ -1262,7 +1567,19 @@ class GraphObj:
                     new_direction = direction + correction_blend * (lateral / lateral_norm)
                     new_direction_norm = np.linalg.norm(new_direction)
                     if new_direction_norm > 1e-9:
-                        direction = new_direction / new_direction_norm
+                        new_direction = new_direction / new_direction_norm
+                        # Bound cumulative rotation from the walk's own
+                        # outward direction (see max_direction_deviation_deg
+                        # docstring above). This step's own ridge point is
+                        # what's pulling the direction implausibly far, so
+                        # -- same as the focal-collapse and no-ridge breaks
+                        # above -- discard this cross-section too rather
+                        # than committing it: it's the first position whose
+                        # own local geometry is no longer trustworthy, not
+                        # just the last position before one that would be.
+                        if float(np.dot(new_direction, initial_direction)) < min_direction_cos:
+                            break
+                        direction = new_direction
 
                 pos_phys = new_pos
                 if voxel != last_voxel:
